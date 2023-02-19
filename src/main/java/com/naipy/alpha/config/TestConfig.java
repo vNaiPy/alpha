@@ -1,8 +1,10 @@
 package com.naipy.alpha.config;
 
+import com.naipy.alpha.entities.Category;
 import com.naipy.alpha.entities.Order;
 import com.naipy.alpha.entities.User;
 import com.naipy.alpha.entities.enums.OrderStatus;
+import com.naipy.alpha.repositories.CategoryRepository;
 import com.naipy.alpha.repositories.OrderRepository;
 import com.naipy.alpha.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private OrderRepository _orderRepository;
 
+    @Autowired
+    private CategoryRepository _categoryRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -35,5 +40,11 @@ public class TestConfig implements CommandLineRunner {
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.WAITING_PAYMENT, u1);
 
         _orderRepository.saveAll(Arrays.asList(o1,o2,o3));
+
+        Category cat1 = new Category(null, "Electronics");
+        Category cat2 = new Category(null, "Books");
+        Category cat3 = new Category(null, "Computers");
+
+        _categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
     }
 }
