@@ -1,14 +1,8 @@
 package com.naipy.alpha.config;
 
-import com.naipy.alpha.entities.Category;
-import com.naipy.alpha.entities.Order;
-import com.naipy.alpha.entities.Product;
-import com.naipy.alpha.entities.User;
+import com.naipy.alpha.entities.*;
 import com.naipy.alpha.entities.enums.OrderStatus;
-import com.naipy.alpha.repositories.CategoryRepository;
-import com.naipy.alpha.repositories.OrderRepository;
-import com.naipy.alpha.repositories.ProductRepository;
-import com.naipy.alpha.repositories.UserRepository;
+import com.naipy.alpha.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +25,9 @@ public class TestConfig implements CommandLineRunner {
 
     @Autowired
     private ProductRepository _productRepository;
+
+    @Autowired
+    private OrderItemRepository _orderItemRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -63,5 +60,12 @@ public class TestConfig implements CommandLineRunner {
         p4.getCategories().add(cat3);
         p5.getCategories().add(cat2);
         _productRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5));
+
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+        OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+        OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+        OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+        _orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
+
     }
 }
