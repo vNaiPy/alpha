@@ -4,6 +4,7 @@ import com.naipy.alpha.entities.User;
 import com.naipy.alpha.repositories.UserRepository;
 import com.naipy.alpha.services.exceptions.DatabaseException;
 import com.naipy.alpha.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -43,9 +44,15 @@ public class UserService {
     }
 
     public User update (Long id, User user) {
-        User entity = _userRepository.getReferenceById(id);
-        updateData(user, entity);
-        return _userRepository.save(entity);
+        try {
+            User entity = _userRepository.getReferenceById(id);
+            updateData(user, entity);
+            return _userRepository.save(entity);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+
     }
 
     private void updateData(User user, User entity) {
