@@ -1,5 +1,6 @@
 package com.naipy.alpha.controllers.exceptions;
 
+import com.naipy.alpha.services.exceptions.DatabaseException;
 import com.naipy.alpha.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -20,4 +21,11 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(standError);
     }
 
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<StandardError> databaseIntegrityViolation (DatabaseException e, HttpServletRequest request) {
+        String error = "Database error";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError standError = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(standError);
+    }
 }

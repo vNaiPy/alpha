@@ -2,8 +2,11 @@ package com.naipy.alpha.services;
 
 import com.naipy.alpha.entities.User;
 import com.naipy.alpha.repositories.UserRepository;
+import com.naipy.alpha.services.exceptions.DatabaseException;
 import com.naipy.alpha.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +31,15 @@ public class UserService {
     }
 
     public void delete (Long id) {
-        _userRepository.deleteById(id);
+        try {
+            _userRepository.deleteById(id);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public User update (Long id, User user) {
