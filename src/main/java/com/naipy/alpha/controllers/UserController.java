@@ -2,11 +2,11 @@ package com.naipy.alpha.controllers;
 
 import com.naipy.alpha.entities.User;
 
+import com.naipy.alpha.entities.dto.UserDTO;
 import com.naipy.alpha.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -18,24 +18,21 @@ public class UserController {
     private UserService _userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll () {
-        List<User> userList = _userService.findAll();
+    public ResponseEntity<List<UserDTO>> findAll () {
+        List<UserDTO> userList = _userService.findAll();
         return ResponseEntity.ok().body(userList);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById (@PathVariable Long id) {
-        User user = _userService.findById(id);
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<UserDTO> findById (@PathVariable Long id) {
+        UserDTO userDTO = _userService.findById(id);
+        return ResponseEntity.ok().body(userDTO);
     }
 
     @PostMapping
     public ResponseEntity<User> insert (@RequestBody User user) {
         user = _userService.insert(user);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                                            .path("/{id}")
-                                            .buildAndExpand(user.getId())
-                                            .toUri();
+        URI uri = UtilsForController.getURI(user.getId());
         return ResponseEntity.created(uri).body(user);
     }
 

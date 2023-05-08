@@ -1,6 +1,7 @@
 package com.naipy.alpha.services;
 
 import com.naipy.alpha.entities.User;
+import com.naipy.alpha.entities.dto.UserDTO;
 import com.naipy.alpha.repositories.UserRepository;
 import com.naipy.alpha.services.exceptions.DatabaseException;
 import com.naipy.alpha.services.exceptions.ResourceNotFoundException;
@@ -12,19 +13,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository _userRepository;
 
-    public List<User> findAll () {
-        return _userRepository.findAll();
+    public List<UserDTO> findAll () {
+        return _userRepository.findAll()
+                .stream().map(UserDTO::createUserDTO)
+                .collect(Collectors.toList());
     }
 
-    public User findById (Long id) {
+    public UserDTO findById (Long id) {
         Optional<User> userOptional = _userRepository.findById(id);
-        return userOptional.orElseThrow(() -> new ResourceNotFoundException(id));
+
+        if (userOptional.isEmpty()) throw new ResourceNotFoundException(id);
+
+        return UserDTO.createUserDTO(userOptional.get());
     }
 
     public User insert (User user) {

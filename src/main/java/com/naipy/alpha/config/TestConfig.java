@@ -32,7 +32,7 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "123456");
+        /*User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "123456");
         User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456");
         _userRepository.saveAll(Arrays.asList(u1, u2));
 
@@ -69,6 +69,6 @@ public class TestConfig implements CommandLineRunner {
 
         Payment pay1 = new Payment(null, Instant.parse("2019-06-20T21:53:07Z"), o1);
         o1.setPayment(pay1);
-        _orderRepository.save(o1);
+        _orderRepository.save(o1);*/
     }
 }
