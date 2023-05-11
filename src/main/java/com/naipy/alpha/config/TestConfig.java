@@ -2,20 +2,30 @@ package com.naipy.alpha.config;
 
 import com.naipy.alpha.entities.*;
 import com.naipy.alpha.entities.enums.OrderStatus;
+import com.naipy.alpha.entities.enums.ProductStatus;
+import com.naipy.alpha.entities.enums.Role;
+import com.naipy.alpha.entities.enums.UserStatus;
 import com.naipy.alpha.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
     @Autowired
     private UserRepository _userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private OrderRepository _orderRepository;
@@ -31,6 +41,52 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        User admin = User.builder()
+                .name("Handrei Morais")
+                .email("handrei@mail.com")
+                .phone("119999999999")
+                .password(passwordEncoder.encode("123456"))
+                .status(UserStatus.ACTIVE)
+                .role(Role.ADMIN)
+                .build();
+
+        User user = User.builder()
+                .name("Bruna Meyer")
+                .email("bruna@mail.com")
+                .phone("119999999999")
+                .password(passwordEncoder.encode("123456"))
+                .status(UserStatus.ACTIVE)
+                .role(Role.USER)
+                .build();
+        _userRepository.saveAll(Arrays.asList(admin, user));
+
+        Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, user);
+        _orderRepository.save(o1);
+
+        Category cat1 = Category.builder().name("Computers").build();
+        Category cat2 = Category.builder().name("Eletronics").build();
+        Category cat3 = Category.builder().name("Books").build();
+        _categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
+
+        Product p1 = new Product(null, "The Lord of the Rings",
+                "Lorem ipsum dolor sit amet, consectetur.",
+                90.5,
+                "img-url",
+                ProductStatus.ACTIVE,
+                user);
+
+        _productRepository.save(p1);
+
+        p1.getCategories().add(cat3);
+        _productRepository.save(p1);
+
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+        _orderItemRepository.save(oi1);
+
+        Payment pay1 = new Payment(null, Instant.parse("2019-06-20T21:53:07Z"), o1);
+        o1.setPayment(pay1);
+        _orderRepository.save(o1);
 
         /*User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "123456");
         User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456");

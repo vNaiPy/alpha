@@ -6,6 +6,7 @@ import com.naipy.alpha.entities.dto.UserDTO;
 import com.naipy.alpha.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -29,17 +30,12 @@ public class UserController {
         return ResponseEntity.ok().body(userDTO);
     }
 
+    @Secured({"ADMIN"})
     @PostMapping
     public ResponseEntity<User> insert (@RequestBody User user) {
         user = _userService.insert(user);
         URI uri = UtilsForController.getURI(user.getId());
         return ResponseEntity.created(uri).body(user);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete (@PathVariable Long id) {
-        _userService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{id}")
@@ -48,4 +44,9 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete (@PathVariable Long id) {
+        _userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

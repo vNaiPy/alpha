@@ -3,6 +3,7 @@ package com.naipy.alpha.controllers.auth;
 import com.naipy.alpha.core.security.jwt.JwtService;
 import com.naipy.alpha.entities.User;
 import com.naipy.alpha.entities.enums.Role;
+import com.naipy.alpha.entities.enums.UserStatus;
 import com.naipy.alpha.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .status(UserStatus.ACTIVE)
                 .role(Role.USER)
                 .build();
         _userRepository.save(user);

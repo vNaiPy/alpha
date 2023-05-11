@@ -2,7 +2,10 @@ package com.naipy.alpha.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.entities.enums.Role;
+import com.naipy.alpha.entities.enums.UserStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +35,9 @@ public class User implements UserDetails {
     private String email;
     private String phone;
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @Enumerated(EnumType.STRING)
     private Role role;

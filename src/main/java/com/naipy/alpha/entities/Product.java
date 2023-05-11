@@ -1,6 +1,7 @@
 package com.naipy.alpha.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.naipy.alpha.entities.enums.ProductStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -19,6 +20,9 @@ public class Product implements Serializable {
     private Double price;
     private String imgUrl;
 
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
@@ -35,12 +39,13 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(Long id, String name, String description, Double price, String imgUrl, User owner) {
+    public Product(Long id, String name, String description, Double price, String imgUrl, ProductStatus status, User owner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
+        this.status = status;
         this.owner = owner;
     }
 
@@ -82,6 +87,14 @@ public class Product implements Serializable {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 
     public User getOwner() {
