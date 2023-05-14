@@ -30,6 +30,12 @@ public class ProductController {
         return ResponseEntity.ok().body(product);
     }
 
+    @GetMapping(value = "/store/{id}")
+    public ResponseEntity<List<ProductDTO>> findAllByOwnerId (@PathVariable Long id) {
+        List<ProductDTO> productDTOList = _productService.findAllByOwner(id);
+        return ResponseEntity.ok().body(productDTOList);
+    }
+
     @PostMapping
     public ResponseEntity<ProductDTO> insert (@RequestBody Product product) {
         ProductDTO productDTO = _productService.insert(product);

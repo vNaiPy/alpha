@@ -2,6 +2,7 @@ package com.naipy.alpha.entities.dto;
 
 import com.naipy.alpha.entities.Category;
 import com.naipy.alpha.entities.Product;
+import com.naipy.alpha.entities.Store;
 import com.naipy.alpha.entities.enums.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,7 @@ public class ProductDTO {
     private Double price;
     private String imgUrl;
     private ProductStatus status;
-    private UserDTO userDTO;
+    private Store store;
     private Set<Category> categories = new HashSet<>();
 
     public static ProductDTO createProductDTO (Product product) {
@@ -34,7 +35,7 @@ public class ProductDTO {
                 .price(product.getPrice())
                 .imgUrl(product.getImgUrl())
                 .status(product.getStatus())
-                .userDTO(UserDTO.createUserDTO(product.getOwner()))
+                .store(product.getOwner().getStore())
                 .categories(product.getCategories())
                 .build();
     }

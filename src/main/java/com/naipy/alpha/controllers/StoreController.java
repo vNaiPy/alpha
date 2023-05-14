@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(value = "/mystore")
+@RequestMapping(value = "/stores")
 @RequiredArgsConstructor
 public class StoreController {
 
@@ -18,9 +20,14 @@ public class StoreController {
     private final StoreService _storeService;
 
     @GetMapping
-    public ResponseEntity<Store> findStoreByCurrentUser () {
-        Store userDTO = _storeService.findStoreByCurrentUser();
-        return ResponseEntity.ok().body(userDTO);
+    public ResponseEntity<List<Store>> findAll () {
+        List<Store> storeList = _storeService.findAll();
+        return ResponseEntity.ok().body(storeList);
     }
 
+    @GetMapping(value = "/mystore")
+    public ResponseEntity<Store> findStoreByCurrentUser () {
+        Store store = _storeService.findStoreByCurrentUser();
+        return ResponseEntity.ok().body(store);
+    }
 }

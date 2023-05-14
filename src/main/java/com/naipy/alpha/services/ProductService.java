@@ -33,6 +33,10 @@ public class ProductService {
         return productOptional.get();
     }
 
+    public List<ProductDTO> findAllByOwner (Long id) {
+        return _productRepository.findAllByOwnerId(id).stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
+    }
+
     public ProductDTO insert (Product product) {
         product.setOwner(getIdCurrentUser());
         return ProductDTO.createProductDTO(_productRepository.save(product));
