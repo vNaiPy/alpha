@@ -71,16 +71,16 @@ public class TestConfig implements CommandLineRunner {
 
         user.setStore(store1);
 
-        Store store2 = Store.builder()
+        /*Store store2 = Store.builder()
                 .name("lovecathy")
                 .logoUrl("logo-url")
                 .bannerUrl("banner-url")
                 .instant(Instant.parse("2019-06-20T21:53:07Z"))
                 .owner(admin)
                 .build();
-        admin.setStore(store2);
-        _userRepository.saveAll(Arrays.asList(admin, user));
-
+        admin.setStore(store2);*/
+        //_userRepository.saveAll(Arrays.asList(admin, user));
+        _userRepository.save(user);
         Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, user);
         _orderRepository.save(o1);
 

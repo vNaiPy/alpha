@@ -3,8 +3,10 @@ package com.naipy.alpha.services;
 import com.naipy.alpha.entities.Store;
 import com.naipy.alpha.entities.User;
 import com.naipy.alpha.repositories.StoreRepository;
+import com.naipy.alpha.repositories.UserRepository;
 import com.naipy.alpha.services.exceptions.DatabaseException;
 import com.naipy.alpha.services.exceptions.ResourceNotFoundException;
+import com.naipy.alpha.services.exceptions.StoreAlreadyRegisteredException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +16,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class StoreService {
+
+    @Autowired
+    private final UserRepository _userRepository;
 
     @Autowired
     private final StoreRepository _storeRepository;
@@ -40,6 +46,25 @@ public class StoreService {
 
         if (storeOptional.isEmpty()) throw new ResourceNotFoundException("Store not exists");
         return storeOptional.get();
+    }
+
+    public Store register (Store store) {
+        try {
+            User currentUser = _userRepository.getReferenceById(getIdCurrentUser().getId());
+
+            Store store2 = Store.builder()
+                    .name(store.getName())
+                    .logoUrl(store.getLogoUrl())
+                    .bannerUrl(store.getBannerUrl())
+                    .instant(Instant.now())
+                    .owner(currentUser)
+                    .build();
+
+            currentUser.setStore(store2);
+            return _userRepository.save(currentUser).getStore();
+        } catch (DataIntegrityViolationException e) {
+            throw new StoreAlreadyRegisteredException("User already owns a store");
+        }
     }
 
     public void delete (Long ownerId) {
