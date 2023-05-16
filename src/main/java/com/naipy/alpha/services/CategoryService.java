@@ -2,6 +2,7 @@ package com.naipy.alpha.services;
 
 import com.naipy.alpha.entities.Category;
 import com.naipy.alpha.repositories.CategoryRepository;
+import com.naipy.alpha.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,11 @@ public class CategoryService {
 
     public Category findById (Long id) {
         Optional<Category> categoryOptional = _categoryRepository.findById(id);
+        if (categoryOptional.isEmpty()) throw new ResourceNotFoundException("Category not found. Id:" + id);
         return categoryOptional.get();
     }
 
+    public Category addCategory(Category category) {
+        return _categoryRepository.save(category);
+    }
 }

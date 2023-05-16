@@ -28,9 +28,7 @@ public class UserService {
 
     public UserDTO findById (Long id) {
         Optional<User> userOptional = _userRepository.findById(id);
-
         if (userOptional.isEmpty()) throw new ResourceNotFoundException(id);
-
         return UserDTO.createUserDTO(userOptional.get());
     }
 

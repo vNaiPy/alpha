@@ -6,24 +6,26 @@ import com.naipy.alpha.entities.dto.ProductDTO;
 import com.naipy.alpha.services.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/stores")
+@Controller
 @RequiredArgsConstructor
 public class StoreController {
 
     @Autowired
     private final StoreService _storeService;
 
-    @GetMapping
-    public ResponseEntity<List<Store>> findAll () {
-        List<Store> storeList = _storeService.findAll();
-        return ResponseEntity.ok().body(storeList);
+    @QueryMapping
+    public List<Store> findAll () {
+        return _storeService.findAll();
     }
 
     @GetMapping(value = "/mystore")
@@ -32,10 +34,8 @@ public class StoreController {
         return ResponseEntity.ok().body(store);
     }
 
-    @PostMapping
-    public ResponseEntity<Store> storeRegistration (@RequestBody Store store) {
-        store = _storeService.register(store);
-        URI location = UtilsForController.getURI(store.getId());
-        return ResponseEntity.created(location).body(store);
+    @MutationMapping
+    public Store storeRegistration (@Argument Store store) {
+        return _storeService.register(store);
     }
 }

@@ -31,7 +31,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**")
                 .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/h2-ui/**"))
+                .requestMatchers(new AntPathRequestMatcher("/h2-ui/**"), new AntPathRequestMatcher("/graphql/**"))
                 .permitAll()
                 .anyRequest()
                 .authenticated()

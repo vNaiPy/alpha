@@ -1,0 +1,52 @@
+type Mutation {
+    addCategory (category: CategoryInput): Category
+    register (request: RegisterRequest): AuthenticationResponse
+    authenticate (request: AuthenticationRequest): AuthenticationResponse
+    storeRegistration(store: StoreInput): Store
+}
+
+type Query {
+        categoryById (id: ID): Category
+        findAllCategories: [Category]
+}
+
+#Category
+input CategoryInput {
+    name: String!
+}
+
+type Category {
+    id: ID!
+    name: String
+}
+
+#Auth
+input RegisterRequest {
+    name: String!,
+    email: String!,
+    phone: String!,
+    password: String!,
+}
+
+input AuthenticationRequest {
+    username: String!,
+    password: String!
+}
+
+type AuthenticationResponse {
+    token: String!
+}
+
+#Store
+input StoreInput {
+    name: String!,
+    logoUrl: String!,
+    bannerUrl: String!
+}
+
+type Store {
+    name: String,
+    logoUrl: String,
+    bannerUrl: String,
+    instant: String
+}
