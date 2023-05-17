@@ -1,13 +1,21 @@
 type Mutation {
-    addCategory (category: CategoryInput): Category
+    #Auth
     register (request: RegisterRequest): AuthenticationResponse
     authenticate (request: AuthenticationRequest): AuthenticationResponse
+    #Store
     storeRegistration(store: StoreInput): Store
+    #Category
+    addCategory (category: CategoryInput): Category
 }
 
 type Query {
-        categoryById (id: ID): Category
-        findAllCategories: [Category]
+    #Store
+    findStoreByCurrentUser: Store
+    findAllStore: [Store]
+    #Category
+    categoryById (id: ID): Category
+    findAllCategories: [Category]
+
 }
 
 #Category
