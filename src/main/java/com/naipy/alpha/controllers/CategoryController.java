@@ -22,7 +22,7 @@ import java.util.Optional;
 public class CategoryController {
 
     @Autowired
-    private CategoryService _categoryService;
+    private final CategoryService _categoryService;
 
     @MutationMapping()
     Category addCategory (@Argument CategoryInput category) {

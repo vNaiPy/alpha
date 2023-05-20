@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,7 +60,7 @@ public class TestConfig implements CommandLineRunner {
                 .status(UserStatus.ACTIVE)
                 .role(Role.USER)
                 .build();
-        _userRepository.saveAll(Arrays.asList(admin, user));
+        _userRepository.saveAll(List.of(admin, user));
 
         Store store1 = Store.builder()
                 .name("dreams")
@@ -88,7 +89,7 @@ public class TestConfig implements CommandLineRunner {
         Category cat1 = Category.builder().name("Computers").build();
         Category cat2 = Category.builder().name("Eletronics").build();
         Category cat3 = Category.builder().name("Books").build();
-        _categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
+        _categoryRepository.saveAll(List.of(cat1, cat2, cat3));
 
         Product p1 = new Product(null, "The Lord of the Rings",
                 "Lorem ipsum dolor sit amet, consectetur.",

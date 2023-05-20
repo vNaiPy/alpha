@@ -63,7 +63,7 @@ type Product {
     price: Float,
     imgUrl: String,
     status: String,
-    owner: User,
+    store: Store,
     categories: [Category],
     items: [OrderItem]
 }
@@ -93,15 +93,11 @@ type Order {
 }
 
 #OrderItem
-type OrderItemPK {
-    order: Order,
-    product: Product
-}
-
 type OrderItem {
-    id: OrderItemPK
     quantity: Int,
     price: Float
+    product: Product
+    subTotal: Float
 }
 
 #Payment
