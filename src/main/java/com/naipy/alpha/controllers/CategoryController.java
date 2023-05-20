@@ -38,7 +38,7 @@ public class CategoryController {
     }
 
     @QueryMapping()
-    Category categoryById (@Argument Long id) {
+    Category findByCategoryId (@Argument Long id) {
         return _categoryService.findById(id);
     }
 

@@ -21,9 +21,9 @@ public class OrderService {
         return _orderRepository.findAll().stream().map(OrderDTO::createOrderDTO).collect(Collectors.toList());
     }
 
-    public Order findById (Long id) {
+    public OrderDTO findById (Long id) {
         Optional<Order> orderOptional = _orderRepository.findById(id);
         if(orderOptional.isEmpty()) throw new ResourceNotFoundException("Order not found. Id: " + id);
-        return orderOptional.get();
+        return OrderDTO.createOrderDTO(orderOptional.get());
     }
 }

@@ -13,7 +13,7 @@ type Query {
     findStoreByCurrentUser: Store
     findAllStore: [Store]
     #Category
-    categoryById (id: ID): Category
+    findByCategoryId (id: ID): Category
     findAllCategories: [Category]
     #Order
     findAllOrders: [Order]

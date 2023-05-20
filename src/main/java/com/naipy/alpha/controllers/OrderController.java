@@ -29,7 +29,7 @@ public class OrderController {
     }
 
     @QueryMapping
-    public Order findByOrderId (@Argument Long id) {
+    public OrderDTO findByOrderId (@Argument Long id) {
         return _orderService.findById(id);
     }
 }
