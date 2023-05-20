@@ -6,6 +6,7 @@ type Mutation {
     storeRegistration(store: StoreInput): Store
     #Category
     addCategory (category: CategoryInput): Category
+    deleteCategoryById (id: ID): ID
 }
 
 type Query {

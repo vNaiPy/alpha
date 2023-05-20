@@ -42,5 +42,11 @@ public class CategoryController {
         return _categoryService.findById(id);
     }
 
+    @MutationMapping
+    Long deleteCategoryById (@Argument Long id) {
+        _categoryService.delete(id);
+        return id;
+    }
+
     record CategoryInput (String name) {}
 }

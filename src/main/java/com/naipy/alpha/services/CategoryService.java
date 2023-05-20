@@ -2,8 +2,11 @@ package com.naipy.alpha.services;
 
 import com.naipy.alpha.entities.Category;
 import com.naipy.alpha.repositories.CategoryRepository;
+import com.naipy.alpha.services.exceptions.DatabaseException;
 import com.naipy.alpha.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,5 +30,17 @@ public class CategoryService {
 
     public Category addCategory(Category category) {
         return _categoryRepository.save(category);
+    }
+
+    public void delete (Long id) {
+        try {
+            _categoryRepository.deleteById(id);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 }
