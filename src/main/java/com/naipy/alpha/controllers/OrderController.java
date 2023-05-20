@@ -1,6 +1,7 @@
 package com.naipy.alpha.controllers;
 
 import com.naipy.alpha.entities.Order;
+import com.naipy.alpha.entities.dto.OrderDTO;
 import com.naipy.alpha.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class OrderController {
     private OrderService _orderService;
 
     @GetMapping
-    public ResponseEntity<List<Order>> findAll () {
-        List<Order> orderList = _orderService.findAll();
+    public ResponseEntity<List<OrderDTO>> findAll () {
+        List<OrderDTO> orderList = _orderService.findAll();
         return ResponseEntity.ok().body(orderList);
     }
 

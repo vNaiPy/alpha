@@ -81,7 +81,8 @@ public class TestConfig implements CommandLineRunner {
         admin.setStore(store2);*/
         //_userRepository.saveAll(Arrays.asList(admin, user));
         _userRepository.save(user);
-        Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, user);
+
+        Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, admin);
         _orderRepository.save(o1);
 
         Category cat1 = Category.builder().name("Computers").build();

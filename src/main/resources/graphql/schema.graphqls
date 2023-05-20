@@ -15,7 +15,9 @@ type Query {
     #Category
     categoryById (id: ID): Category
     findAllCategories: [Category]
-
+    #Order
+    findAllOrders: [Order]
+    findByOrderId (id: ID): Order
 }
 
 #Category
@@ -45,6 +47,27 @@ type AuthenticationResponse {
     token: String!
 }
 
+#User
+type User {
+    id: ID,
+    name: String
+    email: String,
+    phone: String
+}
+
+#Product
+type Product {
+    id: ID,
+    name: String,
+    description: String,
+    price: Float,
+    imgUrl: String,
+    status: String,
+    owner: User,
+    categories: [Category],
+    items: [OrderItem]
+}
+
 #Store
 input StoreInput {
     name: String!,
@@ -56,5 +79,33 @@ type Store {
     name: String,
     logoUrl: String,
     bannerUrl: String,
+    instant: String
+}
+
+#Order
+type Order {
+    id: ID,
+    moment: String
+    orderStatus: String,
+    client: User,
+    items: [OrderItem]
+    payment: Payment
+}
+
+#OrderItem
+type OrderItemPK {
+    order: Order,
+    product: Product
+}
+
+type OrderItem {
+    id: OrderItemPK
+    quantity: Int,
+    price: Float
+}
+
+#Payment
+type Payment {
+    id: ID,
     instant: String
 }
