@@ -4,39 +4,40 @@ import com.naipy.alpha.entities.Product;
 import com.naipy.alpha.entities.User;
 import com.naipy.alpha.entities.dto.ProductDTO;
 import com.naipy.alpha.services.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/products")
+@Controller
+@RequiredArgsConstructor
 public class ProductController {
 
     @Autowired
-    private ProductService _productService;
+    private final ProductService _productService;
 
-    @GetMapping
-    public ResponseEntity<List<ProductDTO>> findAll () {
-        List<ProductDTO> productList = _productService.findAll();
-        return ResponseEntity.ok().body(productList);
+    @QueryMapping
+    public List<ProductDTO> findAllProducts () {
+        return _productService.findAll();
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Product> findById (@PathVariable Long id) {
-        Product product = _productService.findById(id);
-        return ResponseEntity.ok().body(product);
+    @QueryMapping
+    public ProductDTO findByProductId (@Argument Long id) {
+        return _productService.findById(id);
     }
 
-    @GetMapping(value = "/store/{id}")
-    public ResponseEntity<List<ProductDTO>> findAllByOwnerId (@PathVariable Long id) {
-        List<ProductDTO> productDTOList = _productService.findAllByOwner(id);
-        return ResponseEntity.ok().body(productDTOList);
+    @QueryMapping
+    public List<ProductDTO> findAllProductsByOwnerId (@Argument Long id) {
+        return _productService.findAllByOwner(id);
     }
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<ProductDTO> insert (@RequestBody Product product) {
         ProductDTO productDTO = _productService.insert(product);
         URI location = UtilsForController.getURI(productDTO.getId());
@@ -53,5 +54,5 @@ public class ProductController {
     public ResponseEntity<Void> delete (@PathVariable Long id) {
         _productService.delete(id);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 }

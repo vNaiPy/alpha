@@ -28,9 +28,10 @@ public class ProductService {
         return _productRepository.findAll().stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
     }
 
-    public Product findById (Long id) {
+    public ProductDTO findById (Long id) {
         Optional<Product> productOptional = _productRepository.findById(id);
-        return productOptional.get();
+        if (productOptional.isEmpty()) throw new ResourceNotFoundException("Product not found. Id:" + id);
+        return ProductDTO.createProductDTO(productOptional.get());
     }
 
     public List<ProductDTO> findAllByOwner (Long id) {
