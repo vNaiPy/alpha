@@ -1,11 +1,15 @@
 package com.naipy.alpha.services;
 
+import com.naipy.alpha.entities.Category;
 import com.naipy.alpha.entities.Product;
 import com.naipy.alpha.entities.User;
 import com.naipy.alpha.entities.dto.ProductDTO;
+import com.naipy.alpha.entities.enums.ProductStatus;
 import com.naipy.alpha.repositories.ProductRepository;
+import com.naipy.alpha.repositories.StoreRepository;
 import com.naipy.alpha.services.exceptions.DatabaseException;
 import com.naipy.alpha.services.exceptions.ResourceNotFoundException;
+import com.naipy.alpha.services.exceptions.StoreNotRegisteredException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,10 +20,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
+
+    @Autowired
+    private StoreRepository _storeRepository;
 
     @Autowired
     private ProductRepository _productRepository;
@@ -38,9 +46,16 @@ public class ProductService {
         return _productRepository.findAllByOwnerId(id).stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
     }
 
-    public ProductDTO insert (Product product) {
+    public ProductDTO insert (Product product, Set<Category> categoryIdSet) {
+        if (!_storeRepository.existsById(getIdCurrentUser().getId())) throw new StoreNotRegisteredException("Store not found to insert product");
+
+        product.setStatus(ProductStatus.PENDING);
         product.setOwner(getIdCurrentUser());
-        return ProductDTO.createProductDTO(_productRepository.save(product));
+        Product savedProduct = _productRepository.save(product);
+        savedProduct.getCategories().addAll(categoryIdSet);
+        savedProduct.setStatus(ProductStatus.ACTIVE);
+        savedProduct = _productRepository.save(savedProduct);
+        return ProductDTO.createProductDTO(savedProduct);
     }
 
     public ProductDTO update (Long id, Product product) {

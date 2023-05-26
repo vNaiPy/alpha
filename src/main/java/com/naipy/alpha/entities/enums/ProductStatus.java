@@ -4,6 +4,7 @@ public enum ProductStatus {
     ACTIVE,
     DRAFT,
     EXPIRED,
+    PENDING,
     INACTIVE,
     BANNED
 }
