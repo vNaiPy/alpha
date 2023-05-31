@@ -1,0 +1,18 @@
+input ProductInput {
+    title: String!,
+    description: String,
+    price: Float!,
+    imgUrl: String!,
+    categoryIdList: [ID]!
+}
+
+type Product {
+    id: ID,
+    title: String!,
+    description: String,
+    price: Float!,
+    imgUrl: String!,
+    status: String,
+    store: Store!,
+    categories: [Category]
+}

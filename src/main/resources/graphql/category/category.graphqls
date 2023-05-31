@@ -1,0 +1,9 @@
+#Category
+input CategoryInput {
+    name: String!
+}
+
+type Category {
+    id: ID!
+    name: String
+}

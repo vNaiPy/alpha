@@ -1,0 +1,12 @@
+input StoreInput {
+    name: String!,
+    logoUrl: String!,
+    bannerUrl: String!
+}
+
+type Store {
+    name: String!,
+    logoUrl: String!,
+    bannerUrl: String,
+    instant: String
+}

@@ -1,0 +1,15 @@
+input RegisterRequest {
+    name: String!,
+    email: String!,
+    phone: String!,
+    password: String!,
+}
+
+input AuthenticationRequest {
+    username: String!,
+    password: String!
+}
+
+type AuthenticationResponse {
+    token: String!
+}

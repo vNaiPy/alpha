@@ -1,0 +1,15 @@
+type Order {
+    id: ID,
+    moment: String
+    orderStatus: String,
+    client: User,
+    items: [OrderItem]
+    payment: Payment
+}
+
+type OrderItem {
+    quantity: Int,
+    price: Float
+    product: Product
+    subTotal: Float
+}

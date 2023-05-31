@@ -44,7 +44,7 @@ public class ProductController {
     @MutationMapping
     public ProductDTO addProducts (@Argument ProductInput productList) {
         Product newProduct = new Product();
-        newProduct.setName(productList.name);
+        newProduct.setName(productList.title);
         newProduct.setDescription(productList.description);
         newProduct.setPrice(productList.price);
         newProduct.setImgUrl(productList.imgUrl);
@@ -55,7 +55,7 @@ public class ProductController {
         return _productService.insert(newProduct, categoryIdSet);
     }
 
-    record ProductInput (String name, String description, Double price, String imgUrl, List<Long> categoryIdList) {}
+    record ProductInput (String title, String description, Double price, String imgUrl, List<Long> categoryIdList) {}
 
     /*@PutMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> update (@PathVariable Long id, @RequestBody Product product) {

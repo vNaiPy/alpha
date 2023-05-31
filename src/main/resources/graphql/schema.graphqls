@@ -1,14 +1,14 @@
 type Mutation {
     #Auth
-    register (request: RegisterRequest): AuthenticationResponse
-    authenticate (request: AuthenticationRequest): AuthenticationResponse
+    register (request: RegisterRequest!): AuthenticationResponse!
+    authenticate (request: AuthenticationRequest!): AuthenticationResponse!
     #Store
-    storeRegistration(store: StoreInput): Store
+    storeRegistration(store: StoreInput!): Store!
     #Product
-    addProducts (productList: ProductInput): Product
+    addProducts (productList: ProductInput!): Product!
     #Category
-    addCategory (category: CategoryInput): Category
-    deleteCategoryById (id: ID): ID
+    addCategory (category: CategoryInput!): Category!
+    deleteCategoryById (id: ID!): ID!
 }
 
 type Query {
@@ -25,97 +25,4 @@ type Query {
     #Order
     findAllOrders: [Order]
     findByOrderId (id: ID): Order
-}
-
-#Category
-input CategoryInput {
-    name: String!
-}
-
-type Category {
-    id: ID!
-    name: String
-}
-
-#Auth
-input RegisterRequest {
-    name: String!,
-    email: String!,
-    phone: String!,
-    password: String!,
-}
-
-input AuthenticationRequest {
-    username: String!,
-    password: String!
-}
-
-type AuthenticationResponse {
-    token: String!
-}
-
-#User
-type User {
-    id: ID,
-    name: String
-    email: String,
-    phone: String
-}
-
-#Product
-input ProductInput {
-    name: String,
-    description: String,
-    price: Float,
-    imgUrl: String,
-    categoryIdList: [ID]
-}
-
-type Product {
-    id: ID,
-    name: String,
-    description: String,
-    price: Float,
-    imgUrl: String,
-    status: String,
-    store: Store,
-    categories: [Category]
-}
-
-#Store
-input StoreInput {
-    name: String!,
-    logoUrl: String!,
-    bannerUrl: String!
-}
-
-type Store {
-    name: String,
-    logoUrl: String,
-    bannerUrl: String,
-    instant: String
-}
-
-#Order
-type Order {
-    id: ID,
-    moment: String
-    orderStatus: String,
-    client: User,
-    items: [OrderItem]
-    payment: Payment
-}
-
-#OrderItem
-type OrderItem {
-    quantity: Int,
-    price: Float
-    product: Product
-    subTotal: Float
-}
-
-#Payment
-type Payment {
-    id: ID,
-    instant: String
 }
