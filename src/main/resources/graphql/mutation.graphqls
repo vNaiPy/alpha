@@ -10,19 +10,3 @@ type Mutation {
     addCategory (category: CategoryInput!): Category!
     deleteCategoryById (id: ID!): ID!
 }
-
-type Query {
-    #Store
-    findStoreByCurrentUser: Store
-    findAllStore: [Store]
-    #Product
-    findAllProducts: [Product]
-    findByProductId (id: ID): Product
-    findAllProductsByOwnerId (id: ID): [Product]
-    #Category
-    findByCategoryId (id: ID): Category
-    findAllCategories: [Category]
-    #Order
-    findAllOrders: [Order]
-    findByOrderId (id: ID): Order
-}
