@@ -18,6 +18,9 @@ spring:
   graphql:
     graphiql:
       enabled: true
-graphql:
-  servlet:
-    maxQueryDepth: 5
+      path: /graphiql
+    servlet:
+      maxQueryDepth: 5
+    schema:
+      printer:
+        enabled: false

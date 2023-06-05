@@ -22,5 +22,4 @@ public class AuthenticationController {
     public AuthenticationResponse authenticate (@Argument AuthenticationRequest request) {
         return _authService.authenticate(request);
     }
-
 }

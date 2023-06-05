@@ -1,7 +1,6 @@
 package com.naipy.alpha.core.security;
 
 import com.naipy.alpha.core.security.jwt.JwtAuthenticationFilter;
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,9 +28,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers("/api/v1/auth/**", "/graphiql/**", "/graphql/**")
                 .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/h2-ui/**"), new AntPathRequestMatcher("/graphql/**"))
+                .requestMatchers(new AntPathRequestMatcher("/h2-ui/**"))
                 .permitAll()
                 .anyRequest()
                 .authenticated()
