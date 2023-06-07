@@ -3,6 +3,7 @@ package com.naipy.alpha.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.entities.enums.Role;
 import com.naipy.alpha.entities.enums.UserStatus;
+import com.naipy.alpha.token.Token;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -44,6 +45,9 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
     private Store store;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokenList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "client")
