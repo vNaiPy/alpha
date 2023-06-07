@@ -5,6 +5,9 @@ import com.naipy.alpha.entities.User;
 import com.naipy.alpha.entities.enums.Role;
 import com.naipy.alpha.entities.enums.UserStatus;
 import com.naipy.alpha.repositories.UserRepository;
+import com.naipy.alpha.token.Token;
+import com.naipy.alpha.token.TokenRepository;
+import com.naipy.alpha.token.TokenType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +31,9 @@ public class AuthenticationService {
     @Autowired
     private final AuthenticationManager authManager;
 
+    @Autowired
+    private final TokenRepository _tokenRepository;
+
     public AuthenticationResponse register (RegisterRequest request) {
         var user = User.builder()
                 .name(request.getName())
@@ -37,9 +43,11 @@ public class AuthenticationService {
                 .status(UserStatus.ACTIVE)
                 .role(Role.USER)
                 .build();
-        _userRepository.save(user);
+        var savedUser = _userRepository.save(user);
 
         var jwtToken = jwtService.generateToken(user);
+        saveUserToken(savedUser, jwtToken);
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -55,8 +63,20 @@ public class AuthenticationService {
         var user = _userRepository.findByEmail(request.getUsername())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
+        saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    private void saveUserToken (User user, String jwtToken) {
+        var token = Token.builder()
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .user(user)
+                .build();
+        _tokenRepository.save(token);
     }
 }
