@@ -1,5 +1,5 @@
 input ProductInput {
-    title: String!,
+    name: String!,
     description: String,
     price: Float!,
     imgUrl: String!,
@@ -8,7 +8,7 @@ input ProductInput {
 
 type Product {
     id: ID,
-    title: String!,
+    name: String!,
     description: String,
     price: Float!,
     imgUrl: String!,
