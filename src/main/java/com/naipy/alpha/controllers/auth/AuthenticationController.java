@@ -4,22 +4,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
     @Autowired
-    private final AuthenticationService _authService;
+    private AuthenticationService _authService;
 
-    @MutationMapping
-    public AuthenticationResponse register (@Argument RegisterRequest request) {
-        return _authService.register(request);
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register (@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(_authService.register(request));
     }
 
-    @MutationMapping
-    public AuthenticationResponse authenticate (@Argument AuthenticationRequest request) {
-        return _authService.authenticate(request);
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate (@RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(_authService.authenticate(request));
     }
 }

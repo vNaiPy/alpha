@@ -2,7 +2,6 @@ package com.naipy.alpha.controllers;
 
 import com.naipy.alpha.entities.Category;
 import com.naipy.alpha.entities.Product;
-import com.naipy.alpha.entities.User;
 import com.naipy.alpha.entities.dto.ProductDTO;
 import com.naipy.alpha.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,6 +24,7 @@ public class ProductController {
     private final ProductService _productService;
 
     @QueryMapping
+    @Secured("USER")
     public List<ProductDTO> findAllProducts () {
         return _productService.findAll();
     }
