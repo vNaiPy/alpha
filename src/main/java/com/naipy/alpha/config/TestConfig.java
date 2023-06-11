@@ -49,7 +49,7 @@ public class TestConfig implements CommandLineRunner {
                 .phone("119999999999")
                 .password(passwordEncoder.encode("123456"))
                 .status(UserStatus.ACTIVE)
-                .roles(List.of(Role.USER, Role.ADMIN))
+                .roles(List.of(Role.ADMIN, Role.USER))
                 .build();
 
         User user = User.builder()
