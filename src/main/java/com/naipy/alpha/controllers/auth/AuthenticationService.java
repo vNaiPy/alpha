@@ -43,7 +43,7 @@ public class AuthenticationService {
                 .phone(request.getPhone())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .status(UserStatus.ACTIVE)
-                .role(Role.USER)
+                .roles(List.of(Role.USER))
                 .build();
         var savedUser = _userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

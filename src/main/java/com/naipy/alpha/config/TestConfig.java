@@ -49,7 +49,7 @@ public class TestConfig implements CommandLineRunner {
                 .phone("119999999999")
                 .password(passwordEncoder.encode("123456"))
                 .status(UserStatus.ACTIVE)
-                .role(Role.ADMIN)
+                .roles(List.of(Role.USER, Role.ADMIN))
                 .build();
 
         User user = User.builder()
@@ -58,7 +58,7 @@ public class TestConfig implements CommandLineRunner {
                 .phone("119999999999")
                 .password(passwordEncoder.encode("123456"))
                 .status(UserStatus.ACTIVE)
-                .role(Role.USER)
+                .roles(List.of(Role.USER))
                 .build();
         _userRepository.saveAll(List.of(admin, user));
 

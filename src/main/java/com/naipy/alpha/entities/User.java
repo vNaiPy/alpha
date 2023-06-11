@@ -41,7 +41,7 @@ public class User implements UserDetails {
     private UserStatus status;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private List<Role> roles;
 
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
     private Store store;
@@ -59,7 +59,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.name())).toList();
     }
 
     @Override
