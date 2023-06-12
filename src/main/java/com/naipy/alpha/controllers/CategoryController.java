@@ -8,6 +8,8 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +27,13 @@ public class CategoryController {
     private final CategoryService _categoryService;
 
     @MutationMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
     Category addCategory (@Argument CategoryInput category) {
-        return _categoryService.addCategory(
-                Category.builder()
-                        .name(category.name)
-                        .build());
+        return _categoryService.addCategory(Category.builder().name(category.name).build());
     }
 
     @QueryMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
     List<Category> findAllCategories () {
         return _categoryService.findAll();
     }
@@ -43,6 +44,7 @@ public class CategoryController {
     }
 
     @MutationMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     Long deleteCategoryById (@Argument Long id) {
         _categoryService.delete(id);
         return id;

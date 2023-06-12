@@ -43,7 +43,6 @@ public class StoreService {
 
     public Store findStoreByCurrentUser () {
         Optional<Store> storeOptional = _storeRepository.findByOwnerId(getIdCurrentUser().getId());
-
         if (storeOptional.isEmpty()) throw new ResourceNotFoundException("Store not exists");
         return storeOptional.get();
     }
@@ -52,7 +51,7 @@ public class StoreService {
         try {
             User currentUser = _userRepository.getReferenceById(getIdCurrentUser().getId());
 
-            Store store2 = Store.builder()
+            Store newStore = Store.builder()
                     .name(store.getName())
                     .logoUrl(store.getLogoUrl())
                     .bannerUrl(store.getBannerUrl())
@@ -60,7 +59,7 @@ public class StoreService {
                     .owner(currentUser)
                     .build();
 
-            currentUser.setStore(store2);
+            currentUser.setStore(newStore);
             return _userRepository.save(currentUser).getStore();
         } catch (DataIntegrityViolationException e) {
             throw new StoreAlreadyRegisteredException("User already owns a store");

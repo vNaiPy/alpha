@@ -22,12 +22,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    @Autowired
     private final JwtAuthenticationFilter jwtAuthFilter;
-
-    @Autowired
     private final AuthenticationProvider authenticationProvider;
-
     private final LogoutHandler logoutHandler;
 
     @Bean

@@ -48,14 +48,12 @@ public class ProductService {
 
     public ProductDTO insert (Product product, Set<Category> categoryIdSet) {
         if (!_storeRepository.existsById(getIdCurrentUser().getId())) throw new StoreNotRegisteredException("Store not found to insert product");
-
         product.setStatus(ProductStatus.PENDING);
         product.setOwner(getIdCurrentUser());
         Product savedProduct = _productRepository.save(product);
         savedProduct.getCategories().addAll(categoryIdSet);
         savedProduct.setStatus(ProductStatus.ACTIVE);
-        savedProduct = _productRepository.save(savedProduct);
-        return ProductDTO.createProductDTO(savedProduct);
+        return ProductDTO.createProductDTO(_productRepository.save(savedProduct));
     }
 
     public ProductDTO update (Long id, Product product) {

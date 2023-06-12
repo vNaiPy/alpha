@@ -40,6 +40,7 @@ public class ProductController {
     }
 
     @MutationMapping
+    @Secured("USER")
     public ProductDTO addProducts (@Argument ProductInput productList) {
         Product newProduct = new Product();
         newProduct.setName(productList.title);
