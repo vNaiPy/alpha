@@ -2,7 +2,7 @@ package com.naipy.alpha.modules.product.service;
 
 import com.naipy.alpha.modules.category.model.Category;
 import com.naipy.alpha.modules.product.model.Product;
-import com.naipy.alpha.modules.auth.models.User;
+import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.product.model.ProductDTO;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
 import com.naipy.alpha.modules.product.repository.ProductRepository;

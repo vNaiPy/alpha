@@ -1,7 +1,7 @@
 package com.naipy.alpha.modules.order.models;
 
 import com.naipy.alpha.modules.order_item.model.OrderItemDTO;
-import com.naipy.alpha.modules.auth.models.UserDTO;
+import com.naipy.alpha.modules.user.models.UserDTO;
 import com.naipy.alpha.modules.order.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

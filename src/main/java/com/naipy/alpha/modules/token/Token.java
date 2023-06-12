@@ -1,6 +1,6 @@
 package com.naipy.alpha.modules.token;
 
-import com.naipy.alpha.modules.auth.models.User;
+import com.naipy.alpha.modules.user.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

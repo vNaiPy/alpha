@@ -1,9 +1,9 @@
-package com.naipy.alpha.modules.auth.controller;
+package com.naipy.alpha.modules.user.controllers;
 
-import com.naipy.alpha.modules.auth.models.AuthenticationRequest;
-import com.naipy.alpha.modules.auth.models.AuthenticationResponse;
-import com.naipy.alpha.modules.auth.service.AuthenticationService;
-import com.naipy.alpha.modules.auth.models.RegisterRequest;
+import com.naipy.alpha.modules.user.models.AuthenticationRequest;
+import com.naipy.alpha.modules.user.models.AuthenticationResponse;
+import com.naipy.alpha.modules.user.service.AuthenticationService;
+import com.naipy.alpha.modules.user.models.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

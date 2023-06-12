@@ -1,9 +1,9 @@
 package com.naipy.alpha.modules.store.service;
 
 import com.naipy.alpha.modules.store.model.Store;
-import com.naipy.alpha.modules.auth.models.User;
+import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.store.repository.StoreRepository;
-import com.naipy.alpha.modules.auth.repository.UserRepository;
+import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
 import com.naipy.alpha.modules.exceptions.services.StoreAlreadyRegisteredException;

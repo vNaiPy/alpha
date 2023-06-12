@@ -2,10 +2,10 @@ package com.naipy.alpha.config;
 
 import com.naipy.alpha.modules.order.enums.OrderStatus;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
-import com.naipy.alpha.modules.auth.models.Role;
-import com.naipy.alpha.modules.auth.enums.UserStatus;
-import com.naipy.alpha.modules.auth.models.User;
-import com.naipy.alpha.modules.auth.repository.UserRepository;
+import com.naipy.alpha.modules.user.models.Role;
+import com.naipy.alpha.modules.user.enums.UserStatus;
+import com.naipy.alpha.modules.user.models.User;
+import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.category.model.Category;
 import com.naipy.alpha.modules.category.repository.CategoryRepository;
 import com.naipy.alpha.modules.order.models.Order;

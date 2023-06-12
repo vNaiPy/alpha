@@ -1,13 +1,13 @@
-package com.naipy.alpha.modules.auth.service;
+package com.naipy.alpha.modules.user.service;
 
 import com.naipy.alpha.core.security.jwt.JwtService;
-import com.naipy.alpha.modules.auth.models.User;
-import com.naipy.alpha.modules.auth.models.Role;
-import com.naipy.alpha.modules.auth.enums.UserStatus;
-import com.naipy.alpha.modules.auth.models.AuthenticationRequest;
-import com.naipy.alpha.modules.auth.models.AuthenticationResponse;
-import com.naipy.alpha.modules.auth.models.RegisterRequest;
-import com.naipy.alpha.modules.auth.repository.UserRepository;
+import com.naipy.alpha.modules.user.models.User;
+import com.naipy.alpha.modules.user.models.Role;
+import com.naipy.alpha.modules.user.enums.UserStatus;
+import com.naipy.alpha.modules.user.models.AuthenticationRequest;
+import com.naipy.alpha.modules.user.models.AuthenticationResponse;
+import com.naipy.alpha.modules.user.models.RegisterRequest;
+import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.token.Token;
 import com.naipy.alpha.modules.token.TokenRepository;
 import com.naipy.alpha.modules.token.TokenType;

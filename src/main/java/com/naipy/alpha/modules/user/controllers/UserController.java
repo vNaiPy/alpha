@@ -1,10 +1,10 @@
-package com.naipy.alpha.modules.auth.controller;
+package com.naipy.alpha.modules.user.controllers;
 
 import com.naipy.alpha.modules.utils.ControllerUtils;
-import com.naipy.alpha.modules.auth.models.User;
+import com.naipy.alpha.modules.user.models.User;
 
-import com.naipy.alpha.modules.auth.models.UserDTO;
-import com.naipy.alpha.modules.auth.service.UserService;
+import com.naipy.alpha.modules.user.models.UserDTO;
+import com.naipy.alpha.modules.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;

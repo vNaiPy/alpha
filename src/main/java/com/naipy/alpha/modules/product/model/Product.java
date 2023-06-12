@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order.models.Order;
 import com.naipy.alpha.modules.order_item.model.OrderItem;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
-import com.naipy.alpha.modules.auth.models.User;
+import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.category.model.Category;
 import jakarta.persistence.*;
 

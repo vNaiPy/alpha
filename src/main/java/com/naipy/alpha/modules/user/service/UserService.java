@@ -1,8 +1,8 @@
-package com.naipy.alpha.modules.auth.service;
+package com.naipy.alpha.modules.user.service;
 
-import com.naipy.alpha.modules.auth.models.User;
-import com.naipy.alpha.modules.auth.models.UserDTO;
-import com.naipy.alpha.modules.auth.repository.UserRepository;
+import com.naipy.alpha.modules.user.models.User;
+import com.naipy.alpha.modules.user.models.UserDTO;
+import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;

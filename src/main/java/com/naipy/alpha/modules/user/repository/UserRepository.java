@@ -1,6 +1,6 @@
-package com.naipy.alpha.modules.auth.repository;
+package com.naipy.alpha.modules.user.repository;
 
-import com.naipy.alpha.modules.auth.models.User;
+import com.naipy.alpha.modules.user.models.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

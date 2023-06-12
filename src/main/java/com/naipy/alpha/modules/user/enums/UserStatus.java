@@ -1,4 +1,4 @@
-package com.naipy.alpha.modules.auth.enums;
+package com.naipy.alpha.modules.user.enums;
 
 public enum UserStatus {
 

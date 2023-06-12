@@ -3,7 +3,7 @@ package com.naipy.alpha.modules.order.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.naipy.alpha.modules.order_item.model.OrderItem;
 import com.naipy.alpha.modules.order.enums.OrderStatus;
-import com.naipy.alpha.modules.auth.models.User;
+import com.naipy.alpha.modules.user.models.User;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
