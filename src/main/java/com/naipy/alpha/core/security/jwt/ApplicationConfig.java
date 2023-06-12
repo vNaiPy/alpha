@@ -1,6 +1,6 @@
 package com.naipy.alpha.core.security.jwt;
 
-import com.naipy.alpha.repositories.UserRepository;
+import com.naipy.alpha.modules.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,11 +1,21 @@
 package com.naipy.alpha.config;
 
-import com.naipy.alpha.entities.*;
-import com.naipy.alpha.entities.enums.OrderStatus;
-import com.naipy.alpha.entities.enums.ProductStatus;
-import com.naipy.alpha.entities.enums.Role;
-import com.naipy.alpha.entities.enums.UserStatus;
-import com.naipy.alpha.repositories.*;
+import com.naipy.alpha.modules.order.enums.OrderStatus;
+import com.naipy.alpha.modules.product.enums.ProductStatus;
+import com.naipy.alpha.modules.auth.models.Role;
+import com.naipy.alpha.modules.auth.enums.UserStatus;
+import com.naipy.alpha.modules.auth.models.User;
+import com.naipy.alpha.modules.auth.repository.UserRepository;
+import com.naipy.alpha.modules.category.model.Category;
+import com.naipy.alpha.modules.category.repository.CategoryRepository;
+import com.naipy.alpha.modules.order.models.Order;
+import com.naipy.alpha.modules.order.models.Payment;
+import com.naipy.alpha.modules.order.repository.OrderRepository;
+import com.naipy.alpha.modules.order_item.model.OrderItem;
+import com.naipy.alpha.modules.order_item.repository.OrderItemRepository;
+import com.naipy.alpha.modules.product.model.Product;
+import com.naipy.alpha.modules.product.repository.ProductRepository;
+import com.naipy.alpha.modules.store.model.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +23,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Configuration
 @Profile("test")

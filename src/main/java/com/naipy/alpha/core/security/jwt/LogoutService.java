@@ -1,7 +1,7 @@
 package com.naipy.alpha.core.security.jwt;
 
-import com.naipy.alpha.token.Token;
-import com.naipy.alpha.token.TokenRepository;
+import com.naipy.alpha.modules.token.Token;
+import com.naipy.alpha.modules.token.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
