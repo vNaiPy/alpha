@@ -1,7 +1,9 @@
 package com.naipy.alpha.config;
 
+import com.naipy.alpha.modules.localization.repository.LocalizationRepository;
 import com.naipy.alpha.modules.order.enums.OrderStatus;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
+import com.naipy.alpha.modules.localization.model.Localization;
 import com.naipy.alpha.modules.user.models.Role;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user.models.User;
@@ -46,8 +48,47 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private OrderItemRepository _orderItemRepository;
 
+    @Autowired
+    private LocalizationRepository _localizationRepository;
+
     @Override
     public void run(String... args) throws Exception {
+
+        Localization address = Localization.builder()
+                .street("gasparini")
+                .complement("1230")
+                .neighborhood("Rudge")
+                .state("SP")
+                .city("SBC")
+                .country("Brazil")
+                .longitude(-40.0)
+                .latitude(-17.0)
+                .build();
+
+        Localization address2 = Localization.builder()
+                .street("gasparini2")
+                .complement("1230")
+                .neighborhood("Rudge2")
+                .state("SP")
+                .city("SBC")
+                .country("Brazil")
+                .longitude(-40.0)
+                .latitude(-17.0)
+                .build();
+
+        Localization address3 = Localization.builder()
+                .street("gasparini2")
+                .complement("1230")
+                .neighborhood("Rudge2")
+                .state("SP")
+                .city("SBC")
+                .country("Brazil")
+                .longitude(-40.0)
+                .latitude(-17.0)
+                .build();
+        _localizationRepository.saveAll(List.of(address, address2));
+        _localizationRepository.saveAll(List.of(address3));
+
 
         User admin = User.builder()
                 .name("Handrei Morais")
@@ -73,6 +114,7 @@ public class TestConfig implements CommandLineRunner {
                 .logoUrl("logo-url")
                 .bannerUrl("banner-url")
                 .instant(Instant.parse("2019-06-20T21:53:07Z"))
+                .addresses(List.of(address2))
                 .owner(user)
                 .build();
 

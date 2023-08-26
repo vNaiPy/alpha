@@ -3,6 +3,7 @@ package com.naipy.alpha.modules.user.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order.models.Order;
 import com.naipy.alpha.modules.product.model.Product;
+import com.naipy.alpha.modules.localization.model.Localization;
 import com.naipy.alpha.modules.store.model.Store;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.token.Token;
