@@ -8,5 +8,6 @@ type Store {
     name: String!,
     logoUrl: String!,
     bannerUrl: String,
-    instant: String
+    instant: String,
+    address: Localization
 }

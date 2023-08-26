@@ -4,6 +4,7 @@ type Query {
     findAllStore: [Store]
     #Product
     findAllProducts: [Product]
+    findAllByLngLat (lng: Float, lat: Float): [Product]
     findByProductId (id: ID): Product
     findAllProductsByOwnerId (id: ID): [Product]
     #Category

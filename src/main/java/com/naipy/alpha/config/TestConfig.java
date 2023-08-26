@@ -72,8 +72,8 @@ public class TestConfig implements CommandLineRunner {
                 .state("SP")
                 .city("SBC")
                 .country("Brazil")
-                .longitude(-40.0)
-                .latitude(-17.0)
+                .longitude(-46.57393884501647)
+                .latitude(-23.651307691134306)
                 .build();
 
         Localization address3 = Localization.builder()
@@ -83,8 +83,8 @@ public class TestConfig implements CommandLineRunner {
                 .state("SP")
                 .city("SBC")
                 .country("Brazil")
-                .longitude(-40.0)
-                .latitude(-17.0)
+                .longitude(-46.5068369107515)
+                .latitude(-23.60726024455748)
                 .build();
         _localizationRepository.saveAll(List.of(address, address2));
         _localizationRepository.saveAll(List.of(address3));
@@ -114,7 +114,7 @@ public class TestConfig implements CommandLineRunner {
                 .logoUrl("logo-url")
                 .bannerUrl("banner-url")
                 .instant(Instant.parse("2019-06-20T21:53:07Z"))
-                .addresses(List.of(address2))
+                .address(address3)
                 .owner(user)
                 .build();
 

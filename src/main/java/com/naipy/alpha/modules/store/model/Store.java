@@ -32,11 +32,8 @@ public class Store implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant instant;
 
-    @ManyToMany
-    @JoinTable(name = "tb_localization_store",
-            joinColumns = @JoinColumn(name = "store_id"),
-            inverseJoinColumns = @JoinColumn(name = "localization_id"))
-    private List<Localization> addresses;
+    @OneToOne
+    private Localization address;
 
     @JsonIgnore
     @OneToOne

@@ -34,6 +34,11 @@ public class ProductController {
     }
 
     @QueryMapping
+    public List<ProductDTO> findAllByLngLat (@Argument Double lng, @Argument Double lat) {
+        return _productService.findAllByLngLat(lng, lat);
+    };
+
+    @QueryMapping
     public List<ProductDTO> findAllProductsByOwnerId (@Argument Long id) {
         return _productService.findAllByOwner(id);
     }

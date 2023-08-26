@@ -36,6 +36,14 @@ public class ProductService {
         return _productRepository.findAll().stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
     }
 
+    public List<ProductDTO> findAllByLngLat (Double lng, Double lat) {
+        Double lngMaior = lng + 0.02;
+        Double lngMenor = lng - 0.02;
+        Double latMaior = lat + 0.02;
+        Double latMenor = lat - 0.02;
+        return _productRepository.findAllByLngLat(lngMaior, lngMenor, latMaior, latMenor).stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
+    }
+
     public ProductDTO findById (Long id) {
         Optional<Product> productOptional = _productRepository.findById(id);
         if (productOptional.isEmpty()) throw new ResourceNotFoundException("Product not found. Id:" + id);

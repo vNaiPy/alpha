@@ -33,6 +33,6 @@ public class Localization {
     private Double latitude;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "addresses")
-    private List<Store> stores;
+    @OneToOne(mappedBy = "address")
+    private Store store;
 }
