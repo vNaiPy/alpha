@@ -6,6 +6,8 @@ type Mutation {
     storeRegistration(store: StoreInput!): Store!
     #Product
     addProduct (product: ProductInput!): Product!
+    updateProduct (id: ID!, product: ProductInput!): Product!
+    inactiveByProductId (id: ID!): String
     #Category
     addCategory (category: CategoryInput!): Category!
     deleteCategoryById (id: ID!): ID!

@@ -36,12 +36,12 @@ public class ProductService {
         return _productRepository.findAll().stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
     }
 
-    public List<ProductDTO> findAllByLngLat (Double lng, Double lat) {
+    public List<ProductDTO> searchingForWithLngLat (String searchingFor, Double lng, Double lat) {
         Double lngMaior = lng + 0.02;
         Double lngMenor = lng - 0.02;
         Double latMaior = lat + 0.02;
         Double latMenor = lat - 0.02;
-        return _productRepository.findAllByLngLat(lngMaior, lngMenor, latMaior, latMenor).stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
+        return _productRepository.findAllByLngLat(searchingFor.toLowerCase(), lngMaior, lngMenor, latMaior, latMenor).stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
     }
 
     public ProductDTO findById (Long id) {
@@ -64,7 +64,7 @@ public class ProductService {
         return ProductDTO.createProductDTO(_productRepository.save(savedProduct));
     }
 
-    public ProductDTO updateProduct (Long id, Product updatedProduct, Set<Category> categoryIdSet) {
+    public ProductDTO updateProduct (Long id, Product updatedProduct) {
         try {
             Product existentProduct = _productRepository.getReferenceById(id);
             updateData(updatedProduct, existentProduct);
@@ -75,9 +75,12 @@ public class ProductService {
         }
     }
 
-    public void delete (Long id) {
+    public String inactiveByProductId (Long id) {
         try {
-            _productRepository.deleteById(id);
+            Product existentProduct = _productRepository.getReferenceById(id);
+            existentProduct.setStatus(ProductStatus.INACTIVE);
+            _productRepository.save(existentProduct);
+            return "Product deactivated!";
         }
         catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
@@ -97,5 +100,6 @@ public class ProductService {
         existentProduct.setDescription(updatedProduct.getDescription());
         existentProduct.setPrice(updatedProduct.getPrice());
         existentProduct.setImgUrl(updatedProduct.getImgUrl());
+        existentProduct.getCategories().addAll(updatedProduct.getCategories());
     }
 }

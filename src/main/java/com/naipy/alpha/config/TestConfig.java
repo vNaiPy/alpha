@@ -77,7 +77,7 @@ public class TestConfig implements CommandLineRunner {
                 .build();
 
         Localization address3 = Localization.builder()
-                .street("gasparini2")
+                .street("other")
                 .complement("1230")
                 .neighborhood("Rudge2")
                 .state("SP")
@@ -118,8 +118,17 @@ public class TestConfig implements CommandLineRunner {
                 .owner(user)
                 .build();
 
-        user.setStore(store1);
+        Store store2 = Store.builder()
+                .name("Love")
+                .logoUrl("logo-url")
+                .bannerUrl("banner-url")
+                .instant(Instant.parse("2019-06-20T21:53:07Z"))
+                .address(address2)
+                .owner(admin)
+                .build();
 
+        user.setStore(store1);
+        admin.setStore(store2);
         /*Store store2 = Store.builder()
                 .name("lovecathy")
                 .logoUrl("logo-url")
@@ -129,7 +138,7 @@ public class TestConfig implements CommandLineRunner {
                 .build();
         admin.setStore(store2);*/
         //_userRepository.saveAll(Arrays.asList(admin, user));
-        _userRepository.save(user);
+        _userRepository.saveAll(List.of(user, admin));
 
         Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, admin);
         _orderRepository.save(o1);
@@ -146,10 +155,18 @@ public class TestConfig implements CommandLineRunner {
                 ProductStatus.ACTIVE,
                 user);
 
-        _productRepository.save(p1);
+        Product p2 = new Product(null, "Harry Potter",
+                "Lorem ipsum dolor sit amet, consectetur.",
+                90.5,
+                "img-url",
+                ProductStatus.ACTIVE,
+                admin);
+
+        _productRepository.saveAll(List.of(p1, p2));
 
         p1.getCategories().add(cat3);
-        _productRepository.save(p1);
+        p2.getCategories().add(cat3);
+        _productRepository.saveAll(List.of(p1,p2));
 
         OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
         _orderItemRepository.save(oi1);

@@ -34,8 +34,8 @@ public class ProductController {
     }
 
     @QueryMapping
-    public List<ProductDTO> findAllByLngLat (@Argument Double lng, @Argument Double lat) {
-        return _productService.findAllByLngLat(lng, lat);
+    public List<ProductDTO> searchingForWithLngLat (@Argument String searchingFor, @Argument Double lng, @Argument Double lat) {
+        return _productService.searchingForWithLngLat(searchingFor, lng, lat);
     };
 
     @QueryMapping
@@ -58,6 +58,8 @@ public class ProductController {
         return _productService.insert(newProduct, categoryIdSet);
     }
 
+    @MutationMapping
+    @Secured("USER")
     public ProductDTO updateProduct (@Argument Long id, @Argument ProductInput product) {
         Product updatedProduct = new Product();
         updatedProduct.setName(product.name);
@@ -68,20 +70,15 @@ public class ProductController {
         Set<Category> categoryIdSet = product.categoryIdList().stream()
                 .map(categoryId -> Category.builder().id(categoryId).build())
                 .collect(Collectors.toSet());
-        return _productService.updateProduct(id, updatedProduct, categoryIdSet);
+        updatedProduct.getCategories().addAll(categoryIdSet);
+        return _productService.updateProduct(id, updatedProduct);
+    }
+
+    @MutationMapping
+    @Secured("USER")
+    public String inactiveByProductId (@Argument Long id) {
+        return _productService.inactiveByProductId(id);
     }
 
     record ProductInput (String name, String description, Double price, String imgUrl, List<Long> categoryIdList) {}
-
-    /*@PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> update (@PathVariable Long id, @RequestBody Product product) {
-        ProductDTO productDTO = _productService.update(id, product);
-        return ResponseEntity.ok().body(productDTO);
-    }*/
-
-    /*@DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete (@PathVariable Long id) {
-        _productService.delete(id);
-        return ResponseEntity.noContent().build();
-    }*/
 }
