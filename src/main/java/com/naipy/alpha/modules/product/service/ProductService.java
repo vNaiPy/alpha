@@ -64,11 +64,11 @@ public class ProductService {
         return ProductDTO.createProductDTO(_productRepository.save(savedProduct));
     }
 
-    public ProductDTO update (Long id, Product product) {
+    public ProductDTO updateProduct (Long id, Product updatedProduct, Set<Category> categoryIdSet) {
         try {
-            Product entity = _productRepository.getReferenceById(id);
-            updateData(product, entity);
-            return ProductDTO.createProductDTO(_productRepository.save(entity));
+            Product existentProduct = _productRepository.getReferenceById(id);
+            updateData(updatedProduct, existentProduct);
+            return ProductDTO.createProductDTO(_productRepository.save(existentProduct));
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(e.getMessage());
@@ -92,10 +92,10 @@ public class ProductService {
         return (User) authentication.getPrincipal();
     }
 
-    private void updateData(Product product, Product entity) {
-        entity.setName(product.getName());
-        entity.setDescription(product.getDescription());
-        entity.setPrice(product.getPrice());
-        entity.setImgUrl(product.getImgUrl());
+    private void updateData(Product updatedProduct, Product existentProduct) {
+        existentProduct.setName(updatedProduct.getName());
+        existentProduct.setDescription(updatedProduct.getDescription());
+        existentProduct.setPrice(updatedProduct.getPrice());
+        existentProduct.setImgUrl(updatedProduct.getImgUrl());
     }
 }

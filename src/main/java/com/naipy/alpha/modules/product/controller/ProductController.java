@@ -45,17 +45,30 @@ public class ProductController {
 
     @MutationMapping
     @Secured("USER")
-    public ProductDTO addProducts (@Argument ProductInput productList) {
+    public ProductDTO addProduct (@Argument ProductInput product) {
         Product newProduct = new Product();
-        newProduct.setName(productList.name);
-        newProduct.setDescription(productList.description);
-        newProduct.setPrice(productList.price);
-        newProduct.setImgUrl(productList.imgUrl);
+        newProduct.setName(product.name);
+        newProduct.setDescription(product.description);
+        newProduct.setPrice(product.price);
+        newProduct.setImgUrl(product.imgUrl);
 
-        Set<Category> categoryIdSet = productList.categoryIdList().stream()
+        Set<Category> categoryIdSet = product.categoryIdList().stream()
                 .map(categoryId -> Category.builder().id(categoryId).build())
                 .collect(Collectors.toSet());
         return _productService.insert(newProduct, categoryIdSet);
+    }
+
+    public ProductDTO updateProduct (@Argument Long id, @Argument ProductInput product) {
+        Product updatedProduct = new Product();
+        updatedProduct.setName(product.name);
+        updatedProduct.setDescription(product.description);
+        updatedProduct.setPrice(product.price);
+        updatedProduct.setImgUrl(product.imgUrl);
+
+        Set<Category> categoryIdSet = product.categoryIdList().stream()
+                .map(categoryId -> Category.builder().id(categoryId).build())
+                .collect(Collectors.toSet());
+        return _productService.updateProduct(id, updatedProduct, categoryIdSet);
     }
 
     record ProductInput (String name, String description, Double price, String imgUrl, List<Long> categoryIdList) {}

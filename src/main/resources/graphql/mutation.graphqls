@@ -5,7 +5,7 @@ type Mutation {
     #Store
     storeRegistration(store: StoreInput!): Store!
     #Product
-    addProducts (productList: ProductInput!): Product!
+    addProduct (product: ProductInput!): Product!
     #Category
     addCategory (category: CategoryInput!): Category!
     deleteCategoryById (id: ID!): ID!
