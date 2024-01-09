@@ -1,7 +1,8 @@
 input StoreInput {
     name: String!,
-    logoUrl: String!,
-    bannerUrl: String!
+    logoUrl: String,
+    bannerUrl: String,
+    address: LocalizationInput!
 }
 
 type Store {

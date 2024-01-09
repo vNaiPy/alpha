@@ -1,5 +1,10 @@
 package com.naipy.alpha.modules.store.service;
 
+import com.naipy.alpha.modules.address.models.Address;
+import com.naipy.alpha.modules.address.repository.AddressRepository;
+import com.naipy.alpha.modules.user_address.models.Localization;
+import com.naipy.alpha.modules.user_address.models.UserAddress;
+import com.naipy.alpha.modules.user_address.repository.UserAddressRepository;
 import com.naipy.alpha.modules.store.model.Store;
 import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.store.repository.StoreRepository;
@@ -16,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +30,9 @@ public class StoreService {
 
     @Autowired
     private final UserRepository _userRepository;
+
+    @Autowired
+    private final AddressRepository _addressRepository;
 
     @Autowired
     private final StoreRepository _storeRepository;
@@ -47,25 +54,23 @@ public class StoreService {
         return storeOptional.get();
     }
 
-    public Store register (Store store) {
+    /*public Store register (Store newStore, Address newAddress) {
         try {
+            newAddress = _addressRepository.save(newAddress);
             User currentUser = _userRepository.getReferenceById(getIdCurrentUser().getId());
 
-            Store newStore = Store.builder()
-                    .name(store.getName())
-                    .logoUrl(store.getLogoUrl())
-                    .bannerUrl(store.getBannerUrl())
-                    .instant(Instant.now())
-                    .owner(currentUser)
-                    .build();
-
+            UserAddress userAddress = new UserAddress();
+            userAddress.getId().setUser(currentUser);
+            userAddress.getId().setAddress(newAddress);
+            newStore.setAddress(newAddress);
+            newStore.setOwner(currentUser);
             currentUser.setStore(newStore);
             return _userRepository.save(currentUser).getStore();
         } catch (DataIntegrityViolationException e) {
             throw new StoreAlreadyRegisteredException("User already owns a store");
         }
     }
-
+*/
     public void delete (Long ownerId) {
         try {
             _storeRepository.deleteByOwnerId(ownerId);

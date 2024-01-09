@@ -2,7 +2,7 @@ package com.naipy.alpha.modules.store.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.naipy.alpha.modules.localization.model.Localization;
+import com.naipy.alpha.modules.user_address.models.Localization;
 import com.naipy.alpha.modules.user.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tb_store")

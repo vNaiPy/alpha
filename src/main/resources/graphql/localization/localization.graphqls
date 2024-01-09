@@ -1,11 +1,10 @@
 input LocalizationInput {
-    id: ID,
-    street: String,
-    complement: String,
-    neighborhood: String,
-    city: String,
-    state: String,
-    country: String,
+    street: String!,
+    complement: String!,
+    neighborhood: String!,
+    city: String!,
+    state: String!,
+    country: String!,
     longitude: Float!,
     latitude: Float!
 }

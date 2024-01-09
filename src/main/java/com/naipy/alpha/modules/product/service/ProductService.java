@@ -41,7 +41,7 @@ public class ProductService {
         Double lngMenor = lng - 0.02;
         Double latMaior = lat + 0.02;
         Double latMenor = lat - 0.02;
-        return _productRepository.findAllByLngLat(searchingFor.toLowerCase(), lngMaior, lngMenor, latMaior, latMenor).stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
+        return _productRepository.findAllByLngLat(searchingFor.toLowerCase(), lngMaior, lngMenor, latMaior, latMenor).stream().map(ProductDTO::createProductDTO).toList();
     }
 
     public ProductDTO findById (Long id) {

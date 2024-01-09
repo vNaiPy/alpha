@@ -3,11 +3,12 @@ package com.naipy.alpha.modules.user.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order.models.Order;
 import com.naipy.alpha.modules.product.model.Product;
-import com.naipy.alpha.modules.localization.model.Localization;
 import com.naipy.alpha.modules.store.model.Store;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.token.Token;
+import com.naipy.alpha.modules.user_address.models.UserAddress;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,9 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -31,19 +30,32 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private String email;
+
+    @NotNull
     private String phone;
+
+    @NotNull
     private String password;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
     private Store store;
+
+    @OneToMany(mappedBy = "id.user")
+    private Set<UserAddress> usersAddresses = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokenList;

@@ -1,16 +1,13 @@
-package com.naipy.alpha.modules.localization.model;
+package com.naipy.alpha.modules.user_address.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.store.model.Store;
-import com.naipy.alpha.modules.user.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "tb_localization")

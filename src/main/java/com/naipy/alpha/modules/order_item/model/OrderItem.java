@@ -7,12 +7,14 @@ import com.naipy.alpha.modules.product.model.Product;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_order_item")
+@Data
 public class OrderItem implements Serializable {
 
     @EmbeddedId
@@ -45,22 +47,6 @@ public class OrderItem implements Serializable {
 
     public void setProduct (Product product) {
         id.setProduct(product);
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
 
     public Double getSubTotal () {
