@@ -5,10 +5,7 @@ import com.naipy.alpha.modules.city.models.City;
 import com.naipy.alpha.modules.country.models.Country;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +14,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_states")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

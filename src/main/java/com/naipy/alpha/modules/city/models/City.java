@@ -5,10 +5,7 @@ import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.state.models.State;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +14,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_cities")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,6 +32,7 @@ public class City implements Serializable {
     @Column(length = 3)
     private String code;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "state_id")
     private State state;

@@ -8,13 +8,17 @@ import com.naipy.alpha.modules.user_address.pk.UserAddressPK;
 import com.naipy.alpha.modules.user.models.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "tb_user_address")
-@Data
+@Getter
+@Setter
+@ToString
 public class UserAddress implements Serializable {
 
     @EmbeddedId
