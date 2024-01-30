@@ -18,8 +18,8 @@ import java.util.UUID;
 public class Payment implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Instant instant;
 
     @JsonIgnore

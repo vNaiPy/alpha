@@ -31,23 +31,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     private String name;
 
-    @NotNull
     private String email;
 
-    @NotNull
     private String phone;
 
-    @NotNull
     private String password;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
