@@ -25,8 +25,7 @@ import java.util.UUID;
 public class Address implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @NotNull
     private String street;

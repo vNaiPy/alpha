@@ -38,19 +38,7 @@ public class TestConfig implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private OrderRepository _orderRepository;
-
-    @Autowired
     private CategoryRepository _categoryRepository;
-
-    @Autowired
-    private ProductRepository _productRepository;
-
-    @Autowired
-    private OrderItemRepository _orderItemRepository;
-
-    @Autowired
-    private UserAddressRepository _localizationRepository;
 
     @Override
     public void run(String... args) throws Exception {

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class ControllerUtils {
 
-    public static URI getURI (Long id) {
+    public static URI getURI (UUID id) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(id)

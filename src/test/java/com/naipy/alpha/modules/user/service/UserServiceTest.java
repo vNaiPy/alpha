@@ -7,6 +7,7 @@ import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.user.models.UserDTO;
 import com.naipy.alpha.modules.user.repository.UserRepository;
 
+import com.naipy.alpha.modules.utils.ServiceUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class UserServiceTest {
 
@@ -34,8 +36,10 @@ public class UserServiceTest {
 
     @Test
     void findByEmail() {
+
+        UUID id = ServiceUtils.generateUUID();
         User user = User.builder()
-                .id(4L)
+                .id(id)
                 .name("Bruna Meyer")
                 .email("bruna@mail.com")
                 .phone("119999999999")
@@ -43,12 +47,12 @@ public class UserServiceTest {
                 .roles(List.of(Role.USER))
                 .build();
 
-        Mockito.when(_userRepository.findById(4L)).thenReturn(Optional.of(user));
+        Mockito.when(_userRepository.findById(id)).thenReturn(Optional.of(user));
 
-        Optional<User> userMocked = _userRepository.findById(4L);
+        Optional<User> userMocked = _userRepository.findById(id);
         if (userMocked.isEmpty()) throw new ResourceNotFoundException(4L);
 
-        Mockito.verify(_userRepository, Mockito.times(1)).findById(4L);
-        System.out.println(UserDTO.createUserDTO(_userRepository.findById(4L).get()).toString());;
+        Mockito.verify(_userRepository, Mockito.times(1)).findById(id);
+        System.out.println(UserDTO.createUserDTO(_userRepository.findById(id).get()).toString());;
     }
 }

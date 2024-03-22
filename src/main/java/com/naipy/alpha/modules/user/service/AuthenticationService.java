@@ -11,6 +11,7 @@ import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.token.Token;
 import com.naipy.alpha.modules.token.TokenRepository;
 import com.naipy.alpha.modules.token.TokenType;
+import com.naipy.alpha.modules.utils.ServiceUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +28,6 @@ public class AuthenticationService {
 
     @Autowired
     private final UserRepository _userRepository;
-
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private final JwtService jwtService;
@@ -39,18 +38,9 @@ public class AuthenticationService {
     @Autowired
     private final TokenRepository _tokenRepository;
 
-    public AuthenticationResponse register (RegisterRequest request) {
-        var user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .phone(request.getPhone())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .status(UserStatus.ACTIVE)
-                .roles(List.of(Role.USER))
-                .build();
-        var savedUser = _userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        saveUserToken(savedUser, jwtToken);
+    public AuthenticationResponse authenticateAfterInsertingNewUser (User user) {
+        String jwtToken = jwtService.generateToken(user);
+        saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -59,13 +49,12 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate (AuthenticationRequest request) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    request.getUsername(),
-                    request.getPassword()
+                        request.getUsername(),
+                        request.getPassword()
                 )
         );
-        var user = _userRepository.findByEmail(request.getUsername())
-                .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        User user = _userRepository.findByEmail(request.getUsername()).orElseThrow();
+        String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()

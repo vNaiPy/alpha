@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class StoreService {
         return _storeRepository.findAll();
     }
 
-    public Store findById (Long ownerId) {
+    public Store findById (UUID ownerId) {
         Optional<Store> storeOptional = _storeRepository.findByOwnerId(ownerId);
 
         if (storeOptional.isEmpty()) throw new ResourceNotFoundException(ownerId);
@@ -71,7 +72,7 @@ public class StoreService {
         }
     }
 */
-    public void delete (Long ownerId) {
+    public void delete (UUID ownerId) {
         try {
             _storeRepository.deleteByOwnerId(ownerId);
         }
@@ -83,7 +84,7 @@ public class StoreService {
         }
     }
 
-    public Store update (Long ownerId, Store store) {
+    public Store update (UUID ownerId, Store store) {
         try {
             Store entity = _storeRepository.getReferenceById(ownerId);
             updateData(store, entity);

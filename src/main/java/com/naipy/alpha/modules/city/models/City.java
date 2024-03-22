@@ -22,7 +22,6 @@ import java.util.UUID;
 public class City implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotNull

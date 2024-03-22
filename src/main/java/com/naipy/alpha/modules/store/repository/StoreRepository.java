@@ -8,9 +8,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface StoreRepository extends JpaRepository<Store, Long> {
+public interface StoreRepository extends JpaRepository<Store, UUID> {
 
-    Optional<Store> findByOwnerId (Long id);
+    Optional<Store> findByOwnerId (UUID id);
 
-    void deleteByOwnerId (Long id);
+    void deleteByOwnerId (UUID id);
 }

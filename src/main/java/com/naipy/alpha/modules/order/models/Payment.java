@@ -18,7 +18,6 @@ import java.util.UUID;
 public class Payment implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Instant instant;
 

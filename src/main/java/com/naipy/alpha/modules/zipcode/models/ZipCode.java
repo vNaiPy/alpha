@@ -20,12 +20,11 @@ import java.util.UUID;
 public class ZipCode {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotNull
     @Column(length = 12)
-    private String zipCode;
+    private String code;
 
     @JsonIgnore
     @OneToOne(mappedBy = "zipCode", cascade = CascadeType.ALL)

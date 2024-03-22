@@ -23,8 +23,7 @@ import java.util.UUID;
 public class Store implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     private String name;
     private String logoUrl;
     private String bannerUrl;
