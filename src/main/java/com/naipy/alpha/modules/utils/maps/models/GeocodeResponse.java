@@ -1,7 +1,8 @@
-package com.naipy.alpha.modules.utils.maps;
+package com.naipy.alpha.modules.utils.maps.models;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.ArrayList;

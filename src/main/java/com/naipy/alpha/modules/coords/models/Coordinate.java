@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -24,10 +25,10 @@ public class Coordinate implements Serializable {
     private UUID id;
 
     @NotNull
-    private Double latitude;
+    private BigDecimal latitude;
 
     @NotNull
-    private Double longitude;
+    private BigDecimal longitude;
 
     @JsonIgnore
     @OneToMany(mappedBy = "coordinate")

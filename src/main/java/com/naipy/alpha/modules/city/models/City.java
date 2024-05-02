@@ -28,7 +28,6 @@ public class City implements Serializable {
     private String name;
 
     @NotNull
-    @Column(length = 3)
     private String code;
 
     @NotNull

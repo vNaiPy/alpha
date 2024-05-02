@@ -1,4 +1,4 @@
-package com.naipy.alpha.modules.utils.maps;
+package com.naipy.alpha.modules.utils.maps.models;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Bounds {
+public class Viewport {
 
     private Location northeast;
     private Location southwest;

@@ -2,16 +2,23 @@ package com.naipy.alpha.modules.address.service;
 
 import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.address.repository.AddressRepository;
+import com.naipy.alpha.modules.city.models.City;
 import com.naipy.alpha.modules.city.repository.CityRepository;
+import com.naipy.alpha.modules.coords.models.Coordinate;
 import com.naipy.alpha.modules.country.models.Country;
 import com.naipy.alpha.modules.country.repository.CountryRepository;
+import com.naipy.alpha.modules.state.models.State;
 import com.naipy.alpha.modules.state.repository.StateRepository;
+import com.naipy.alpha.modules.user.models.User;
+import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
+import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.utils.ServiceUtils;
-import com.naipy.alpha.modules.utils.maps.MapsService;
+import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
+import com.naipy.alpha.modules.utils.maps.services.MapsService;
+import com.naipy.alpha.modules.zipcode.models.ZipCode;
 import com.naipy.alpha.modules.zipcode.repository.ZipCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Optional;
 
@@ -31,21 +38,74 @@ public class AddressService {
     @Autowired
     MapsService _mapsService;
 
-    final String MAPS_KEY = "AIzaSyDLr4j7hVxfeYDR1wEC1YnDSgw91UqOjsY";
-    final String WHITESPACE = "%20";
-
-    public Address addAddress (Address address) {
-        Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(address.getZipCode().getCode());
+    public Address addOrGetAddress (String zipCode) {
+        Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(zipCode);
 
         if (optionalAddress.isEmpty()) {
-            String addressForRequest = address.getStreet() + address.get;
-            _mapsService.getAddressFromMapsApi(addressForRequest);
-            Address adrs = Address.builder()
-                    .id(ServiceUtils.generateUUID())
-                    .build();
-            return _addressRepository.save(address);
+            GeocodeResponse geocodeResponse = _mapsService.getAddressBySomethingFromMapsApi(zipCode);
+            return _addressRepository.save(instantiateAddressFromGeocodeResponse(geocodeResponse));
         }
         return optionalAddress.get();
     }
 
+    public UserAddress getAddressToUser (String addressComplete) {
+        GeocodeResponse geocodeResponse = _mapsService.getAddressBySomethingFromMapsApi(addressComplete);
+
+
+        return null;
+    }
+
+    public Address instantiateAddressFromGeocodeResponse (GeocodeResponse geocodeResponse) {
+        UserAddress userAddress = new UserAddress();
+        Address.AddressBuilder addressBuilder = Address.builder();
+        ZipCode zipCode = new ZipCode();
+        City city = new City();
+        State state = new State();
+        Country country = new Country();
+
+        geocodeResponse.getResults().forEach(addressResult -> {
+            addressResult.getAddressComponents().forEach(addressComponent -> {
+                if (addressComponent.getTypes().contains("postal_code")) {
+                    zipCode.setId(ServiceUtils.generateUUID());
+                    zipCode.setCode(addressComponent.getLongName());
+                }
+                else if (addressComponent.getTypes().contains("route"))
+                    addressBuilder.street(addressComponent.getLongName());
+                else if (addressComponent.getTypes().contains("sublocality_level_1"))
+                    addressBuilder.neighborhood(addressComponent.getLongName());
+                else if (addressComponent.getTypes().contains("administrative_area_level_2")) {
+                    city.setId(ServiceUtils.generateUUID());
+                    city.setName(addressComponent.getLongName());
+                    city.setCode(addressComponent.getShortName());
+                }
+                else if (addressComponent.getTypes().contains("administrative_area_level_1")) {
+                    state.setId(ServiceUtils.generateUUID());
+                    state.setName(addressComponent.getLongName());
+                    state.setCode(addressComponent.getShortName());
+                }
+                else if (addressComponent.getTypes().contains("country")) {
+                    country.setId(ServiceUtils.generateUUID());
+                    country.setName(addressComponent.getLongName());
+                    country.setCode(addressComponent.getShortName());
+                }
+
+            });
+        });
+        Optional<Country> countryAlreadyExists = _countryRepository.findByName(country.getName());
+        Country savedCountry = countryAlreadyExists.orElseGet(() -> _countryRepository.save(country));
+
+        state.setCountry(savedCountry);
+        Optional<State> stateAlreadyExists = _stateRepository.findByName(state.getName());
+        State savedState = stateAlreadyExists.orElseGet(() -> _stateRepository.save(state));
+
+        city.setState(savedState);
+        Optional<City> cityAlreadyExists = _cityRepository.findByName(city.getName());
+        City savedCity = cityAlreadyExists.orElseGet(() -> _cityRepository.save(city));
+
+        ZipCode savedZipCode = _zipCodeRepository.save(zipCode);
+        addressBuilder.id(ServiceUtils.generateUUID());
+        addressBuilder.city(savedCity);
+        addressBuilder.zipCode(savedZipCode);
+        return addressBuilder.build();
+    }
 }

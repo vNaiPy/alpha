@@ -10,6 +10,8 @@ import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.utils.ServiceUtils;
+import com.naipy.alpha.modules.utils.maps.services.MapsService;
+import com.naipy.alpha.modules.zipcode.models.ZipCode;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,6 +39,9 @@ public class UserService {
     AddressService _addressService;
 
     @Autowired
+    MapsService _mapsService;
+
+    @Autowired
     AuthenticationService _authenticationService;
 
     public AuthenticationResponse addNewUser (RegisterRequest request) {
@@ -56,18 +61,11 @@ public class UserService {
         return _authenticationService.authenticate(request);
     }
 
-    public Address addUserAddress (Address address, String streetNumber, String complement) {
-        User currentUser = ServiceUtils.getIdCurrentUser();
-        UserAddress userAddress = new UserAddress();
-        userAddress.setUser(currentUser);
-        userAddress.setAddress(_addressService.addAddress(address));
-        userAddress.setStreetNumber(streetNumber);
-        userAddress.setComplement(complement);
-        userAddress.setUsageType(AddressUsageType.PERSONAL);
-        userAddress.setIsDefault(true);
+    public Address addUserAddress (String zipCode, String streetNumber, String complement) {
+        Address address = _addressService.addOrGetAddress(zipCode);
 
-
-
+        String addressComplete = address.getStreet() + streetNumber + address.getNeighborhood() + address.getCity().getName();
+        _addressService.getAddressToUser(addressComplete);
 
         return null;
     }

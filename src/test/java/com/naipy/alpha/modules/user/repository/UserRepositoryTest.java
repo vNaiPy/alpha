@@ -30,6 +30,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -96,7 +97,7 @@ class UserRepositoryTest {
 
         ZipCode zipCode = ZipCode.builder()
                 .id(ServiceUtils.generateUUID())
-                .zipCode("09635130")
+                .code("09635130")
                 .build();
         _zipCodeRepository.save(zipCode);
 
@@ -133,8 +134,8 @@ class UserRepositoryTest {
 
         Coordinate coordinate = Coordinate.builder()
                 .id(ServiceUtils.generateUUID())
-                .longitude(-15.005345)
-                .latitude(12.005345)
+                .longitude(BigDecimal.valueOf(-15.005345))
+                .latitude(BigDecimal.valueOf(12.005345))
                 .build();
         _coordinateRepository.save(coordinate);
 

@@ -1,9 +1,7 @@
-package com.naipy.alpha.modules.utils.maps;
+package com.naipy.alpha.modules.utils.maps.services;
 
-import com.naipy.alpha.modules.address.models.Address;
-import org.springframework.http.HttpHeaders;
+import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -15,7 +13,7 @@ public class MapsService {
 
     private WebClient webClient;
     final String MAPS_KEY = "&key=AIzaSyDLr4j7hVxfeYDR1wEC1YnDSgw91UqOjsY";
-    final String WHITESPACE = "%20";
+    final String WHITESPACE_CODE = "%20";
 
     public MapsService (WebClient webClientBuilder) {
         webClient = WebClient.builder()
@@ -23,16 +21,12 @@ public class MapsService {
                 .build();
     }
 
-    public GeocodeResponse getAddressFromMapsApi (String address) {
-
-        String exampleAddressForRequest = "address=Rua%20Gasparini%20130%20Rudge";
-        /*String addressForRequest = address.getStreet().replace(" ", WHITESPACE);
-        this.webClient.get()
-                .uri("/json?address=" + addressForRequest + MAPS_KEY);*/
+    public GeocodeResponse getAddressBySomethingFromMapsApi (String zipCodeOrAddressComplete) {
+        zipCodeOrAddressComplete = zipCodeOrAddressComplete.replace(" ", WHITESPACE_CODE);
 
         return webClient
                 .get()
-                .uri("/json?address=" + address + MAPS_KEY)
+                .uri("/json?address=" + zipCodeOrAddressComplete + MAPS_KEY)
                 .accept(APPLICATION_JSON)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Parametro invalido")))

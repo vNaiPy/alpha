@@ -1,5 +1,6 @@
-package com.naipy.alpha.modules.utils.maps;
+package com.naipy.alpha.modules.utils.maps.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -10,7 +11,8 @@ import lombok.*;
 public class Geometry {
 
     private Location location;
-    private String location_type;
+    @JsonProperty("location_type")
+    private String locationType;
     private Viewport viewport;
     private Bounds bounds;
 
