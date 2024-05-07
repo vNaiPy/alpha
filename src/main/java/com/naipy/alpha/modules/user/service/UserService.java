@@ -62,7 +62,7 @@ public class UserService {
     }
 
     public Address addUserAddress (String zipCode, String streetNumber, String complement) {
-        Address address = _addressService.addOrGetAddress(zipCode);
+        Address address = _addressService.addIfDoesntExistsAndGetAddress(zipCode);
 
         String addressComplete = address.getStreet() + streetNumber + address.getNeighborhood() + address.getCity().getName();
         _addressService.getAddressToUser(addressComplete);

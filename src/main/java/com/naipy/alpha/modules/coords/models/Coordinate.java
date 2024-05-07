@@ -19,6 +19,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Coordinate implements Serializable {
 
     @Id
@@ -32,5 +33,6 @@ public class Coordinate implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "coordinate")
+    @ToString.Exclude
     private Set<UserAddress> userAddress = new HashSet<>();
 }

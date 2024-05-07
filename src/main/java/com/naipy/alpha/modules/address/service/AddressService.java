@@ -38,14 +38,15 @@ public class AddressService {
     @Autowired
     MapsService _mapsService;
 
-    public Address addOrGetAddress (String zipCode) {
+    public Address addIfDoesntExistsAndGetAddress (String zipCode) {
         Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(zipCode);
 
         if (optionalAddress.isEmpty()) {
             GeocodeResponse geocodeResponse = _mapsService.getAddressBySomethingFromMapsApi(zipCode);
-            return _addressRepository.save(instantiateAddressFromGeocodeResponse(geocodeResponse));
+            return _addressRepository.save(instantiateAddressFromGeocodeResponse(geocodeResponse).getAddress());
         }
-        return optionalAddress.get();
+        else
+            return optionalAddress.get();
     }
 
     public UserAddress getAddressToUser (String addressComplete) {
@@ -55,13 +56,19 @@ public class AddressService {
         return null;
     }
 
-    public Address instantiateAddressFromGeocodeResponse (GeocodeResponse geocodeResponse) {
+    /**
+     * @param geocodeResponse
+     * @return UserAddress
+     * @implNote Recebe um objeto de resposta do maps api, salva algumas entidades no banco relacionado ao endereço e retorna uma instância de UserAddress
+     */
+    public UserAddress instantiateAddressFromGeocodeResponse (GeocodeResponse geocodeResponse) {
         UserAddress userAddress = new UserAddress();
         Address.AddressBuilder addressBuilder = Address.builder();
         ZipCode zipCode = new ZipCode();
         City city = new City();
         State state = new State();
         Country country = new Country();
+        Coordinate coordinate = new Coordinate();
 
         geocodeResponse.getResults().forEach(addressResult -> {
             addressResult.getAddressComponents().forEach(addressComponent -> {
@@ -88,8 +95,9 @@ public class AddressService {
                     country.setName(addressComponent.getLongName());
                     country.setCode(addressComponent.getShortName());
                 }
-
             });
+            coordinate.setLatitude(addressResult.getGeometry().getLocation().getLat());
+            coordinate.setLongitude(addressResult.getGeometry().getLocation().getLng());
         });
         Optional<Country> countryAlreadyExists = _countryRepository.findByName(country.getName());
         Country savedCountry = countryAlreadyExists.orElseGet(() -> _countryRepository.save(country));
@@ -102,10 +110,15 @@ public class AddressService {
         Optional<City> cityAlreadyExists = _cityRepository.findByName(city.getName());
         City savedCity = cityAlreadyExists.orElseGet(() -> _cityRepository.save(city));
 
+        //Não é necessário fazer validação do zipCode porque, no método onde invoca esse método, já é feita a busca por zipcode se existe algum endereço cadastrado
         ZipCode savedZipCode = _zipCodeRepository.save(zipCode);
         addressBuilder.id(ServiceUtils.generateUUID());
         addressBuilder.city(savedCity);
         addressBuilder.zipCode(savedZipCode);
-        return addressBuilder.build();
+
+        coordinate.setId(ServiceUtils.generateUUID());
+        userAddress.setCoordinate(coordinate);
+        userAddress.setAddress(addressBuilder.build());
+        return userAddress;
     }
 }
