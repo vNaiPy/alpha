@@ -9,15 +9,12 @@ import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
+import com.naipy.alpha.modules.user_address.repository.UserAddressRepository;
 import com.naipy.alpha.modules.utils.ServiceUtils;
-import com.naipy.alpha.modules.utils.maps.services.MapsService;
-import com.naipy.alpha.modules.zipcode.models.ZipCode;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +36,7 @@ public class UserService {
     AddressService _addressService;
 
     @Autowired
-    MapsService _mapsService;
+    UserAddressRepository _userAddressRepository;
 
     @Autowired
     AuthenticationService _authenticationService;
@@ -61,13 +58,21 @@ public class UserService {
         return _authenticationService.authenticate(request);
     }
 
-    public Address addUserAddress (String zipCode, String streetNumber, String complement) {
+    public UserAddress addUserAddress (String zipCode, String streetNumber, String complement) {
+        User currentUser = ServiceUtils.getIdCurrentUser();
         Address address = _addressService.addIfDoesntExistsAndGetAddress(zipCode);
-
-        String addressComplete = address.getStreet() + streetNumber + address.getNeighborhood() + address.getCity().getName();
-        _addressService.getAddressToUser(addressComplete);
-
-        return null;
+        String addressComplete = address.getStreet()
+                + streetNumber
+                + address.getNeighborhood()
+                + address.getCity().getName()
+                + address.getCity().getState().getName()
+                + address.getCity().getState().getCountry().getName();
+        UserAddress userAddress = _addressService.getUserAddressToUser(addressComplete);
+        userAddress.setUser(currentUser);
+        userAddress.setComplement(complement);
+        userAddress.setUsageType(AddressUsageType.PERSONAL);
+        userAddress.setIsDefault(true);
+        return _userAddressRepository.save(userAddress);
     }
 
     public List<UserDTO> findAll () {

@@ -21,12 +21,12 @@ public class MapsService {
                 .build();
     }
 
-    public GeocodeResponse getAddressBySomethingFromMapsApi (String zipCodeOrAddressComplete) {
-        zipCodeOrAddressComplete = zipCodeOrAddressComplete.replace(" ", WHITESPACE_CODE);
+    public GeocodeResponse getAddressByZipCodeOrCompleteAddressFromMapsApi (String zipCodeOrCompleteAddress) {
+        zipCodeOrCompleteAddress = zipCodeOrCompleteAddress.replace(" ", WHITESPACE_CODE);
 
         return webClient
                 .get()
-                .uri("/json?address=" + zipCodeOrAddressComplete + MAPS_KEY)
+                .uri("/json?address=" + zipCodeOrCompleteAddress + MAPS_KEY)
                 .accept(APPLICATION_JSON)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Parametro invalido")))

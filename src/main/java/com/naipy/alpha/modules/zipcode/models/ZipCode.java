@@ -28,5 +28,6 @@ public class ZipCode {
 
     @JsonIgnore
     @OneToOne(mappedBy = "zipCode", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Address address;
 }

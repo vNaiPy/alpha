@@ -9,10 +9,9 @@ import com.naipy.alpha.modules.country.models.Country;
 import com.naipy.alpha.modules.country.repository.CountryRepository;
 import com.naipy.alpha.modules.state.models.State;
 import com.naipy.alpha.modules.state.repository.StateRepository;
-import com.naipy.alpha.modules.user.models.User;
-import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.utils.ServiceUtils;
+import com.naipy.alpha.modules.utils.maps.models.AddressComponent;
 import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.utils.maps.services.MapsService;
 import com.naipy.alpha.modules.zipcode.models.ZipCode;
@@ -20,8 +19,13 @@ import com.naipy.alpha.modules.zipcode.repository.ZipCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+/**
+ *
+ */
 @Service
 public class AddressService {
 
@@ -38,30 +42,33 @@ public class AddressService {
     @Autowired
     MapsService _mapsService;
 
+
+    /**
+     * Primeiro, consultar no Redis. Caso nao exista, consultar no Postgrees. Caso nao exista, consultar na API GoogleMaps e salvar nos bancos.
+     * @param zipCode recebe um CEP
+     * @return Address - Retorna um endereço salvo no banco
+     */
     public Address addIfDoesntExistsAndGetAddress (String zipCode) {
         Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(zipCode);
 
         if (optionalAddress.isEmpty()) {
-            GeocodeResponse geocodeResponse = _mapsService.getAddressBySomethingFromMapsApi(zipCode);
-            return _addressRepository.save(instantiateAddressFromGeocodeResponse(geocodeResponse).getAddress());
+            GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
+            return _addressRepository.save(instantiateUserAddressFromGeocodeResponse(geocodeResponse).getAddress());
         }
         else
             return optionalAddress.get();
     }
 
-    public UserAddress getAddressToUser (String addressComplete) {
-        GeocodeResponse geocodeResponse = _mapsService.getAddressBySomethingFromMapsApi(addressComplete);
-
-
-        return null;
+    public UserAddress getUserAddressToUser (String addressComplete) {
+        GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(addressComplete);
+        return instantiateUserAddressFromGeocodeResponse(geocodeResponse);
     }
 
     /**
-     * @param geocodeResponse
-     * @return UserAddress
-     * @implNote Recebe um objeto de resposta do maps api, salva algumas entidades no banco relacionado ao endereço e retorna uma instância de UserAddress
+     * @param geocodeResponse eh um objeto mapeado com dados retornados do GoogleMapsAPI
+     * @return UserAddress eh um objeto que possui o mapeamento de informações necessárias para relacionar endereço e usuário.
      */
-    public UserAddress instantiateAddressFromGeocodeResponse (GeocodeResponse geocodeResponse) {
+    public UserAddress instantiateUserAddressFromGeocodeResponse (GeocodeResponse geocodeResponse) {
         UserAddress userAddress = new UserAddress();
         Address.AddressBuilder addressBuilder = Address.builder();
         ZipCode zipCode = new ZipCode();
@@ -72,29 +79,32 @@ public class AddressService {
 
         geocodeResponse.getResults().forEach(addressResult -> {
             addressResult.getAddressComponents().forEach(addressComponent -> {
-                if (addressComponent.getTypes().contains("postal_code")) {
+                List<String> componentTypes = addressComponent.getTypes();
+                if (componentTypes.contains("postal_code")) {
                     zipCode.setId(ServiceUtils.generateUUID());
                     zipCode.setCode(addressComponent.getLongName());
                 }
-                else if (addressComponent.getTypes().contains("route"))
+                else if (componentTypes.contains("route"))
                     addressBuilder.street(addressComponent.getLongName());
-                else if (addressComponent.getTypes().contains("sublocality_level_1"))
+                else if (componentTypes.contains("sublocality_level_1"))
                     addressBuilder.neighborhood(addressComponent.getLongName());
-                else if (addressComponent.getTypes().contains("administrative_area_level_2")) {
+                else if (componentTypes.contains("administrative_area_level_2")) {
                     city.setId(ServiceUtils.generateUUID());
                     city.setName(addressComponent.getLongName());
                     city.setCode(addressComponent.getShortName());
                 }
-                else if (addressComponent.getTypes().contains("administrative_area_level_1")) {
+                else if (componentTypes.contains("administrative_area_level_1")) {
                     state.setId(ServiceUtils.generateUUID());
                     state.setName(addressComponent.getLongName());
                     state.setCode(addressComponent.getShortName());
                 }
-                else if (addressComponent.getTypes().contains("country")) {
+                else if (componentTypes.contains("country")) {
                     country.setId(ServiceUtils.generateUUID());
                     country.setName(addressComponent.getLongName());
                     country.setCode(addressComponent.getShortName());
                 }
+                else if (componentTypes.contains("street_number"))
+                    userAddress.setStreetNumber(addressComponent.getLongName());
             });
             coordinate.setLatitude(addressResult.getGeometry().getLocation().getLat());
             coordinate.setLongitude(addressResult.getGeometry().getLocation().getLng());

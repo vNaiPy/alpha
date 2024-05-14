@@ -4,22 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order.models.Order;
 import com.naipy.alpha.modules.product.model.Product;
 import com.naipy.alpha.modules.store.model.Store;
-import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.token.Token;
+import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Builder
 @AllArgsConstructor
@@ -51,14 +49,17 @@ public class User implements UserDetails {
     private Set<UserAddress> usersAddresses = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private List<Token> tokenList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "client")
+    @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
+    @ToString.Exclude
     private List<Product> products = new ArrayList<>();
 
     @Override

@@ -18,6 +18,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Country implements Serializable {
 
     @Id
@@ -32,5 +33,6 @@ public class Country implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "country")
+    @ToString.Exclude
     private List<State> state = new ArrayList<>();
 }
