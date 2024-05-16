@@ -8,5 +8,4 @@ import java.util.UUID;
 
 @Repository
 public interface ZipCodeRepository extends JpaRepository<ZipCode, UUID> {
-    boolean existsByZipCode (String zipCode);
 }

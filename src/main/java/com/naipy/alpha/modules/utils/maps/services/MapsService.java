@@ -11,12 +11,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Service
 public class MapsService {
 
-    private WebClient webClient;
+    private final WebClient webClient;
     final String MAPS_KEY = "&key=AIzaSyDLr4j7hVxfeYDR1wEC1YnDSgw91UqOjsY";
     final String WHITESPACE_CODE = "%20";
 
-    public MapsService (WebClient webClientBuilder) {
-        webClient = WebClient.builder()
+    public MapsService (WebClient.Builder webClientBuilder) {
+        this.webClient =
+                webClientBuilder
                 .baseUrl("https://maps.googleapis.com/maps/api/geocode")
                 .build();
     }
@@ -24,7 +25,7 @@ public class MapsService {
     public GeocodeResponse getAddressByZipCodeOrCompleteAddressFromMapsApi (String zipCodeOrCompleteAddress) {
         zipCodeOrCompleteAddress = zipCodeOrCompleteAddress.replace(" ", WHITESPACE_CODE);
 
-        return webClient
+        return this.webClient
                 .get()
                 .uri("/json?address=" + zipCodeOrCompleteAddress + MAPS_KEY)
                 .accept(APPLICATION_JSON)
