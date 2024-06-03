@@ -16,6 +16,6 @@ public class AddressController {
     private final AddressService _addressService;
 
     @QueryMapping()
-    public Address findByZipCode (@Argument String zipCode) {return _addressService.addIfDoesntExistsAndGetAddress(zipCode);}
+    public Address findByZipCode (@Argument String zipCode) {return _addressService.getAddressAndAddIfDoesntExistsAnd(zipCode);}
 
 }

@@ -1,17 +1,15 @@
 package com.naipy.alpha.modules.address.service;
 
 import com.naipy.alpha.modules.address.models.Address;
+import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.repository.AddressRepository;
 import com.naipy.alpha.modules.city.models.City;
 import com.naipy.alpha.modules.city.repository.CityRepository;
-import com.naipy.alpha.modules.coords.models.Coordinate;
 import com.naipy.alpha.modules.country.models.Country;
 import com.naipy.alpha.modules.country.repository.CountryRepository;
 import com.naipy.alpha.modules.state.models.State;
 import com.naipy.alpha.modules.state.repository.StateRepository;
-import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.utils.ServiceUtils;
-import com.naipy.alpha.modules.utils.maps.models.AddressComponent;
 import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.utils.maps.services.MapsService;
 import com.naipy.alpha.modules.zipcode.models.ZipCode;
@@ -20,12 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-/**
- *
- */
 @Service
 public class AddressService {
 
@@ -45,37 +39,35 @@ public class AddressService {
 
     /**
      * Primeiro, consultar no Redis. Caso nao exista, consultar no Postgrees. Caso nao exista, consultar na API GoogleMaps e salvar nos bancos.
-     * @param zipCode recebe um CEP
-     * @return Address - Retorna um endereço salvo no banco
+     * @param zipCode eh um codigo postal/CEP
+     * @return Address - Retorna um endereco salvo no banco
      */
-    public Address addIfDoesntExistsAndGetAddress (String zipCode) {
+    public Address getAddressAndAddIfDoesntExistsAnd (String zipCode) {
         Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(zipCode);
-
         if (optionalAddress.isEmpty()) {
             GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
-            return _addressRepository.save(instantiateUserAddressFromGeocodeResponse(geocodeResponse).getAddress());
+            return _addressRepository.save(instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse).getAddress());
         }
         else
             return optionalAddress.get();
     }
 
-    public UserAddress getUserAddressToUser (String addressComplete) {
-        GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(addressComplete);
-        return instantiateUserAddressFromGeocodeResponse(geocodeResponse);
+    public AddressEnriched getAddressEnrichedByCompleteAddress (String completeAddress) {
+        GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(completeAddress);
+        return instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
     }
 
     /**
      * @param geocodeResponse eh um objeto mapeado com dados retornados do GoogleMapsAPI
-     * @return UserAddress eh um objeto que possui o mapeamento de informações necessárias para relacionar endereço e usuário.
+     * @return AddressEnriched eh um objeto que possui o mapeamento de informacoes necessarias para relacionar endereco e usuario.
      */
-    public UserAddress instantiateUserAddressFromGeocodeResponse (GeocodeResponse geocodeResponse) {
-        UserAddress userAddress = new UserAddress();
+    public AddressEnriched instantiateAddressEnrichedFromGeocodeResponse (GeocodeResponse geocodeResponse) {
         Address.AddressBuilder addressBuilder = Address.builder();
+        AddressEnriched.AddressEnrichedBuilder addressEnrichedBuilder = AddressEnriched.builder();
         ZipCode zipCode = new ZipCode();
         City city = new City();
         State state = new State();
         Country country = new Country();
-        Coordinate coordinate = new Coordinate();
 
         geocodeResponse.getResults().forEach(addressResult -> {
             addressResult.getAddressComponents().forEach(addressComponent -> {
@@ -104,10 +96,10 @@ public class AddressService {
                     country.setCode(addressComponent.getShortName());
                 }
                 else if (componentTypes.contains("street_number"))
-                    userAddress.setStreetNumber(addressComponent.getLongName());
+                    addressEnrichedBuilder.streetNumber(addressComponent.getLongName());
             });
-            coordinate.setLatitude(addressResult.getGeometry().getLocation().getLat());
-            coordinate.setLongitude(addressResult.getGeometry().getLocation().getLng());
+            addressBuilder.latitude(addressResult.getGeometry().getLocation().getLat());
+            addressBuilder.longitude(addressResult.getGeometry().getLocation().getLng());
         });
         Optional<Country> countryAlreadyExists = _countryRepository.findByName(country.getName());
         Country savedCountry = countryAlreadyExists.orElseGet(() -> _countryRepository.save(country));
@@ -120,15 +112,13 @@ public class AddressService {
         Optional<City> cityAlreadyExists = _cityRepository.findByName(city.getName());
         City savedCity = cityAlreadyExists.orElseGet(() -> _cityRepository.save(city));
 
-        //Não é necessário fazer validação do zipCode porque, no método onde invoca esse método, já é feita a busca por zipcode se existe algum endereço cadastrado
+        //Nao eh necessário fazer validação do zipCode porque, no metodo onde invoca esse método, ja eh feita a busca por zipcode se existe algum endereço cadastrado
         ZipCode savedZipCode = _zipCodeRepository.save(zipCode);
         addressBuilder.id(ServiceUtils.generateUUID());
         addressBuilder.city(savedCity);
         addressBuilder.zipCode(savedZipCode);
 
-        coordinate.setId(ServiceUtils.generateUUID());
-        userAddress.setCoordinate(coordinate);
-        userAddress.setAddress(addressBuilder.build());
-        return userAddress;
+        addressEnrichedBuilder.address(addressBuilder.build());
+        return addressEnrichedBuilder.build();
     }
 }

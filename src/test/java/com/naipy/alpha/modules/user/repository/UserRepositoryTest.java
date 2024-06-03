@@ -4,8 +4,6 @@ import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.address.repository.AddressRepository;
 import com.naipy.alpha.modules.city.models.City;
 import com.naipy.alpha.modules.city.repository.CityRepository;
-import com.naipy.alpha.modules.coords.models.Coordinate;
-import com.naipy.alpha.modules.coords.repository.CoordinateRepository;
 import com.naipy.alpha.modules.country.models.Country;
 import com.naipy.alpha.modules.country.repository.CountryRepository;
 import com.naipy.alpha.modules.state.models.State;
@@ -13,7 +11,6 @@ import com.naipy.alpha.modules.state.repository.StateRepository;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user.models.Role;
 import com.naipy.alpha.modules.user.models.User;
-import com.naipy.alpha.modules.user.models.UserDTO;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.user_address.repository.UserAddressRepository;
@@ -61,9 +58,6 @@ class UserRepositoryTest {
 
     @Autowired
     AddressRepository _addressRepository;
-
-    @Autowired
-    CoordinateRepository _coordinateRepository;
 
     @Autowired
     UserAddressRepository _userAddressRepository;
@@ -132,14 +126,8 @@ class UserRepositoryTest {
 
         _userRepository.saveAll(List.of(admin, user));
 
-        Coordinate coordinate = Coordinate.builder()
-                .id(ServiceUtils.generateUUID())
-                .longitude(BigDecimal.valueOf(-15.005345))
-                .latitude(BigDecimal.valueOf(12.005345))
-                .build();
-        _coordinateRepository.save(coordinate);
 
-        UserAddress userAddress = new UserAddress(user, address, "Próximo ao Coop", "130", true, AddressUsageType.PERSONAL, coordinate);
+        UserAddress userAddress = new UserAddress(user, address, "Próximo ao Coop", "130", BigDecimal.valueOf(-23.651076), BigDecimal.valueOf(-46.57465730000001), true, AddressUsageType.PERSONAL);
         _userAddressRepository.save(userAddress);
     }
 

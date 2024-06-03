@@ -3,15 +3,13 @@ package com.naipy.alpha.modules.address.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.city.models.City;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
-import com.naipy.alpha.modules.utils.ServiceUtils;
-import com.naipy.alpha.modules.utils.maps.models.AddressComponent;
-import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.zipcode.models.ZipCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -42,6 +40,12 @@ public class Address implements Serializable {
     @OneToOne
     @JoinColumn(name = "zipcode_id")
     private ZipCode zipCode;
+
+    @NotNull
+    private BigDecimal latitude;
+
+    @NotNull
+    private BigDecimal longitude;
 
     @JsonIgnore
     @OneToMany(mappedBy = "id.address")

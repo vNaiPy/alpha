@@ -1,10 +1,15 @@
 package com.naipy.alpha.modules.user.controllers;
 
+import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.user.models.*;
+import com.naipy.alpha.modules.user_address.models.UserAddress;
+import com.naipy.alpha.modules.user_address.service.UserAddressService;
 import com.naipy.alpha.modules.utils.ControllerUtils;
 
 import com.naipy.alpha.modules.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +21,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
+
     @Autowired
     private UserService _userService;
+
+    @Autowired
+    private UserAddressService _userAddressService;
 
     @Secured({"ADMIN"})
     @GetMapping
@@ -40,6 +49,13 @@ public class UserController {
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate (@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(_userService.authenticate(request));
+    }
+
+    record AddressInput (String zipCode, String streetNumber, String complement) {}
+    @MutationMapping
+    @Secured("USER")
+    public UserAddress addUserAddress (@Argument AddressInput addressInput) {
+        return _userAddressService.addAddressToUser(addressInput.zipCode, addressInput.streetNumber, addressInput.complement);
     }
 
     @PutMapping(value = "/{id}")

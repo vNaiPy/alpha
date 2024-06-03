@@ -10,6 +10,7 @@ import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.user_address.repository.UserAddressRepository;
+import com.naipy.alpha.modules.user_address.service.UserAddressService;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    AddressService _addressService;
-
-    @Autowired
-    UserAddressRepository _userAddressRepository;
+    private UserAddressService _userAddressService;
 
     @Autowired
     AuthenticationService _authenticationService;
@@ -59,20 +57,7 @@ public class UserService {
     }
 
     public UserAddress addUserAddress (String zipCode, String streetNumber, String complement) {
-        User currentUser = ServiceUtils.getIdCurrentUser();
-        Address address = _addressService.addIfDoesntExistsAndGetAddress(zipCode);
-        String addressComplete = address.getStreet()
-                + streetNumber
-                + address.getNeighborhood()
-                + address.getCity().getName()
-                + address.getCity().getState().getName()
-                + address.getCity().getState().getCountry().getName();
-        UserAddress userAddress = _addressService.getUserAddressToUser(addressComplete);
-        userAddress.setUser(currentUser);
-        userAddress.setComplement(complement);
-        userAddress.setUsageType(AddressUsageType.PERSONAL);
-        userAddress.setIsDefault(true);
-        return _userAddressRepository.save(userAddress);
+        return _userAddressService.addAddressToUser(zipCode, streetNumber, complement);
     }
 
     public List<UserDTO> findAll () {
