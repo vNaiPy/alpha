@@ -25,9 +25,6 @@ public class UserController {
     @Autowired
     private UserService _userService;
 
-    @Autowired
-    private UserAddressService _userAddressService;
-
     @Secured({"ADMIN"})
     @GetMapping
     public ResponseEntity<List<UserDTO>> findAll () {
@@ -51,11 +48,11 @@ public class UserController {
         return ResponseEntity.ok(_userService.authenticate(request));
     }
 
-    record AddressInput (String zipCode, String streetNumber, String complement) {}
+    public record AddressInput (String zipCode, String streetNumber, String complement) {}
     @MutationMapping
     @Secured("USER")
     public UserAddress addUserAddress (@Argument AddressInput addressInput) {
-        return _userAddressService.addAddressToUser(addressInput.zipCode, addressInput.streetNumber, addressInput.complement);
+        return _userService.addUserAddress(addressInput);
     }
 
     @PutMapping(value = "/{id}")

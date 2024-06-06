@@ -1,6 +1,6 @@
-package com.naipy.alpha.modules.utils.maps.services;
+package com.naipy.alpha.modules.external_api.maps.services;
 
-import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
+import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

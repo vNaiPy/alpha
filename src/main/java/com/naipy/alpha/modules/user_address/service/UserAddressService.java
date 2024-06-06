@@ -22,7 +22,7 @@ public class UserAddressService {
     private UserAddressRepository _userAddressRepository;
 
     public UserAddress addAddressToUser (String zipCode, String streetNumber, String complement) {
-        Address address = _addressService.getAddressAndAddIfDoesntExistsAnd(zipCode);
+        Address address = _addressService.getAddressAndAddIfDoesntExists(zipCode);
         String addressComplete = address.getStreet()
                 + streetNumber
                 + address.getNeighborhood()

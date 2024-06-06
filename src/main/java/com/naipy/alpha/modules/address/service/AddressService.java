@@ -7,11 +7,13 @@ import com.naipy.alpha.modules.city.models.City;
 import com.naipy.alpha.modules.city.repository.CityRepository;
 import com.naipy.alpha.modules.country.models.Country;
 import com.naipy.alpha.modules.country.repository.CountryRepository;
+import com.naipy.alpha.modules.exceptions.services.ExternalResponseNotReceivedException;
+import com.naipy.alpha.modules.exceptions.services.InvalidParameterException;
 import com.naipy.alpha.modules.state.models.State;
 import com.naipy.alpha.modules.state.repository.StateRepository;
 import com.naipy.alpha.modules.utils.ServiceUtils;
-import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
-import com.naipy.alpha.modules.utils.maps.services.MapsService;
+import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
+import com.naipy.alpha.modules.external_api.maps.services.MapsService;
 import com.naipy.alpha.modules.zipcode.models.ZipCode;
 import com.naipy.alpha.modules.zipcode.repository.ZipCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +44,13 @@ public class AddressService {
      * @param zipCode eh um codigo postal/CEP
      * @return Address - Retorna um endereco salvo no banco
      */
-    public Address getAddressAndAddIfDoesntExistsAnd (String zipCode) {
+    public Address getAddressAndAddIfDoesntExists (String zipCode) {
         Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(zipCode);
         if (optionalAddress.isEmpty()) {
-            GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
+            GeocodeResponse geocodeResponse =
+                    _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
+            if (ServiceUtils.isDifferent("OK", geocodeResponse.getStatus()))
+                throw new ExternalResponseNotReceivedException(geocodeResponse.getStatus());
             return _addressRepository.save(instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse).getAddress());
         }
         else

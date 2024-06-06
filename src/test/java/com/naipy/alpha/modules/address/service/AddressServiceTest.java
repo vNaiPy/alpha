@@ -11,10 +11,9 @@ import com.naipy.alpha.modules.country.models.Country;
 import com.naipy.alpha.modules.country.repository.CountryRepository;
 import com.naipy.alpha.modules.state.models.State;
 import com.naipy.alpha.modules.state.repository.StateRepository;
-import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.utils.ServiceUtils;
-import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
-import com.naipy.alpha.modules.utils.maps.services.MapsService;
+import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
+import com.naipy.alpha.modules.external_api.maps.services.MapsService;
 import com.naipy.alpha.modules.zipcode.models.ZipCode;
 import com.naipy.alpha.modules.zipcode.repository.ZipCodeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AddressServiceTest {
 
@@ -66,7 +63,7 @@ class AddressServiceTest {
     }
 
     @Test
-    void addIfDoesntExistsAndGetAddress() throws JsonProcessingException {
+    void getAddressAndAddIfDoesntExists() throws JsonProcessingException {
         String zipCode = "09635130";
         Optional<Address> falseOptionalAddress = Optional.empty();
         Mockito.when(_addressRepository.findAddressByZipCode(zipCode)).thenReturn(falseOptionalAddress);

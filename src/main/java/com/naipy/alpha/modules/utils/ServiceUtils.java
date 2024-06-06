@@ -17,4 +17,8 @@ public class ServiceUtils {
         return (User) authentication.getPrincipal();
     }
 
+    public static boolean isDifferent (Object o1, Object o2) {
+        return !o1.equals(o2);
+    }
+
 }

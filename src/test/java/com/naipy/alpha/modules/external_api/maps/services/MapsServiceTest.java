@@ -1,16 +1,13 @@
-package com.naipy.alpha.modules.utils.maps.services;
+package com.naipy.alpha.modules.external_api.maps.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.naipy.alpha.modules.utils.maps.models.GeocodeResponse;
+import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.reactive.function.client.WebClient;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MapsServiceTest {
 

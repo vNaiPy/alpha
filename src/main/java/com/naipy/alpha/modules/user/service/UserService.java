@@ -1,15 +1,12 @@
 package com.naipy.alpha.modules.user.service;
 
-import com.naipy.alpha.modules.address.models.Address;
-import com.naipy.alpha.modules.address.service.AddressService;
+import com.naipy.alpha.modules.user.controllers.UserController;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user.models.*;
 import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
-import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
-import com.naipy.alpha.modules.user_address.repository.UserAddressRepository;
 import com.naipy.alpha.modules.user_address.service.UserAddressService;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import jakarta.persistence.EntityNotFoundException;
@@ -56,8 +53,8 @@ public class UserService {
         return _authenticationService.authenticate(request);
     }
 
-    public UserAddress addUserAddress (String zipCode, String streetNumber, String complement) {
-        return _userAddressService.addAddressToUser(zipCode, streetNumber, complement);
+    public UserAddress addUserAddress (UserController.AddressInput addressInput) {
+        return _userAddressService.addAddressToUser(addressInput.zipCode(), addressInput.streetNumber(), addressInput.complement());
     }
 
     public List<UserDTO> findAll () {

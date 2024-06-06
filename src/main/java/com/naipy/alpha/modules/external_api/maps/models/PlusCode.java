@@ -1,4 +1,4 @@
-package com.naipy.alpha.modules.utils.maps.models;
+package com.naipy.alpha.modules.external_api.maps.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
