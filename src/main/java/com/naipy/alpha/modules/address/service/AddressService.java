@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AddressService {
+public class AddressService extends ServiceUtils{
 
     @Autowired
     CountryRepository _countryRepository;
@@ -45,12 +45,12 @@ public class AddressService {
      * @return Address - Retorna um endereco salvo no banco
      */
     public Address getAddressAndAddIfDoesntExists (String zipCode) {
+        zipCode = removeNonNumeric(zipCode);
         Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(zipCode);
         if (optionalAddress.isEmpty()) {
             GeocodeResponse geocodeResponse =
                     _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
-            if (ServiceUtils.isDifferent("OK", geocodeResponse.getStatus()))
-                throw new ExternalResponseNotReceivedException(geocodeResponse.getStatus());
+            isValidGeocodeResponse(geocodeResponse, zipCode);
             return _addressRepository.save(instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse).getAddress());
         }
         else
@@ -59,7 +59,15 @@ public class AddressService {
 
     public AddressEnriched getAddressEnrichedByCompleteAddress (String completeAddress) {
         GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(completeAddress);
+        isValidGeocodeResponse(geocodeResponse, completeAddress);
         return instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
+    }
+
+    public void isValidGeocodeResponse (GeocodeResponse geocodeResponse, String zipCodeOrCompleteAddress) {
+        if (geocodeResponse.getStatus().equals("ZERO_RESULTS"))
+            throw new ExternalResponseNotReceivedException(geocodeResponse.getStatus() + ". Parameter passed: " + zipCodeOrCompleteAddress);
+        else if (isDifferent("OK", geocodeResponse.getStatus()))
+            throw new ExternalResponseNotReceivedException(geocodeResponse.getStatus() + ". External error received: " + geocodeResponse.getErrorMessage());
     }
 
     /**
@@ -78,7 +86,7 @@ public class AddressService {
             addressResult.getAddressComponents().forEach(addressComponent -> {
                 List<String> componentTypes = addressComponent.getTypes();
                 if (componentTypes.contains("postal_code")) {
-                    zipCode.setId(ServiceUtils.generateUUID());
+                    zipCode.setId(generateUUID());
                     zipCode.setCode(addressComponent.getLongName());
                 }
                 else if (componentTypes.contains("route"))
@@ -86,17 +94,17 @@ public class AddressService {
                 else if (componentTypes.contains("sublocality_level_1"))
                     addressBuilder.neighborhood(addressComponent.getLongName());
                 else if (componentTypes.contains("administrative_area_level_2")) {
-                    city.setId(ServiceUtils.generateUUID());
+                    city.setId(generateUUID());
                     city.setName(addressComponent.getLongName());
                     city.setCode(addressComponent.getShortName());
                 }
                 else if (componentTypes.contains("administrative_area_level_1")) {
-                    state.setId(ServiceUtils.generateUUID());
+                    state.setId(generateUUID());
                     state.setName(addressComponent.getLongName());
                     state.setCode(addressComponent.getShortName());
                 }
                 else if (componentTypes.contains("country")) {
-                    country.setId(ServiceUtils.generateUUID());
+                    country.setId(generateUUID());
                     country.setName(addressComponent.getLongName());
                     country.setCode(addressComponent.getShortName());
                 }
@@ -119,7 +127,7 @@ public class AddressService {
 
         //Nao eh necessário fazer validação do zipCode porque, no metodo onde invoca esse método, ja eh feita a busca por zipcode se existe algum endereço cadastrado
         ZipCode savedZipCode = _zipCodeRepository.save(zipCode);
-        addressBuilder.id(ServiceUtils.generateUUID());
+        addressBuilder.id(generateUUID());
         addressBuilder.city(savedCity);
         addressBuilder.zipCode(savedZipCode);
 

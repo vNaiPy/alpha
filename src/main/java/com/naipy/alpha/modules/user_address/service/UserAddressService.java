@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserAddressService {
+public class UserAddressService extends ServiceUtils {
 
     @Autowired
     private AddressService _addressService;
@@ -31,8 +31,8 @@ public class UserAddressService {
                 + address.getCity().getState().getCountry().getName();
 
         if (addressComplete.isEmpty())
-            throw new InvalidParameterException(addressComplete);
-        User currentUser = ServiceUtils.getIdCurrentUser();
+            throw new InvalidParameterException(addressComplete + ". This is not valid for searching in the MapsAPI");
+        User currentUser = getIdCurrentUser();
         UserAddress userAddress = new UserAddress();
         AddressEnriched addressEnriched = _addressService.getAddressEnrichedByCompleteAddress(addressComplete);
         userAddress.setUser(currentUser);

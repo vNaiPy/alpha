@@ -21,4 +21,8 @@ public class ServiceUtils {
         return !o1.equals(o2);
     }
 
+    public String removeNonNumeric (String dirtyString) {
+        return dirtyString.replaceAll("[^a-zA-Z0-9]", "");
+    }
+
 }
