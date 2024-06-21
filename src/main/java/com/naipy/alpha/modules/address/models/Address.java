@@ -3,7 +3,6 @@ package com.naipy.alpha.modules.address.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.city.models.City;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
-import com.naipy.alpha.modules.zipcode.models.ZipCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -33,13 +32,13 @@ public class Address implements Serializable {
     @NotNull
     private String neighborhood;
 
+    @NotNull
+    @Column(length = 12)
+    private String zipcode;
+
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
-
-    @OneToOne
-    @JoinColumn(name = "zipcode_id")
-    private ZipCode zipCode;
 
     @NotNull
     private BigDecimal latitude;

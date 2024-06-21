@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
@@ -29,17 +30,17 @@ public class ProductController {
     }
 
     @QueryMapping
-    public ProductDTO findByProductId (@Argument Long id) {
+    public ProductDTO findByProductId (@Argument UUID id) {
         return _productService.findById(id);
     }
 
-    @QueryMapping
+    /*@QueryMapping
     public List<ProductDTO> searchingForWithLngLat (@Argument String searchingFor, @Argument Double lng, @Argument Double lat) {
         return _productService.searchingForWithLngLat(searchingFor, lng, lat);
-    };
+    };*/
 
     @QueryMapping
-    public List<ProductDTO> findAllProductsByOwnerId (@Argument Long id) {
+    public List<ProductDTO> findAllProductsByOwnerId (@Argument UUID id) {
         return _productService.findAllByOwner(id);
     }
 
@@ -60,7 +61,7 @@ public class ProductController {
 
     @MutationMapping
     @Secured("USER")
-    public ProductDTO updateProduct (@Argument Long id, @Argument ProductInput product) {
+    public ProductDTO updateProduct (@Argument UUID id, @Argument ProductInput product) {
         Product updatedProduct = new Product();
         updatedProduct.setName(product.name);
         updatedProduct.setDescription(product.description);
@@ -76,7 +77,7 @@ public class ProductController {
 
     @MutationMapping
     @Secured("USER")
-    public String inactiveByProductId (@Argument Long id) {
+    public String inactiveByProductId (@Argument UUID id) {
         return _productService.inactiveByProductId(id);
     }
 

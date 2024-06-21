@@ -1,5 +1,6 @@
 package com.naipy.alpha.modules.user.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order.models.Order;
 import com.naipy.alpha.modules.product.model.Product;
@@ -8,11 +9,15 @@ import com.naipy.alpha.modules.token.Token;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.*;
 
 @Getter
@@ -22,19 +27,37 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_user")
+@Table(name = "tb_users")
 public class User implements UserDetails {
 
     @Id
     private UUID id;
 
+    @NotBlank
     private String name;
 
+    @NotBlank
+    private String surname;
+
+    @NotBlank
     private String email;
 
+    @NotBlank
     private String phone;
 
+    @NotBlank
+    private String profilePicture;
+
+    @NotBlank
     private String password;
+
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    private Instant registeredSince;
+
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    private Instant lastUpdate;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;

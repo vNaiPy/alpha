@@ -12,13 +12,13 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
-@Table(name = "tb_product")
+@Table(name = "tb_products")
 public class Product implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     private String name;
     private String description;
     private Double price;
@@ -43,7 +43,7 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(Long id, String name, String description, Double price, String imgUrl, ProductStatus status, User owner) {
+    public Product(UUID id, String name, String description, Double price, String imgUrl, ProductStatus status, User owner) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -53,11 +53,11 @@ public class Product implements Serializable {
         this.owner = owner;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -122,16 +122,4 @@ public class Product implements Serializable {
         return orderSet;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return Objects.equals(id, product.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

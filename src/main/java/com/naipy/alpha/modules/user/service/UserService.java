@@ -98,4 +98,6 @@ public class UserService {
         entity.setEmail(user.getEmail());
         entity.setPhone(user.getPhone());
     }
+
+    public String encoder (String password) {return passwordEncoder.encode(password);}
 }

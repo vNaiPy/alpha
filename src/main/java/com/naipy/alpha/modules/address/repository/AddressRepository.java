@@ -12,6 +12,6 @@ import java.util.UUID;
 @Repository
 public interface AddressRepository  extends JpaRepository<Address, UUID> {
 
-    @Query("SELECT adss FROM Address adss JOIN adss.zipCode zp WHERE zp.code = :zipcode")
+    @Query("SELECT adss FROM Address adss WHERE adss.zipcode = :zipcode")
     Optional<Address> findAddressByZipCode (@Param("zipcode") String zipcode);
 }

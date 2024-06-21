@@ -8,14 +8,11 @@ import com.naipy.alpha.modules.city.repository.CityRepository;
 import com.naipy.alpha.modules.country.models.Country;
 import com.naipy.alpha.modules.country.repository.CountryRepository;
 import com.naipy.alpha.modules.exceptions.services.ExternalResponseNotReceivedException;
-import com.naipy.alpha.modules.exceptions.services.InvalidParameterException;
 import com.naipy.alpha.modules.state.models.State;
 import com.naipy.alpha.modules.state.repository.StateRepository;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.external_api.maps.services.MapsService;
-import com.naipy.alpha.modules.zipcode.models.ZipCode;
-import com.naipy.alpha.modules.zipcode.repository.ZipCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +28,6 @@ public class AddressService extends ServiceUtils{
     StateRepository _stateRepository;
     @Autowired
     CityRepository _cityRepository;
-    @Autowired
-    ZipCodeRepository _zipCodeRepository;
     @Autowired
     AddressRepository _addressRepository;
     @Autowired
@@ -77,7 +72,6 @@ public class AddressService extends ServiceUtils{
     public AddressEnriched instantiateAddressEnrichedFromGeocodeResponse (GeocodeResponse geocodeResponse) {
         Address.AddressBuilder addressBuilder = Address.builder();
         AddressEnriched.AddressEnrichedBuilder addressEnrichedBuilder = AddressEnriched.builder();
-        ZipCode zipCode = new ZipCode();
         City city = new City();
         State state = new State();
         Country country = new Country();
@@ -86,8 +80,7 @@ public class AddressService extends ServiceUtils{
             addressResult.getAddressComponents().forEach(addressComponent -> {
                 List<String> componentTypes = addressComponent.getTypes();
                 if (componentTypes.contains("postal_code")) {
-                    zipCode.setId(generateUUID());
-                    zipCode.setCode(addressComponent.getLongName());
+                    addressBuilder.zipcode(addressComponent.getLongName());
                 }
                 else if (componentTypes.contains("route"))
                     addressBuilder.street(addressComponent.getLongName());
@@ -126,10 +119,8 @@ public class AddressService extends ServiceUtils{
         City savedCity = cityAlreadyExists.orElseGet(() -> _cityRepository.save(city));
 
         //Nao eh necessário fazer validação do zipCode porque, no metodo onde invoca esse método, ja eh feita a busca por zipcode se existe algum endereço cadastrado
-        ZipCode savedZipCode = _zipCodeRepository.save(zipCode);
         addressBuilder.id(generateUUID());
         addressBuilder.city(savedCity);
-        addressBuilder.zipCode(savedZipCode);
 
         addressEnrichedBuilder.address(addressBuilder.build());
         return addressEnrichedBuilder.build();

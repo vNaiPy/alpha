@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,21 +37,21 @@ public class ProductService {
         return _productRepository.findAll().stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
     }
 
-    public List<ProductDTO> searchingForWithLngLat (String searchingFor, Double lng, Double lat) {
+    /*public List<ProductDTO> searchingForWithLngLat (String searchingFor, Double lng, Double lat) {
         Double lngMaior = lng + 0.02;
         Double lngMenor = lng - 0.02;
         Double latMaior = lat + 0.02;
         Double latMenor = lat - 0.02;
         return _productRepository.findAllByLngLat(searchingFor.toLowerCase(), lngMaior, lngMenor, latMaior, latMenor).stream().map(ProductDTO::createProductDTO).toList();
     }
-
-    public ProductDTO findById (Long id) {
+*/
+    public ProductDTO findById (UUID id) {
         Optional<Product> productOptional = _productRepository.findById(id);
         if (productOptional.isEmpty()) throw new ResourceNotFoundException("Product not found. Id:" + id);
         return ProductDTO.createProductDTO(productOptional.get());
     }
 
-    public List<ProductDTO> findAllByOwner (Long id) {
+    public List<ProductDTO> findAllByOwner (UUID id) {
         return _productRepository.findAllByOwnerId(id).stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
     }
 
@@ -64,7 +65,7 @@ public class ProductService {
         return ProductDTO.createProductDTO(_productRepository.save(savedProduct));
     }
 
-    public ProductDTO updateProduct (Long id, Product updatedProduct) {
+    public ProductDTO updateProduct (UUID id, Product updatedProduct) {
         try {
             Product existentProduct = _productRepository.getReferenceById(id);
             updateData(updatedProduct, existentProduct);
@@ -75,7 +76,7 @@ public class ProductService {
         }
     }
 
-    public String inactiveByProductId (Long id) {
+    public String inactiveByProductId (UUID id) {
         try {
             Product existentProduct = _productRepository.getReferenceById(id);
             existentProduct.setStatus(ProductStatus.INACTIVE);

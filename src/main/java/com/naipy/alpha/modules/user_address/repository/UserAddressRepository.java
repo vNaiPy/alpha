@@ -2,9 +2,15 @@ package com.naipy.alpha.modules.user_address.repository;
 
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserAddressRepository extends JpaRepository<UserAddress, Long> {
+import java.util.Set;
+import java.util.UUID;
 
+@Repository
+public interface UserAddressRepository extends JpaRepository<UserAddress, UUID> {
+
+    @Query(value = "SELECT * from tb_user_address ua WHERE ua.user_id = ?1", nativeQuery = true)
+    Set<UserAddress> findUserAddressByUserId (UUID userId);
 }

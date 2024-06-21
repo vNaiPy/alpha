@@ -15,8 +15,6 @@ import com.naipy.alpha.modules.utils.ChargeObject;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.external_api.maps.services.MapsService;
-import com.naipy.alpha.modules.zipcode.models.ZipCode;
-import com.naipy.alpha.modules.zipcode.repository.ZipCodeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-class AddressServiceTest {
+class AddressServiceTest extends ServiceUtils {
 
     @Mock
     CountryRepository _countryRepository;
@@ -39,8 +37,6 @@ class AddressServiceTest {
     StateRepository _stateRepository;
     @Mock
     CityRepository _cityRepository;
-    @Mock
-    ZipCodeRepository _zipCodeRepository;
     @Mock
     AddressRepository _addressRepository;
     @Mock
@@ -86,7 +82,6 @@ class AddressServiceTest {
         GeocodeResponse geocodeResponse = objectMapper.readValue(geocodeResponseParam, GeocodeResponse.class);
         Address.AddressBuilder addressBuilder = Address.builder();
         AddressEnriched.AddressEnrichedBuilder addressEnrichedBuilder = AddressEnriched.builder();
-        ZipCode zipCode = new ZipCode();
         City city = new City();
         State state = new State();
         Country country = new Country();
@@ -95,25 +90,24 @@ class AddressServiceTest {
             addressResult.getAddressComponents().forEach(addressComponent -> {
                 List<String> componentTypes = addressComponent.getTypes();
                 if (componentTypes.contains("postal_code")) {
-                    zipCode.setId(ServiceUtils.generateUUID());
-                    zipCode.setCode(addressComponent.getLongName());
+                    addressBuilder.zipcode(addressComponent.getLongName());
                 }
                 else if (componentTypes.contains("route"))
                     addressBuilder.street(addressComponent.getLongName());
                 else if (componentTypes.contains("sublocality_level_1"))
                     addressBuilder.neighborhood(addressComponent.getLongName());
                 else if (componentTypes.contains("administrative_area_level_2")) {
-                    city.setId(ServiceUtils.generateUUID());
+                    city.setId(generateUUID());
                     city.setName(addressComponent.getLongName());
                     city.setCode(addressComponent.getShortName());
                 }
                 else if (componentTypes.contains("administrative_area_level_1")) {
-                    state.setId(ServiceUtils.generateUUID());
+                    state.setId(generateUUID());
                     state.setName(addressComponent.getLongName());
                     state.setCode(addressComponent.getShortName());
                 }
                 else if (componentTypes.contains("country")) {
-                    country.setId(ServiceUtils.generateUUID());
+                    country.setId(generateUUID());
                     country.setName(addressComponent.getLongName());
                     country.setCode(addressComponent.getShortName());
                 }
@@ -138,11 +132,8 @@ class AddressServiceTest {
         City savedCity = cityAlreadyExists.orElseGet(() -> _cityRepository.save(city));
 
         //Não é necessário fazer validação do zipCode porque, no método onde invoca esse método, já é feita a busca por zipcode se existe algum endereço cadastrado
-        Mockito.when(_zipCodeRepository.save(zipCode)).thenReturn(zipCode);
-        ZipCode savedZipCode = _zipCodeRepository.save(zipCode);
         addressBuilder.id(ServiceUtils.generateUUID());
         addressBuilder.city(savedCity);
-        addressBuilder.zipCode(savedZipCode);
 
         addressEnrichedBuilder.address(addressBuilder.build());
         System.out.println(addressEnrichedBuilder.build().toString());

@@ -2,7 +2,6 @@ input StoreInput {
     name: String!,
     logoUrl: String,
     bannerUrl: String,
-    address: LocalizationInput!
 }
 
 type Store {
@@ -10,5 +9,4 @@ type Store {
     logoUrl: String!,
     bannerUrl: String,
     instant: String,
-    address: Localization
 }
