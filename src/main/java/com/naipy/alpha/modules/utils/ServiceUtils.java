@@ -1,5 +1,6 @@
 package com.naipy.alpha.modules.utils;
 
+import com.github.f4b6a3.uuid.UuidCreator;
 import com.naipy.alpha.modules.user.models.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,7 +10,8 @@ import java.util.UUID;
 public class ServiceUtils {
 
     public static UUID generateUUID () {
-        return UUID.randomUUID();
+        //UUID v7
+        return UuidCreator.getTimeOrderedEpoch();
     }
 
     public static User getIdCurrentUser(){
