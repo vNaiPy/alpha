@@ -1,9 +1,11 @@
 package com.naipy.alpha.modules.user_address.service;
 
 import com.naipy.alpha.modules.address.models.Address;
+import com.naipy.alpha.modules.address.models.AddressDTO;
 import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.service.AddressService;
 import com.naipy.alpha.modules.exceptions.services.InvalidParameterException;
+import com.naipy.alpha.modules.user.controllers.AddressInput;
 import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
@@ -21,28 +23,34 @@ public class UserAddressService extends ServiceUtils {
     @Autowired
     private UserAddressRepository _userAddressRepository;
 
-    public UserAddress addAddressToUser (String zipCode, String streetNumber, String complement) {
-        Address address = _addressService.getAddressAndAddIfDoesntExists(zipCode);
-        String addressComplete = address.getStreet()
-                + streetNumber
-                + address.getNeighborhood()
-                + address.getCity().getName()
-                + address.getCity().getState().getName()
-                + address.getCity().getState().getCountry().getName();
+    public UserAddress addAddressToUser (AddressInput addressInput) {
+        AddressDTO addressDTO = _addressService.getAddressAndAddIfDoesntExists(addressInput.zipCode());
+        AddressEnriched addressEnriched = getExactAddressOfUser(addressDTO, addressInput.streetNumber());
 
-        if (addressComplete.isEmpty())
-            throw new InvalidParameterException(addressComplete + ". This is not valid for searching in the MapsAPI");
         User currentUser = getIdCurrentUser();
         UserAddress userAddress = new UserAddress();
-        AddressEnriched addressEnriched = _addressService.getAddressEnrichedByCompleteAddress(addressComplete);
         userAddress.setUser(currentUser);
         userAddress.setAddress(addressEnriched.getAddress());
         userAddress.setLongitude(addressEnriched.getAddress().getLongitude());
         userAddress.setLatitude(addressEnriched.getAddress().getLatitude());
         userAddress.setStreetNumber(addressEnriched.getStreetNumber());
-        userAddress.setComplement(complement);
+        userAddress.setComplement(addressInput.complement());
         userAddress.setUsageType(AddressUsageType.PERSONAL);
         userAddress.setIsDefault(true);
         return _userAddressRepository.save(userAddress);
+    }
+
+    public AddressEnriched getExactAddressOfUser (AddressDTO address, String streetNumber) {
+        String addressComplete = address.getStreet() + WHITESPACE
+                + streetNumber + WHITESPACE
+                + address.getNeighborhood() + WHITESPACE
+                + address.getCity() + WHITESPACE
+                + address.getState() + WHITESPACE
+                + address.getCountry();
+
+        if (addressComplete.isBlank())
+            throw new InvalidParameterException(addressComplete + ". This is not valid for searching in the MapsAPI");
+
+        return _addressService.getAddressEnrichedByCompleteAddress(addressComplete);
     }
 }

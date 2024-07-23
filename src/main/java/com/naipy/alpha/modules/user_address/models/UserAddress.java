@@ -1,5 +1,6 @@
 package com.naipy.alpha.modules.user_address.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
@@ -13,6 +14,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Entity
 @Table(name = "tb_user_address")
@@ -42,6 +44,12 @@ public class UserAddress implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     private AddressUsageType usageType;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    private Instant insertDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    private Instant lastUpdate;
 
     public UserAddress() {
     }

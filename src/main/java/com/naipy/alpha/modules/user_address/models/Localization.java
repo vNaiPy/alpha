@@ -2,7 +2,7 @@ package com.naipy.alpha.modules.user_address.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.naipy.alpha.modules.store.model.Store;
+import com.naipy.alpha.modules.store.models.Store;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

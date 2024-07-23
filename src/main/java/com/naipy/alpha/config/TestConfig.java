@@ -1,19 +1,7 @@
 package com.naipy.alpha.config;
 
-import com.naipy.alpha.modules.country.models.Country;
-import com.naipy.alpha.modules.country.repository.CountryRepository;
-import com.naipy.alpha.modules.state.models.State;
-import com.naipy.alpha.modules.state.repository.StateRepository;
-import com.naipy.alpha.modules.user_address.repository.UserAddressRepository;
-import com.naipy.alpha.modules.user.models.Role;
-import com.naipy.alpha.modules.user.enums.UserStatus;
-import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.user.repository.UserRepository;
-import com.naipy.alpha.modules.category.model.Category;
 import com.naipy.alpha.modules.category.repository.CategoryRepository;
-import com.naipy.alpha.modules.order.repository.OrderRepository;
-import com.naipy.alpha.modules.order_item.repository.OrderItemRepository;
-import com.naipy.alpha.modules.product.repository.ProductRepository;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,19 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
-
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
     @Autowired
     private UserRepository _userRepository;
 
-    @Autowired
-    private CountryRepository _countryRepository;
-
-    @Autowired
-    private StateRepository _stateRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -44,21 +25,8 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Country country = Country.builder()
-                .id(ServiceUtils.generateUUID())
-                .name("Brasil")
-                .code("BR")
-                .build();
-
-        _countryRepository.save(country);
-
-        State state = State.builder()
-                .id(ServiceUtils.generateUUID())
-                .name("São Paulo")
-                .code("SP")
-                .country(country)
-                .build();
-        _stateRepository.save(state);
+        String country = "Brasil";
+        String state = "São Paulo";
 
 
         /*User admin = User.builder()

@@ -2,8 +2,13 @@ type Mutation {
     #Auth
     register (request: RegisterRequest!): AuthenticationResponse!
     authenticate (request: AuthenticationRequest!): AuthenticationResponse!
+
+    #User
+
+    addAddressToUser(addressInput: UserAddressInput): [UserAddress]
+
     #Store
-    storeRegistration(store: StoreInput!): Store!
+    storeRegistration (store: StoreInput!): Store!
     #Product
     addProduct (product: ProductInput!): Product!
     updateProduct (id: ID!, product: ProductInput!): Product!

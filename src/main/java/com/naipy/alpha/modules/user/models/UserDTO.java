@@ -1,7 +1,7 @@
 package com.naipy.alpha.modules.user.models;
 
 import com.naipy.alpha.modules.order.models.Order;
-import com.naipy.alpha.modules.store.model.Store;
+import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import lombok.AllArgsConstructor;

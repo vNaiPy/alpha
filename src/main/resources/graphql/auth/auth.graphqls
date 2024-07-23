@@ -1,12 +1,14 @@
 input RegisterRequest {
-    name: String!,
-    email: String!,
-    phone: String!,
-    password: String!,
+    name: String!
+    surname: String!
+    identityDocument: String!
+    email: String!
+    phone: String!
+    password: String!
 }
 
 input AuthenticationRequest {
-    username: String!,
+    username: String!
     password: String!
 }
 

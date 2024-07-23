@@ -48,11 +48,10 @@ public class UserController {
         return ResponseEntity.ok(_userService.authenticate(request));
     }
 
-    public record AddressInput (String zipCode, String streetNumber, String complement) {}
     @MutationMapping
     @Secured("USER")
-    public UserAddress addUserAddress (@Argument AddressInput addressInput) {
-        return _userService.addUserAddress(addressInput);
+    public UserAddress addAddressToUser (@Argument AddressInput addressInput) {
+        return _userService.addAddressToUser(addressInput);
     }
 
     @PutMapping(value = "/{id}")

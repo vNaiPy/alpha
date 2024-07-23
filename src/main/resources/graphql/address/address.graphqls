@@ -1,0 +1,30 @@
+type Address {
+    id: ID
+    street: String!
+    neighborhood: String!
+    zipcode: String!
+    latitude: Float!
+    longitude: Float!
+    city: City
+}
+
+type City {
+    id: ID
+    name: String!
+    code: String
+    state: State
+}
+
+type State {
+    id: ID
+    name: String!
+    code: String
+    country: Country
+}
+
+type Country {
+    id: ID
+    name: String!
+    code: String
+}
+

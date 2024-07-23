@@ -1,7 +1,10 @@
 package com.naipy.alpha.modules.user_address.service;
 
 import com.naipy.alpha.modules.address.models.Address;
+import com.naipy.alpha.modules.address.models.AddressDTO;
+import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.service.AddressService;
+import com.naipy.alpha.modules.exceptions.services.InvalidParameterException;
 import com.naipy.alpha.modules.utils.ChargeObject;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,16 +35,29 @@ class UserAddressServiceTest extends ServiceUtils {
     void addAddressToUser() {
         String zipCode = "09635-130";
         String streetNumber = "130";
-        Mockito.when(_addressService.getAddressAndAddIfDoesntExists(zipCode)).thenReturn(ChargeObject.getOneAddress());
+        Mockito.when(_addressService.getAddressAndAddIfDoesntExists(zipCode)).thenReturn(new AddressDTO(ChargeObject.getOneAddress()));
+        AddressDTO addressDTO = _addressService.getAddressAndAddIfDoesntExists(zipCode);
+
+        Mockito.when(_userAddressService.getExactAddressOfUser(addressDTO, streetNumber)).thenReturn(ChargeObject.getOneAddressEnriched());
+        AddressEnriched addressEnriched = _userAddressService.getExactAddressOfUser(addressDTO, streetNumber);
+        System.out.println(addressEnriched);
+    }
+
+    @Test
+    void addAddressToUserThrowingInvalidParameterException() {
+        String zipCode = "09635-130";
+        String streetNumber = "130";
+        /*Mockito.when(_addressService.getAddressAndAddIfDoesntExists(zipCode)).thenReturn(ChargeObject.getOneAddress());
         Address address = _addressService.getAddressAndAddIfDoesntExists(zipCode);
-        String addressComplete = address.getStreet()
-                + streetNumber
-                + address.getNeighborhood()
-                + address.getCity().getName()
-                + address.getCity().getState().getName()
+        String addressComplete = address.getStreet() + WHITESPACE
+                + streetNumber + WHITESPACE
+                + address.getNeighborhood() + WHITESPACE
+                + address.getCity().getName() + WHITESPACE
+                + address.getCity().getState().getName() + WHITESPACE
                 + address.getCity().getState().getCountry().getName();
 
-        System.out.println(addressComplete.toString());
-
+        if (addressComplete.isBlank())
+            throw new InvalidParameterException(addressComplete + ". This is not valid for searching in the MapsAPI");
+*/
     }
 }

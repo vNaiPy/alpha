@@ -1,5 +1,6 @@
 package com.naipy.alpha.modules.user.service;
 
+import com.naipy.alpha.modules.user.controllers.AddressInput;
 import com.naipy.alpha.modules.user.controllers.UserController;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user.models.*;
@@ -53,8 +54,8 @@ public class UserService {
         return _authenticationService.authenticate(request);
     }
 
-    public UserAddress addUserAddress (UserController.AddressInput addressInput) {
-        return _userAddressService.addAddressToUser(addressInput.zipCode(), addressInput.streetNumber(), addressInput.complement());
+    public UserAddress addAddressToUser (AddressInput addressInput) {
+        return _userAddressService.addAddressToUser(addressInput);
     }
 
     public List<UserDTO> findAll () {

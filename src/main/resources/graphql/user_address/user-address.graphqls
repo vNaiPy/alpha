@@ -1,0 +1,16 @@
+input UserAddressInput {
+    zipCode: String!,
+    streetNumber: String!,
+    complement: String
+}
+
+type UserAddress {
+    id: ID
+    user: User
+    address: Address!
+    streetNumber: String!
+    complement: String!
+    latitude: Float!
+    longitude: Float!
+    isDefault: Boolean
+}

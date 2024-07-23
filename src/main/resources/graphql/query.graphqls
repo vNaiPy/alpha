@@ -1,4 +1,8 @@
 type Query {
+
+    #Address
+    findByZipcode(zipcode: String): Address
+
     #Store
     findStoreByCurrentUser: Store
     findAllStore: [Store]

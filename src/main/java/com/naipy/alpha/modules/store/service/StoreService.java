@@ -1,17 +1,12 @@
 package com.naipy.alpha.modules.store.service;
 
-import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.address.repository.AddressRepository;
-import com.naipy.alpha.modules.user_address.models.Localization;
-import com.naipy.alpha.modules.user_address.models.UserAddress;
-import com.naipy.alpha.modules.user_address.repository.UserAddressRepository;
-import com.naipy.alpha.modules.store.model.Store;
+import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.store.repository.StoreRepository;
 import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
-import com.naipy.alpha.modules.exceptions.services.StoreAlreadyRegisteredException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

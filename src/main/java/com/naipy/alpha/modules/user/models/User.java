@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order.models.Order;
 import com.naipy.alpha.modules.product.model.Product;
-import com.naipy.alpha.modules.store.model.Store;
+import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.token.Token;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
@@ -12,7 +12,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +37,9 @@ public class User implements UserDetails {
 
     @NotBlank
     private String surname;
+
+    @NotBlank
+    private String identityDocument;
 
     @NotBlank
     private String email;

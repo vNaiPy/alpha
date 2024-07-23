@@ -1,7 +1,7 @@
 package com.naipy.alpha.modules.product.model;
 
 import com.naipy.alpha.modules.category.model.Category;
-import com.naipy.alpha.modules.store.model.Store;
+import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

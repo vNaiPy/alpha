@@ -1,10 +1,9 @@
 package com.naipy.alpha.modules.address.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.naipy.alpha.modules.city.models.City;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.io.Serializable;
@@ -26,24 +25,29 @@ public class Address implements Serializable {
     @Id
     private UUID id;
 
-    @NotNull
+    @NotBlank
     private String street;
 
-    @NotNull
+    @NotBlank
     private String neighborhood;
 
-    @NotNull
+    @NotBlank
     @Column(length = 12)
     private String zipcode;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private City city;
+    @NotBlank
+    private String city;
 
-    @NotNull
+    @NotBlank
+    private String state;
+
+    @NotBlank
+    private String country;
+
+    @NotBlank
     private BigDecimal latitude;
 
-    @NotNull
+    @NotBlank
     private BigDecimal longitude;
 
     @JsonIgnore

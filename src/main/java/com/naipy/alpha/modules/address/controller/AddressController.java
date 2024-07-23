@@ -1,6 +1,6 @@
 package com.naipy.alpha.modules.address.controller;
 
-import com.naipy.alpha.modules.address.models.Address;
+import com.naipy.alpha.modules.address.models.AddressDTO;
 import com.naipy.alpha.modules.address.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,6 @@ public class AddressController {
     private final AddressService _addressService;
 
     @QueryMapping()
-    public Address findByZipCode (@Argument String zipCode) {return _addressService.getAddressAndAddIfDoesntExists(zipCode);}
+    public AddressDTO findByZipcode (@Argument String zipCode) {return _addressService.getAddressAndAddIfDoesntExists(zipCode);}
 
 }

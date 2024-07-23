@@ -9,6 +9,9 @@ import java.util.UUID;
 
 public class ServiceUtils {
 
+    public final String WHITESPACE = " ";
+    public final String EMPTY_STRING = "";
+
     public static UUID generateUUID () {
         //UUID v7
         return UuidCreator.getTimeOrderedEpoch();
