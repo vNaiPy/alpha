@@ -3,11 +3,14 @@ package com.naipy.alpha.modules.address.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naipy.alpha.modules.address.models.Address;
+import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.repository.AddressRepository;
+import com.naipy.alpha.modules.utils.ChargeAddressObject;
 import com.naipy.alpha.modules.utils.ChargeObject;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.external_api.maps.services.MapsService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,13 +28,13 @@ import java.util.Optional;
 class AddressServiceTest extends ServiceUtils {
 
     @Mock
-    AddressRepository _addressRepository;
+    AddressRepository addressRepository;
     @Mock
-    MapsService _mapsService;
+    MapsService mapsService;
 
     @Autowired
     @InjectMocks
-    AddressService _addressService;
+    AddressService addressService;
 
     @BeforeEach
     void setup () {
@@ -39,26 +42,27 @@ class AddressServiceTest extends ServiceUtils {
     }
 
     static List<String> myParameters() {
-        return List.of(ChargeObject.postalCodeType, ChargeObject.streetNumberType);
+        return List.of(ChargeAddressObject.POSTAL_CODE_TYPE, ChargeAddressObject.STREET_NUMBER_TYPE);
     }
 
     @Test
     void getAddressAndAddIfDoesntExists() throws JsonProcessingException {
         String zipCode = "09635130";
         Optional<Address> falseOptionalAddress = Optional.empty();
-        Mockito.when(_addressRepository.findAddressByZipCode(zipCode)).thenReturn(falseOptionalAddress);
-        Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(zipCode);
+        Mockito.when(addressRepository.findAddressByZipCode(zipCode)).thenReturn(falseOptionalAddress);
+        Optional<Address> optionalAddress = addressRepository.findAddressByZipCode(zipCode);
 
         if (optionalAddress.isEmpty()) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            GeocodeResponse mockedGeocodeResponse = objectMapper.readValue(ChargeObject.postalCodeType, GeocodeResponse.class);
+            GeocodeResponse mockedGeocodeResponse = ChargeAddressObject.getPostalCodeType();
 
-            Mockito.when(_mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode)).thenReturn(mockedGeocodeResponse);
-            GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
+            Mockito.when(mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode)).thenReturn(mockedGeocodeResponse);
+            GeocodeResponse geocodeResponse = mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
             System.out.println(geocodeResponse);
+            Assertions.assertEquals(mockedGeocodeResponse, geocodeResponse);
         }
-        else
-            System.out.println(optionalAddress.get().toString());
+        else {
+            Assertions.assertFalse(optionalAddress.isEmpty());
+        }
     }
 
 
@@ -67,7 +71,7 @@ class AddressServiceTest extends ServiceUtils {
     void instantiateAddressFromGeocodeResponse(String geocodeResponseParam) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         GeocodeResponse geocodeResponse = objectMapper.readValue(geocodeResponseParam, GeocodeResponse.class);
-        _addressService.instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
-        System.out.println(_addressService.instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse));
+        AddressEnriched addressEnriched = addressService.instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
+        System.out.println(addressEnriched.toString());
     }
 }

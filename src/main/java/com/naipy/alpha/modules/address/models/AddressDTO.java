@@ -3,19 +3,16 @@ package com.naipy.alpha.modules.address.models;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
-import java.util.UUID;
-
 @Getter
 @ToString
 public class AddressDTO {
 
-    private final UUID id;
+    private final String id;
     private final String street;
     private final String neighborhood;
     private final String zipcode;
-    private final BigDecimal latitude;
-    private final BigDecimal longitude;
+    private final String latitude;
+    private final String longitude;
     private final String city;
     private final String state;
     private final String country;

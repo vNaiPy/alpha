@@ -7,10 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "tb_addresses")
@@ -23,7 +21,7 @@ import java.util.UUID;
 public class Address implements Serializable {
 
     @Id
-    private UUID id;
+    private String id;
 
     @NotBlank
     private String street;
@@ -45,10 +43,10 @@ public class Address implements Serializable {
     private String country;
 
     @NotBlank
-    private BigDecimal latitude;
+    private String latitude;
 
     @NotBlank
-    private BigDecimal longitude;
+    private String longitude;
 
     @JsonIgnore
     @OneToMany(mappedBy = "id.address")

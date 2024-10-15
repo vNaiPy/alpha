@@ -18,8 +18,8 @@ public class UserAddressDTO {
     private final AddressDTO addressDTO;
     private final String complement;
     private final String streetNumber;
-    private final BigDecimal latitude;
-    private final BigDecimal longitude;
+    private final String latitude;
+    private final String longitude;
     private final AddressUsageType usageType;
 
     public UserAddressDTO (UserAddress userAddress) {

@@ -9,12 +9,17 @@ import java.util.UUID;
 
 public class ServiceUtils {
 
-    public final String WHITESPACE = " ";
-    public final String EMPTY_STRING = "";
+    public static final String WHITESPACE = " ";
+    public static final String EMPTY_STRING = "";
 
-    public static UUID generateUUID () {
+   /* public static UUID generateUUID () {
         //UUID v7
         return UuidCreator.getTimeOrderedEpoch();
+    }*/
+
+    public static String generateUUID () {
+        //UUID v7
+        return UuidCreator.getTimeOrderedEpoch().toString();
     }
 
     public static User getIdCurrentUser(){

@@ -5,26 +5,7 @@ type Address {
     zipcode: String!
     latitude: Float!
     longitude: Float!
-    city: City
+    city: String
+    state: String
+    country: String
 }
-
-type City {
-    id: ID
-    name: String!
-    code: String
-    state: State
-}
-
-type State {
-    id: ID
-    name: String!
-    code: String
-    country: Country
-}
-
-type Country {
-    id: ID
-    name: String!
-    code: String
-}
-

@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> findById (@PathVariable UUID id) {
+    public ResponseEntity<UserDTO> findById (@PathVariable String id) {
         UserDTO userDTO = _userService.findById(id);
         return ResponseEntity.ok().body(userDTO);
     }
@@ -55,13 +55,13 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<User> update (@PathVariable UUID id, @RequestBody User user) {
+    public ResponseEntity<User> update (@PathVariable String id, @RequestBody User user) {
         user = _userService.update(id, user);
         return ResponseEntity.ok().body(user);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete (@PathVariable UUID id) {
+    public ResponseEntity<Void> delete (@PathVariable String id) {
         _userService.delete(id);
         return ResponseEntity.noContent().build();
     }

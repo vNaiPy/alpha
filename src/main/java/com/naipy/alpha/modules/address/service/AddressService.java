@@ -18,10 +18,10 @@ import java.util.Optional;
 public class AddressService extends ServiceUtils{
 
     @Autowired
-    AddressRepository _addressRepository;
+    AddressRepository addressRepository;
+    
     @Autowired
-    MapsService _mapsService;
-
+    MapsService mapsService;
 
     /**
      * Primeiro, consultar no Redis. Caso nao exista, consultar no Postgrees. Caso nao exista, consultar na API GoogleMaps e salvar nos bancos.
@@ -30,19 +30,19 @@ public class AddressService extends ServiceUtils{
      */
     public AddressDTO getAddressAndAddIfDoesntExists (String zipCode) {
         zipCode = removeNonNumeric(zipCode);
-        Optional<Address> optionalAddress = _addressRepository.findAddressByZipCode(zipCode);
+        Optional<Address> optionalAddress = addressRepository.findAddressByZipCode(zipCode);
         if (optionalAddress.isEmpty()) {
             GeocodeResponse geocodeResponse =
-                    _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
+                    mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
             isValidGeocodeResponse(geocodeResponse, zipCode);
-            return new AddressDTO(_addressRepository.save(instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse).getAddress()));
+            return new AddressDTO(addressRepository.save(instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse).getAddress()));
         }
         else
             return new AddressDTO(optionalAddress.get());
     }
 
     public AddressEnriched getAddressEnrichedByCompleteAddress (String completeAddress) {
-        GeocodeResponse geocodeResponse = _mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(completeAddress);
+        GeocodeResponse geocodeResponse = mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(completeAddress);
         isValidGeocodeResponse(geocodeResponse, completeAddress);
         return instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
     }
@@ -66,7 +66,7 @@ public class AddressService extends ServiceUtils{
             addressResult.getAddressComponents().forEach(addressComponent -> {
                 List<String> componentTypes = addressComponent.getTypes();
                 if (componentTypes.contains("postal_code"))
-                    addressBuilder.zipcode(addressComponent.getLongName());
+                    addressBuilder.zipcode(removeNonNumeric(addressComponent.getLongName()));
                 else if (componentTypes.contains("route"))
                     addressBuilder.street(addressComponent.getLongName());
                 else if (componentTypes.contains("sublocality_level_1"))
@@ -74,7 +74,7 @@ public class AddressService extends ServiceUtils{
                 else if (componentTypes.contains("administrative_area_level_2"))
                     addressBuilder.city(addressComponent.getLongName());
                 else if (componentTypes.contains("administrative_area_level_1"))
-                    addressBuilder.street(addressComponent.getLongName());
+                    addressBuilder.state(addressComponent.getLongName());
                 else if (componentTypes.contains("country"))
                     addressBuilder.country(addressComponent.getLongName());
                 else if (componentTypes.contains("street_number"))

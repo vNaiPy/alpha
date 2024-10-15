@@ -1,6 +1,5 @@
 package com.naipy.alpha.modules.user_address.service;
 
-import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.address.models.AddressDTO;
 import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.service.AddressService;

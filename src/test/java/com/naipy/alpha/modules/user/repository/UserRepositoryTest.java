@@ -18,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -32,13 +31,13 @@ class UserRepositoryTest {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    UserRepository _userRepository;
+    UserRepository userRepository;
 
     @Autowired
-    AddressRepository _addressRepository;
+    AddressRepository addressRepository;
 
     @Autowired
-    UserAddressRepository _userAddressRepository;
+    UserAddressRepository userAddressRepository;
 
     @BeforeEach
     void setUp () {
@@ -50,11 +49,11 @@ class UserRepositoryTest {
                 .city("São Bernardo do Campo")
                 .state("São Paulo")
                 .country("Brasil")
-                .longitude(BigDecimal.valueOf(-46.57409550000001))
-                .latitude(BigDecimal.valueOf(-23.6509129))
+                .longitude("-46.57409550000001")
+                .latitude("-23.6509129")
                 .zipcode("09635130")
                 .build();
-        address = _addressRepository.save(address);
+        address = addressRepository.save(address);
 
         User admin = User.builder()
                 .id(ServiceUtils.generateUUID())
@@ -84,17 +83,17 @@ class UserRepositoryTest {
                 .lastUpdate(Instant.now())
                 .build();
 
-        _userRepository.saveAll(List.of(admin, user));
+        userRepository.saveAll(List.of(admin, user));
 
-        UserAddress userAddress = new UserAddress(user, address, "Próximo ao Coop", "130", BigDecimal.valueOf(-23.651076), BigDecimal.valueOf(-46.57465730000001), true, AddressUsageType.PERSONAL);
-        System.out.println(_userAddressRepository.save(userAddress));
-        System.out.println(_userAddressRepository.findUserAddressByUserId(userAddress.getUser().getId()));
+        UserAddress userAddress = new UserAddress(user, address, "Próximo ao Coop", "130", "-23.651076", "-46.57465730000001", true, AddressUsageType.PERSONAL);
+        System.out.println(userAddressRepository.save(userAddress));
+        System.out.println(userAddressRepository.findUserAddressByUserId(userAddress.getUser().getId()));
     }
 
     @Test
     @DisplayName("findByEmail happy way")
     void findByEmailCase1() {
-        Optional<User> userOptional = _userRepository.findByEmail("bruna@mail.com");
+        Optional<User> userOptional = userRepository.findByEmail("bruna@mail.com");
         System.out.println(userOptional.orElse(null));
         assertTrue(userOptional.isPresent());
     }
@@ -102,16 +101,16 @@ class UserRepositoryTest {
     @Test
     @DisplayName("findByEmail bad way")
     void findByEmailCase2() {
-        Optional<User> userOptional = _userRepository.findByEmail("bruna@mai.com");
+        Optional<User> userOptional = userRepository.findByEmail("bruna@mai.com");
         System.out.println(userOptional.orElse(null));
-        assertFalse(_userRepository.findByEmail("bruna@mai.com").isPresent());
+        assertFalse(userRepository.findByEmail("bruna@mai.com").isPresent());
     }
 
     @Test
     @DisplayName("getUserAddress happy way")
     void getUserAddressCase1() {
+        var userOptional = userAddressRepository.findUserAddressByUserId(ServiceUtils.generateUUID());
 
-        var userOptional = _userAddressRepository.findUserAddressByUserId(ServiceUtils.generateUUID());
         System.out.println(userOptional.toString());
     }
 }

@@ -11,6 +11,5 @@ import lombok.*;
 public class AddressEnriched {
 
     private Address address;
-
     private String streetNumber;
 }

@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
 public class UserService {
 
     @Autowired
-    private UserRepository _userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserAddressService _userAddressService;
+    private UserAddressService userAddressService;
 
     @Autowired
-    AuthenticationService _authenticationService;
+    AuthenticationService authenticationService;
 
     public AuthenticationResponse addNewUser (RegisterRequest request) {
         User user = User.builder()
@@ -47,32 +47,32 @@ public class UserService {
                 .status(UserStatus.ACTIVE)
                 .roles(List.of(Role.USER))
                 .build();
-        return _authenticationService.authenticateAfterInsertingNewUser(_userRepository.save(user));
+        return authenticationService.authenticateAfterInsertingNewUser(userRepository.save(user));
     }
 
     public AuthenticationResponse authenticate (AuthenticationRequest request) {
-        return _authenticationService.authenticate(request);
+        return authenticationService.authenticate(request);
     }
 
     public UserAddress addAddressToUser (AddressInput addressInput) {
-        return _userAddressService.addAddressToUser(addressInput);
+        return userAddressService.addAddressToUser(addressInput);
     }
 
     public List<UserDTO> findAll () {
-        return _userRepository.findAll()
+        return userRepository.findAll()
                 .stream().map(UserDTO::createUserDTO)
                 .collect(Collectors.toList());
     }
 
-    public UserDTO findById (UUID id) {
-        Optional<User> userOptional = _userRepository.findById(id);
+    public UserDTO findById (String id) {
+        Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) throw new ResourceNotFoundException(id);
         return UserDTO.createUserDTO(userOptional.get());
     }
 
-    public void delete (UUID id) {
+    public void delete (String id) {
         try {
-            _userRepository.deleteById(id);
+            userRepository.deleteById(id);
         }
         catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
@@ -82,11 +82,11 @@ public class UserService {
         }
     }
 
-    public User update (UUID id, User user) {
+    public User update (String id, User user) {
         try {
-            User entity = _userRepository.getReferenceById(id);
+            User entity = userRepository.getReferenceById(id);
             updateData(user, entity);
-            return _userRepository.save(entity);
+            return userRepository.save(entity);
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(e.getMessage());

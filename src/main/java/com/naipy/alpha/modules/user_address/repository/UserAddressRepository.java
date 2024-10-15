@@ -6,11 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Repository
-public interface UserAddressRepository extends JpaRepository<UserAddress, UUID> {
+public interface UserAddressRepository extends JpaRepository<UserAddress, String> {
 
     @Query(value = "SELECT * from tb_user_address ua WHERE ua.user_id = ?1", nativeQuery = true)
-    Set<UserAddress> findUserAddressByUserId (UUID userId);
+    Set<UserAddress> findUserAddressByUserId (String userId);
 }

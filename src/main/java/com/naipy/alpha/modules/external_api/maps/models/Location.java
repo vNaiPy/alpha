@@ -10,6 +10,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @ToString
 public class Location {
-    private BigDecimal lat;
-    private BigDecimal lng;
+    private String lat;
+    private String lng;
 }

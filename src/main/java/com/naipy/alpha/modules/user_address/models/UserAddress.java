@@ -7,6 +7,7 @@ import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.pk.UserAddressPK;
 import com.naipy.alpha.modules.user.models.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,11 +33,11 @@ public class UserAddress implements Serializable {
     @NotNull
     private String streetNumber;
 
-    @NotNull
-    private BigDecimal latitude;
+    @NotBlank
+    private String latitude;
 
-    @NotNull
-    private BigDecimal longitude;
+    @NotBlank
+    private String longitude;
 
     @NotNull
     private Boolean isDefault;
@@ -54,7 +55,7 @@ public class UserAddress implements Serializable {
     public UserAddress() {
     }
 
-    public UserAddress(User user, Address address, String complement, String streetNumber, BigDecimal latitude, BigDecimal longitude, Boolean isDefault, AddressUsageType usageType) {
+    public UserAddress(User user, Address address, String complement, String streetNumber, String latitude, String longitude, Boolean isDefault, AddressUsageType usageType) {
         setUser(user);
         setAddress(address);
         this.complement = complement;
@@ -63,6 +64,8 @@ public class UserAddress implements Serializable {
         this.longitude = longitude;
         this.isDefault = isDefault;
         this.usageType = usageType;
+        this.insertDate = Instant.now();
+        this.lastUpdate = Instant.now();
     }
 
     @JsonIgnore

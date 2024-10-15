@@ -37,7 +37,7 @@ public class UserServiceTest {
     @Test
     void findByEmail() {
 
-        UUID id = ServiceUtils.generateUUID();
+        String id = ServiceUtils.generateUUID();
         User user = User.builder()
                 .id(id)
                 .name("Bruna Meyer")

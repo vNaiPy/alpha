@@ -30,7 +30,7 @@ import java.util.*;
 public class User implements UserDetails {
 
     @Id
-    private UUID id;
+    private String id;
 
     @NotBlank
     private String name;
@@ -47,7 +47,6 @@ public class User implements UserDetails {
     @NotBlank
     private String phone;
 
-    @NotBlank
     private String profilePicture;
 
     @NotBlank

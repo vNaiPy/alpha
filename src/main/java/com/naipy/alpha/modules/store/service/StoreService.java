@@ -37,7 +37,7 @@ public class StoreService {
         return _storeRepository.findAll();
     }
 
-    public Store findById (UUID ownerId) {
+    public Store findById (String ownerId) {
         Optional<Store> storeOptional = _storeRepository.findByOwnerId(ownerId);
 
         if (storeOptional.isEmpty()) throw new ResourceNotFoundException(ownerId);
@@ -67,7 +67,7 @@ public class StoreService {
         }
     }
 */
-    public void delete (UUID ownerId) {
+    public void delete (String ownerId) {
         try {
             _storeRepository.deleteByOwnerId(ownerId);
         }
@@ -79,7 +79,7 @@ public class StoreService {
         }
     }
 
-    public Store update (UUID ownerId, Store store) {
+    public Store update (String ownerId, Store store) {
         try {
             Store entity = _storeRepository.getReferenceById(ownerId);
             updateData(store, entity);

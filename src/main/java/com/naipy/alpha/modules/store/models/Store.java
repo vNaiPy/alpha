@@ -22,7 +22,7 @@ import java.util.UUID;
 public class Store implements Serializable {
 
     @Id
-    private UUID id;
+    private String id;
     private String name;
     private String logoUrl;
     private String bannerUrl;
