@@ -12,8 +12,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class MapsService {
 
     private final WebClient webClient;
-    final String MAPS_KEY = "&key=AIzaSyDLr4j7hVxfeYDR1wEC1YnDSgw91UqOjsY";
-    final String WHITESPACE_CODE = "%20";
+    private static final String MAPS_KEY = "&key=AIzaSyDLr4j7hVxfeYDR1wEC1YnDSgw91UqOjsY";
+    private static final String WHITESPACE_CODE = "%20";
 
     public MapsService (WebClient.Builder webClientBuilder) {
         this.webClient =

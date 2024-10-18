@@ -1,7 +1,5 @@
 package com.naipy.alpha.modules.utils;
 
-import com.naipy.alpha.modules.address.models.Address;
-import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user.models.Role;
 import com.naipy.alpha.modules.user.models.User;

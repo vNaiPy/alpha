@@ -37,7 +37,8 @@ public class CategoryService {
             _categoryRepository.deleteById(id);
         }
         catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(id);
+            final String errorMessage = "Category not found by ID: " + id.toString();
+            throw new ResourceNotFoundException(errorMessage);
         }
         catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());

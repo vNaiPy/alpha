@@ -23,11 +23,11 @@ import java.util.UUID;
 public class UserServiceTest {
 
     @Mock
-    private UserRepository _userRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
     @Autowired
-    UserService _userService;
+    UserService userService;
 
     @BeforeEach
     void setup() {
@@ -47,12 +47,12 @@ public class UserServiceTest {
                 .roles(List.of(Role.USER))
                 .build();
 
-        Mockito.when(_userRepository.findById(id)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(user));
 
-        Optional<User> userMocked = _userRepository.findById(id);
-        if (userMocked.isEmpty()) throw new ResourceNotFoundException(4L);
+        Optional<User> userMocked = userRepository.findById(id);
+        if (userMocked.isEmpty()) throw new ResourceNotFoundException("User not found by ID: " + id);
 
-        Mockito.verify(_userRepository, Mockito.times(1)).findById(id);
-        System.out.println(UserDTO.createUserDTO(_userRepository.findById(id).get()).toString());;
+        Mockito.verify(userRepository, Mockito.times(1)).findById(id);
+        System.out.println(UserDTO.createUserDTO(userRepository.findById(id).get()).toString());
     }
 }

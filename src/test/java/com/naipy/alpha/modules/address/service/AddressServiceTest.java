@@ -3,10 +3,10 @@ package com.naipy.alpha.modules.address.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naipy.alpha.modules.address.models.Address;
+import com.naipy.alpha.modules.address.models.AddressDTO;
 import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.repository.AddressRepository;
 import com.naipy.alpha.modules.utils.ChargeAddressObject;
-import com.naipy.alpha.modules.utils.ChargeObject;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.external_api.maps.services.MapsService;
@@ -54,11 +54,20 @@ class AddressServiceTest extends ServiceUtils {
 
         if (optionalAddress.isEmpty()) {
             GeocodeResponse mockedGeocodeResponse = ChargeAddressObject.getPostalCodeType();
-
             Mockito.when(mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode)).thenReturn(mockedGeocodeResponse);
             GeocodeResponse geocodeResponse = mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
-            System.out.println(geocodeResponse);
-            Assertions.assertEquals(mockedGeocodeResponse, geocodeResponse);
+
+            addressService.isValidGeocodeResponse(geocodeResponse, zipCode);
+
+            AddressEnriched addressEnriched = addressService.instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
+
+            Mockito.when(addressRepository.save(addressEnriched.getAddress())).thenReturn(addressEnriched.getAddress());
+            AddressDTO addressDTO = new AddressDTO(addressRepository.save(addressEnriched.getAddress()));
+
+            Address addressGoal =  ChargeAddressObject.getOneAddress();
+            equalizerObjectId(addressEnriched.getAddress(), addressGoal);
+            AddressDTO successGoal = new AddressDTO(addressGoal);
+            Assertions.assertEquals(addressDTO, successGoal);
         }
         else {
             Assertions.assertFalse(optionalAddress.isEmpty());
@@ -72,6 +81,23 @@ class AddressServiceTest extends ServiceUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         GeocodeResponse geocodeResponse = objectMapper.readValue(geocodeResponseParam, GeocodeResponse.class);
         AddressEnriched addressEnriched = addressService.instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
-        System.out.println(addressEnriched.toString());
+        if (addressEnriched.getStreetNumber().isEmpty()){
+            Address addressGoal =  ChargeAddressObject.getOneAddress();
+            equalizerObjectId(addressEnriched.getAddress(), addressGoal);
+            Assertions.assertEquals(addressEnriched.getAddress(), addressGoal);
+        }
+        else if (!addressEnriched.getStreetNumber().isBlank()) {
+            AddressEnriched addressEnrichedGoal =  ChargeAddressObject.getOneAddressEnriched();
+            equalizerObjectId(addressEnriched, addressEnrichedGoal);
+            Assertions.assertEquals(addressEnriched, addressEnrichedGoal);
+        }
+    }
+
+    void equalizerObjectId(Address address, Address addressGoal) {
+        addressGoal.setId(address.getId());
+    }
+
+    void equalizerObjectId(AddressEnriched addressEnriched, AddressEnriched addressEnrichedGoal) {
+        addressEnrichedGoal.getAddress().setId(addressEnriched.getAddress().getId());
     }
 }

@@ -22,19 +22,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
-    @Autowired
-    private StoreRepository _storeRepository;
+    private final StoreRepository storeRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    private ProductRepository _productRepository;
+    public ProductService(StoreRepository storeRepository, ProductRepository productRepository) {
+        this.storeRepository = storeRepository;
+        this.productRepository = productRepository;
+    }
 
     public List<ProductDTO> findAll () {
-        return _productRepository.findAll().stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
+        return productRepository.findAll().stream().map(ProductDTO::createProductDTO).toList();
     }
 
     /*public List<ProductDTO> searchingForWithLngLat (String searchingFor, Double lng, Double lat) {
@@ -46,30 +48,30 @@ public class ProductService {
     }
 */
     public ProductDTO findById (UUID id) {
-        Optional<Product> productOptional = _productRepository.findById(id);
+        Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isEmpty()) throw new ResourceNotFoundException("Product not found. Id:" + id);
         return ProductDTO.createProductDTO(productOptional.get());
     }
 
     public List<ProductDTO> findAllByOwner (UUID id) {
-        return _productRepository.findAllByOwnerId(id).stream().map(ProductDTO::createProductDTO).collect(Collectors.toList());
+        return productRepository.findAllByOwnerId(id).stream().map(ProductDTO::createProductDTO).toList();
     }
 
     public ProductDTO insert (Product product, Set<Category> categoryIdSet) {
-        if (!_storeRepository.existsById(getIdCurrentUser().getId())) throw new StoreNotRegisteredException("Store not found to insert product");
+        if (!storeRepository.existsById(getIdCurrentUser().getId())) throw new StoreNotRegisteredException("Store not found to insert product");
         product.setStatus(ProductStatus.PENDING);
         product.setOwner(getIdCurrentUser());
-        Product savedProduct = _productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
         savedProduct.getCategories().addAll(categoryIdSet);
         savedProduct.setStatus(ProductStatus.ACTIVE);
-        return ProductDTO.createProductDTO(_productRepository.save(savedProduct));
+        return ProductDTO.createProductDTO(productRepository.save(savedProduct));
     }
 
     public ProductDTO updateProduct (UUID id, Product updatedProduct) {
         try {
-            Product existentProduct = _productRepository.getReferenceById(id);
+            Product existentProduct = productRepository.getReferenceById(id);
             updateData(updatedProduct, existentProduct);
-            return ProductDTO.createProductDTO(_productRepository.save(existentProduct));
+            return ProductDTO.createProductDTO(productRepository.save(existentProduct));
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(e.getMessage());
@@ -78,13 +80,14 @@ public class ProductService {
 
     public String inactiveByProductId (UUID id) {
         try {
-            Product existentProduct = _productRepository.getReferenceById(id);
+            Product existentProduct = productRepository.getReferenceById(id);
             existentProduct.setStatus(ProductStatus.INACTIVE);
-            _productRepository.save(existentProduct);
+            productRepository.save(existentProduct);
             return "Product deactivated!";
         }
         catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(id);
+            final String errorMessage = "Product not found by ID: " + id.toString();
+            throw new ResourceNotFoundException(errorMessage);
         }
         catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());

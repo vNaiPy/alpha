@@ -1,10 +1,12 @@
 package com.naipy.alpha.modules.address.models;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public class AddressDTO {
 
     private final String id;

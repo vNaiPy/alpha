@@ -17,11 +17,14 @@ import java.util.Optional;
 @Service
 public class AddressService extends ServiceUtils{
 
+    private final AddressRepository addressRepository;
+    private final MapsService mapsService;
+
     @Autowired
-    AddressRepository addressRepository;
-    
-    @Autowired
-    MapsService mapsService;
+    public AddressService(AddressRepository addressRepository, MapsService mapsService) {
+        this.addressRepository = addressRepository;
+        this.mapsService = mapsService;
+    }
 
     /**
      * Primeiro, consultar no Redis. Caso nao exista, consultar no Postgrees. Caso nao exista, consultar na API GoogleMaps e salvar nos bancos.

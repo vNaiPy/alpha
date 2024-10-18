@@ -1,16 +1,16 @@
 package com.naipy.alpha.modules.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.f4b6a3.uuid.UuidCreator;
 import com.naipy.alpha.modules.user.models.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.UUID;
-
 public class ServiceUtils {
 
     public static final String WHITESPACE = " ";
     public static final String EMPTY_STRING = "";
+    protected static final ObjectMapper objectMapper = new ObjectMapper();
 
    /* public static UUID generateUUID () {
         //UUID v7
