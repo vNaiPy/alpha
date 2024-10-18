@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -18,7 +19,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class Address implements Serializable {
 
     @Id
@@ -53,4 +53,17 @@ public class Address implements Serializable {
     @OneToMany(mappedBy = "id.address")
     @ToString.Exclude
     private Set<UserAddress> usersAddresses = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(id, address.id) && Objects.equals(street, address.street) && Objects.equals(neighborhood, address.neighborhood) && Objects.equals(zipcode, address.zipcode) && Objects.equals(city, address.city) && Objects.equals(state, address.state) && Objects.equals(country, address.country) && Objects.equals(latitude, address.latitude) && Objects.equals(longitude, address.longitude) && Objects.equals(usersAddresses, address.usersAddresses);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, street, neighborhood, zipcode, city, state, country, latitude, longitude, usersAddresses);
+    }
 }
