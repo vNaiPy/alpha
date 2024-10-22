@@ -5,9 +5,9 @@ import com.naipy.alpha.modules.address.models.AddressDTO;
 import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.repository.AddressRepository;
 import com.naipy.alpha.modules.exceptions.services.ExternalResponseNotReceivedException;
-import com.naipy.alpha.modules.utils.ServiceUtils;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.external_api.maps.services.MapsService;
+import com.naipy.alpha.modules.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

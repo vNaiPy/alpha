@@ -56,7 +56,6 @@ class AddressServiceTest extends ServiceUtils {
             GeocodeResponse mockedGeocodeResponse = ChargeAddressObject.getPostalCodeType();
             Mockito.when(mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode)).thenReturn(mockedGeocodeResponse);
             GeocodeResponse geocodeResponse = mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
-
             addressService.isValidGeocodeResponse(geocodeResponse, zipCode);
 
             AddressEnriched addressEnriched = addressService.instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
@@ -64,7 +63,7 @@ class AddressServiceTest extends ServiceUtils {
             Mockito.when(addressRepository.save(addressEnriched.getAddress())).thenReturn(addressEnriched.getAddress());
             AddressDTO addressDTO = new AddressDTO(addressRepository.save(addressEnriched.getAddress()));
 
-            Address addressGoal =  ChargeAddressObject.getOneAddress();
+            Address addressGoal =  ChargeAddressObject.getOnePostalCode();
             equalizerObjectId(addressEnriched.getAddress(), addressGoal);
             AddressDTO successGoal = new AddressDTO(addressGoal);
             Assertions.assertEquals(addressDTO, successGoal);
@@ -81,15 +80,15 @@ class AddressServiceTest extends ServiceUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         GeocodeResponse geocodeResponse = objectMapper.readValue(geocodeResponseParam, GeocodeResponse.class);
         AddressEnriched addressEnriched = addressService.instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
-        if (addressEnriched.getStreetNumber().isEmpty()){
-            Address addressGoal =  ChargeAddressObject.getOneAddress();
-            equalizerObjectId(addressEnriched.getAddress(), addressGoal);
-            Assertions.assertEquals(addressEnriched.getAddress(), addressGoal);
-        }
-        else if (!addressEnriched.getStreetNumber().isBlank()) {
+        if (Optional.ofNullable(addressEnriched.getStreetNumber()).isPresent()){
             AddressEnriched addressEnrichedGoal =  ChargeAddressObject.getOneAddressEnriched();
             equalizerObjectId(addressEnriched, addressEnrichedGoal);
             Assertions.assertEquals(addressEnriched, addressEnrichedGoal);
+        }
+        else {
+            Address addressGoal =  ChargeAddressObject.getOnePostalCode();
+            equalizerObjectId(addressEnriched.getAddress(), addressGoal);
+            Assertions.assertEquals(addressEnriched.getAddress(), addressGoal);
         }
     }
 

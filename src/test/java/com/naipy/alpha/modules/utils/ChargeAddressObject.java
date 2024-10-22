@@ -31,6 +31,20 @@ public class ChargeAddressObject extends ServiceUtils {
                 .build();
     }
 
+    public static Address getOnePostalCode () {
+        return Address.builder()
+                .id(generateUUID())
+                .street("Rua Gasparini")
+                .neighborhood("Rudge Ramos")
+                .zipcode("09635130")
+                .city("São Bernardo do Campo")
+                .state("São Paulo")
+                .country("Brasil")
+                .latitude("-23.651076")
+                .longitude("-46.57465730000001")
+                .build();
+    }
+
     public static AddressEnriched getOneAddressEnriched () {
         return AddressEnriched.builder()
                 .address(getOneAddress())
