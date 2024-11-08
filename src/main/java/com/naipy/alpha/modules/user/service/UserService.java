@@ -23,19 +23,20 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService extends ServiceUtils {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserAddressService userAddressService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserAddressService userAddressService;
-
-    @Autowired
-    AuthenticationService authenticationService;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserAddressService userAddressService, AuthenticationService authenticationService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userAddressService = userAddressService;
+        this.authenticationService = authenticationService;
+    }
 
     public AuthenticationResponse addNewUser (RegisterRequest request) {
         User user = User.builder()
@@ -61,7 +62,7 @@ public class UserService {
     public List<UserDTO> findAll () {
         return userRepository.findAll()
                 .stream().map(UserDTO::createUserDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public UserDTO findById (String id) {

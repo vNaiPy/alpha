@@ -43,7 +43,6 @@ public class ChargeObject extends ServiceUtils {
                 , "130"
                 , "-23.6509129"
                 , "-46.57409550000001",
-                true,
                 AddressUsageType.PERSONAL);
     }
 }

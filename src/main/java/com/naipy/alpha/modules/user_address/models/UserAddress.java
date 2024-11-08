@@ -14,7 +14,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -27,10 +26,10 @@ public class UserAddress implements Serializable {
     @EmbeddedId
     private UserAddressPK id = new UserAddressPK();
 
-    @NotNull
+    @NotBlank
     private String complement;
 
-    @NotNull
+    @NotBlank
     private String streetNumber;
 
     @NotBlank
@@ -38,9 +37,6 @@ public class UserAddress implements Serializable {
 
     @NotBlank
     private String longitude;
-
-    @NotNull
-    private Boolean isDefault;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -55,14 +51,13 @@ public class UserAddress implements Serializable {
     public UserAddress() {
     }
 
-    public UserAddress(User user, Address address, String complement, String streetNumber, String latitude, String longitude, Boolean isDefault, AddressUsageType usageType) {
+    public UserAddress(User user, Address address, String complement, String streetNumber, String latitude, String longitude, AddressUsageType usageType) {
         setUser(user);
         setAddress(address);
         this.complement = complement;
         this.streetNumber = streetNumber;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.isDefault = isDefault;
         this.usageType = usageType;
         this.insertDate = Instant.now();
         this.lastUpdate = Instant.now();

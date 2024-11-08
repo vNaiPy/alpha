@@ -16,14 +16,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserAddressService extends ServiceUtils {
 
-    @Autowired
-    private AddressService _addressService;
+    private final AddressService addressService;
+
+    private final UserAddressRepository userAddressRepository;
 
     @Autowired
-    private UserAddressRepository _userAddressRepository;
+    public UserAddressService(AddressService addressService, UserAddressRepository userAddressRepository) {
+        this.addressService = addressService;
+        this.userAddressRepository = userAddressRepository;
+    }
 
     public UserAddress addAddressToUser (AddressInput addressInput) {
-        AddressDTO addressDTO = _addressService.getAddressAndAddIfDoesntExists(addressInput.zipCode());
+        AddressDTO addressDTO = addressService.getAddressAndAddIfDoesntExists(addressInput.zipCode());
         AddressEnriched addressEnriched = getExactAddressOfUser(addressDTO, addressInput.streetNumber());
 
         User currentUser = getIdCurrentUser();
@@ -35,8 +39,8 @@ public class UserAddressService extends ServiceUtils {
         userAddress.setStreetNumber(addressEnriched.getStreetNumber());
         userAddress.setComplement(addressInput.complement());
         userAddress.setUsageType(AddressUsageType.PERSONAL);
-        userAddress.setIsDefault(true);
-        return _userAddressRepository.save(userAddress);
+
+        return userAddressRepository.save(userAddress);
     }
 
     public AddressEnriched getExactAddressOfUser (AddressDTO address, String streetNumber) {
@@ -48,8 +52,8 @@ public class UserAddressService extends ServiceUtils {
                 + address.getCountry();
 
         if (addressComplete.isBlank())
-            throw new InvalidParameterException(addressComplete + ". This is not valid for searching in the MapsAPI");
+            throw new InvalidParameterException("Parameter is not valid for searching in the MapsAPI. Param: " + addressComplete);
 
-        return _addressService.getAddressEnrichedByCompleteAddress(addressComplete);
+        return addressService.getAddressEnrichedByCompleteAddress(addressComplete);
     }
 }

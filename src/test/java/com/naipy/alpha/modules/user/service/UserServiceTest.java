@@ -18,9 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public class UserServiceTest {
+class UserServiceTest extends ServiceUtils {
 
     @Mock
     private UserRepository userRepository;
@@ -37,7 +36,7 @@ public class UserServiceTest {
     @Test
     void findByEmail() {
 
-        String id = ServiceUtils.generateUUID();
+        String id = generateUUID();
         User user = User.builder()
                 .id(id)
                 .name("Bruna Meyer")
@@ -47,7 +46,7 @@ public class UserServiceTest {
                 .roles(List.of(Role.USER))
                 .build();
 
-        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable(user));
 
         Optional<User> userMocked = userRepository.findById(id);
         if (userMocked.isEmpty()) throw new ResourceNotFoundException("User not found by ID: " + id);

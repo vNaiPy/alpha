@@ -17,10 +17,10 @@ import java.util.List;
 
 @Configuration
 @Profile("test")
-public class TestConfig implements CommandLineRunner {
+public class TestConfig extends ServiceUtils implements CommandLineRunner {
+
     @Autowired
     private UserRepository _userRepository;
-
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -31,12 +31,8 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        String country = "Brasil";
-        String state = "São Paulo";
-
-
         User admin = User.builder()
-                .id(ServiceUtils.generateUUID())
+                .id(generateUUID())
                 .name("Handrei")
                 .surname("Morais")
                 .email("handrei@mail.com")

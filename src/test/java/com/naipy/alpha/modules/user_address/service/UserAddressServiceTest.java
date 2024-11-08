@@ -38,4 +38,8 @@ class UserAddressServiceTest extends ServiceUtils {
         AddressEnriched addressEnriched = _userAddressService.getExactAddressOfUser(addressDTO, streetNumber);
         System.out.println(addressEnriched);
     }
+
+    @Test
+    void getExactAddressOfUser() {
+    }
 }
