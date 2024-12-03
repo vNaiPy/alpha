@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
-class UserRepositoryTest {
+class UserRepositoryTest extends ServiceUtils {
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -43,7 +43,7 @@ class UserRepositoryTest {
     void setUp () {
 
         Address address = Address.builder()
-                .id(ServiceUtils.generateUUID())
+                .id(generateUUID())
                 .street("Rua Gasparini")
                 .neighborhood("Rudge Ramos")
                 .city("São Bernardo do Campo")
@@ -85,7 +85,7 @@ class UserRepositoryTest {
 
         userRepository.saveAll(List.of(admin, user));
 
-        UserAddress userAddress = new UserAddress(user, address, "Próximo ao Coop", "130", "-23.651076", "-46.57465730000001", true, AddressUsageType.PERSONAL);
+        UserAddress userAddress = new UserAddress(user, address, "Próximo ao Coop", "130", "-23.651076", "-46.57465730000001", AddressUsageType.PERSONAL);
         System.out.println(userAddressRepository.save(userAddress));
         System.out.println(userAddressRepository.findUserAddressByUserId(userAddress.getUser().getId()));
     }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AddressService extends ServiceUtils{
+public class AddressService extends ServiceUtils {
 
     private final AddressRepository addressRepository;
     private final MapsService mapsService;
@@ -32,16 +32,19 @@ public class AddressService extends ServiceUtils{
      * @return Address - Retorna um endereco salvo no banco
      */
     public AddressDTO getAddressAndAddIfDoesntExists (String zipCode) {
+        AddressDTO addressDTO;
         zipCode = removeNonNumeric(zipCode);
         Optional<Address> optionalAddress = addressRepository.findAddressByZipCode(zipCode);
         if (optionalAddress.isEmpty()) {
             GeocodeResponse geocodeResponse =
                     mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
             isValidGeocodeResponse(geocodeResponse, zipCode);
-            return new AddressDTO(addressRepository.save(instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse).getAddress()));
+            addressDTO = new AddressDTO(addressRepository.save(instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse).getAddress()));
         }
-        else
-            return new AddressDTO(optionalAddress.get());
+        else {
+            addressDTO = new AddressDTO(optionalAddress.get());
+        }
+        return addressDTO;
     }
 
     public AddressEnriched getAddressEnrichedByCompleteAddress (String completeAddress) {
@@ -64,23 +67,30 @@ public class AddressService extends ServiceUtils{
     public AddressEnriched instantiateAddressEnrichedFromGeocodeResponse (GeocodeResponse geocodeResponse) {
         Address.AddressBuilder addressBuilder = Address.builder();
         AddressEnriched.AddressEnrichedBuilder addressEnrichedBuilder = AddressEnriched.builder();
+        final String postalCodeKey = "postal_code";
+        final String streetKey = "route";
+        final String neighborhoodKey = "sublocality_level_1";
+        final String cityKey = "administrative_area_level_2";
+        final String stateKey = "administrative_area_level_1";
+        final String countryKey = "country";
+        final String streetNumberKey = "street_number";
 
         geocodeResponse.getResults().forEach(addressResult -> {
             addressResult.getAddressComponents().forEach(addressComponent -> {
                 List<String> componentTypes = addressComponent.getTypes();
-                if (componentTypes.contains("postal_code"))
+                if (componentTypes.contains(postalCodeKey))
                     addressBuilder.zipcode(removeNonNumeric(addressComponent.getLongName()));
-                else if (componentTypes.contains("route"))
+                else if (componentTypes.contains(streetKey))
                     addressBuilder.street(addressComponent.getLongName());
-                else if (componentTypes.contains("sublocality_level_1"))
+                else if (componentTypes.contains(neighborhoodKey))
                     addressBuilder.neighborhood(addressComponent.getLongName());
-                else if (componentTypes.contains("administrative_area_level_2"))
+                else if (componentTypes.contains(cityKey))
                     addressBuilder.city(addressComponent.getLongName());
-                else if (componentTypes.contains("administrative_area_level_1"))
+                else if (componentTypes.contains(stateKey))
                     addressBuilder.state(addressComponent.getLongName());
-                else if (componentTypes.contains("country"))
+                else if (componentTypes.contains(countryKey))
                     addressBuilder.country(addressComponent.getLongName());
-                else if (componentTypes.contains("street_number"))
+                else if (componentTypes.contains(streetNumberKey))
                     addressEnrichedBuilder.streetNumber(addressComponent.getLongName());
             });
             addressBuilder.latitude(addressResult.getGeometry().getLocation().getLat());

@@ -9,6 +9,7 @@ import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.user_address.repository.UserAddressRepository;
+import com.naipy.alpha.modules.utils.ConstantVariables;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,12 +45,12 @@ public class UserAddressService extends ServiceUtils {
     }
 
     public AddressEnriched getExactAddressOfUser (AddressDTO address, String streetNumber) {
-        String addressComplete = address.getStreet() + WHITESPACE
-                + streetNumber + WHITESPACE
-                + address.getNeighborhood() + WHITESPACE
-                + address.getCity() + WHITESPACE
-                + address.getState() + WHITESPACE
-                + address.getCountry();
+        String addressComplete = address.getStreet().concat(ConstantVariables.EMPTY_STRING)
+                .concat(streetNumber).concat(ConstantVariables.EMPTY_STRING)
+                .concat(address.getNeighborhood()).concat(ConstantVariables.EMPTY_STRING)
+                .concat(address.getCity()).concat(ConstantVariables.EMPTY_STRING)
+                .concat(address.getState()).concat(ConstantVariables.EMPTY_STRING)
+                .concat(address.getCountry());
 
         if (addressComplete.isBlank())
             throw new InvalidParameterException("Parameter is not valid for searching in the MapsAPI. Param: " + addressComplete);

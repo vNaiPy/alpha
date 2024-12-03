@@ -1,6 +1,8 @@
 package com.naipy.alpha.modules.external_api.maps.services;
 
+import com.naipy.alpha.config.ConfigurationLoader;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
+import com.naipy.alpha.modules.utils.ConstantVariables;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,18 +14,18 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class MapsService {
 
     private final WebClient webClient;
-    private static final String MAPS_KEY = "&key=AIzaSyDLr4j7hVxfeYDR1wEC1YnDSgw91UqOjsY";
-    private static final String WHITESPACE_CODE = "%20";
+    private static final String MAPS_KEY = ConfigurationLoader.getMapsKey();
 
     public MapsService (WebClient.Builder webClientBuilder) {
+        final String endpointGeocodeAPI = "https://maps.googleapis.com/maps/api/geocode";
         this.webClient =
                 webClientBuilder
-                .baseUrl("https://maps.googleapis.com/maps/api/geocode")
+                .baseUrl(endpointGeocodeAPI)
                 .build();
     }
 
     public GeocodeResponse getAddressByZipCodeOrCompleteAddressFromMapsApi (String zipCodeOrCompleteAddress) {
-        zipCodeOrCompleteAddress = zipCodeOrCompleteAddress.replace(" ", WHITESPACE_CODE);
+        zipCodeOrCompleteAddress = zipCodeOrCompleteAddress.replace(" ", ConstantVariables.WHITESPACE_CODE);
 
         return this.webClient
                 .get()

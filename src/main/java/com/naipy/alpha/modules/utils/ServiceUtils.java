@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ServiceUtils {
 
-    protected static final String WHITESPACE = " ";
     protected static final ObjectMapper objectMapper = new ObjectMapper();
 
     protected static String generateUUID () {
