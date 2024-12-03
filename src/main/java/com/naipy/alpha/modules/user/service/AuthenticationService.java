@@ -2,41 +2,34 @@ package com.naipy.alpha.modules.user.service;
 
 import com.naipy.alpha.core.security.jwt.JwtService;
 import com.naipy.alpha.modules.user.models.User;
-import com.naipy.alpha.modules.user.models.Role;
-import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user.models.AuthenticationRequest;
 import com.naipy.alpha.modules.user.models.AuthenticationResponse;
-import com.naipy.alpha.modules.user.models.RegisterRequest;
 import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.token.Token;
 import com.naipy.alpha.modules.token.TokenRepository;
 import com.naipy.alpha.modules.token.TokenType;
-import com.naipy.alpha.modules.utils.ServiceUtils;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class AuthenticationService {
 
-    @Autowired
-    private final UserRepository _userRepository;
-
-    @Autowired
+    private final UserRepository userRepository;
     private final JwtService jwtService;
-
-    @Autowired
     private final AuthenticationManager authManager;
+    private final TokenRepository tokenRepository;
 
     @Autowired
-    private final TokenRepository _tokenRepository;
+    public AuthenticationService(UserRepository userRepository, JwtService jwtService, AuthenticationManager authManager, TokenRepository tokenRepository) {
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+        this.authManager = authManager;
+        this.tokenRepository = tokenRepository;
+    }
 
     public AuthenticationResponse authenticateAfterInsertingNewUser (User user) {
         String jwtToken = jwtService.generateToken(user);
@@ -53,7 +46,7 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        User user = _userRepository.findByEmail(request.getUsername()).orElseThrow();
+        User user = userRepository.findByEmail(request.getUsername()).orElseThrow();
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
@@ -63,7 +56,7 @@ public class AuthenticationService {
     }
 
     private void revokeAllUserTokens (User user) {
-        List<Token> validUserTokenList = _tokenRepository.findAllValidTokenByUser(user.getId());
+        List<Token> validUserTokenList = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokenList.isEmpty())
             return;
 
@@ -71,7 +64,7 @@ public class AuthenticationService {
             token.setExpired(true);
             token.setRevoked(true);
         });
-        _tokenRepository.saveAll(validUserTokenList);
+        tokenRepository.saveAll(validUserTokenList);
     }
 
     private void saveUserToken (User user, String jwtToken) {
@@ -82,6 +75,6 @@ public class AuthenticationService {
                 .revoked(false)
                 .user(user)
                 .build();
-        _tokenRepository.save(token);
+        tokenRepository.save(token);
     }
 }
