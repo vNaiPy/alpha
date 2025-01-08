@@ -45,15 +45,15 @@ public class UserAddressService extends ServiceUtils {
     }
 
     public AddressEnriched getExactAddressOfUser (AddressDTO address, String streetNumber) {
-        String addressComplete = address.getStreet().concat(ConstantVariables.EMPTY_STRING)
-                .concat(streetNumber).concat(ConstantVariables.EMPTY_STRING)
-                .concat(address.getNeighborhood()).concat(ConstantVariables.EMPTY_STRING)
-                .concat(address.getCity()).concat(ConstantVariables.EMPTY_STRING)
-                .concat(address.getState()).concat(ConstantVariables.EMPTY_STRING)
+        String addressComplete = address.getStreet().concat(ConstantVariables.WHITESPACE)
+                .concat(streetNumber).concat(ConstantVariables.WHITESPACE)
+                .concat(address.getNeighborhood()).concat(ConstantVariables.WHITESPACE)
+                .concat(address.getCity()).concat(ConstantVariables.WHITESPACE)
+                .concat(address.getState()).concat(ConstantVariables.WHITESPACE)
                 .concat(address.getCountry());
 
         if (addressComplete.isBlank())
-            throw new InvalidParameterException("Parameter is not valid for searching in the MapsAPI. Param: " + addressComplete);
+            throw new InvalidParameterException("Parameter is not valid for searching in the MapsAPI. Param: ".concat(addressComplete));
 
         return addressService.getAddressEnrichedByCompleteAddress(addressComplete);
     }
