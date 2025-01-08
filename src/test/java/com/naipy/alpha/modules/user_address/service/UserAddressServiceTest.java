@@ -4,7 +4,9 @@ import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.address.models.AddressDTO;
 import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.service.AddressService;
+import com.naipy.alpha.modules.exceptions.services.InvalidParameterException;
 import com.naipy.alpha.modules.utils.ChargeAddressObject;
+import com.naipy.alpha.modules.utils.ConstantVariables;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,11 +61,25 @@ class UserAddressServiceTest extends ServiceUtils {
 
     @Test
     void getExactAddressOfUser() {
-        AddressDTO address = new AddressDTO(ChargeAddressObject.getOneAddress());
+        AddressEnriched addressEnrichedExpected = ChargeAddressObject.getOneAddressEnriched();
+        AddressDTO addressDTO = new AddressDTO(ChargeAddressObject.getOneAddress());
         String streetNumber = "130";
 
-        userAddressService.getExactAddressOfUser(address, streetNumber);
+        Mockito.when(addressService.getAddressEnrichedByCompleteAddress(Mockito.anyString())).thenReturn(ChargeAddressObject.getOneAddressEnriched());
+        AddressEnriched addressEnrichedResult = userAddressService.getExactAddressOfUser(addressDTO, streetNumber);
 
+        Assertions.assertEquals(addressEnrichedExpected, addressEnrichedResult);
+    }
 
+    @Test
+    void getExactAddressOfUser_ThrowInvalidParameterException() {
+        InvalidParameterException addressEnrichedExpected = new InvalidParameterException("Parameter is not valid for searching in the MapsAPI. Param: " + ConstantVariables.EMPTY_STRING);
+        AddressDTO emptyAddressDTO = new AddressDTO(ChargeAddressObject.getOneEmptyAddress());
+        String streetNumber = ConstantVariables.EMPTY_STRING;
+
+        Mockito.when(addressService.getAddressEnrichedByCompleteAddress(Mockito.anyString())).thenReturn(ChargeAddressObject.getOneAddressEnriched());
+        InvalidParameterException exceptionResult = Assertions.assertThrows(InvalidParameterException.class, () -> {userAddressService.getExactAddressOfUser(emptyAddressDTO, streetNumber);});
+
+        Assertions.assertEquals(addressEnrichedExpected, exceptionResult);
     }
 }
