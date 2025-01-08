@@ -25,7 +25,7 @@ public class MapsService {
     }
 
     public GeocodeResponse getAddressByZipCodeOrCompleteAddressFromMapsApi (String zipCodeOrCompleteAddress) {
-        zipCodeOrCompleteAddress = zipCodeOrCompleteAddress.replace(" ", ConstantVariables.WHITESPACE_CODE);
+        zipCodeOrCompleteAddress = zipCodeOrCompleteAddress.replace(ConstantVariables.WHITESPACE, ConstantVariables.WHITESPACE_CODE);
 
         return this.webClient
                 .get()
