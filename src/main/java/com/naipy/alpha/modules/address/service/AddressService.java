@@ -54,10 +54,13 @@ public class AddressService extends ServiceUtils {
     }
 
     public void isValidGeocodeResponse (GeocodeResponse geocodeResponse, String zipCodeOrCompleteAddress) {
+        final String status = "Status: ";
         if (geocodeResponse.getStatus().equals("ZERO_RESULTS"))
-            throw new ExternalResponseNotReceivedException("Status: " + geocodeResponse.getStatus() + ". Parameter passed: " + zipCodeOrCompleteAddress);
+            throw new ExternalResponseNotReceivedException(status.concat(geocodeResponse.getStatus()).concat(". Parameter passed: ").concat(zipCodeOrCompleteAddress));
+        else if (geocodeResponse.getStatus().equals("REQUEST_DENIED"))
+            throw new ExternalResponseNotReceivedException(status.concat(geocodeResponse.getStatus()).concat(". External error received: ").concat(geocodeResponse.getErrorMessage()).concat(" Parameter passed: ").concat(zipCodeOrCompleteAddress));
         else if (isDifferent("OK", geocodeResponse.getStatus()))
-            throw new ExternalResponseNotReceivedException("Status: " + geocodeResponse.getStatus() + ". External error received: " + geocodeResponse.getErrorMessage());
+            throw new ExternalResponseNotReceivedException(status.concat(geocodeResponse.getStatus()).concat(". External error received: ").concat(geocodeResponse.getErrorMessage()));
     }
 
     /**
