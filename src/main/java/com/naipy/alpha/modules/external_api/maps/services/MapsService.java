@@ -1,6 +1,7 @@
 package com.naipy.alpha.modules.external_api.maps.services;
 
 import com.naipy.alpha.config.ConfigurationLoader;
+import com.naipy.alpha.modules.external_api.maps.interfaces.Maps;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.utils.ConstantVariables;
 import org.springframework.http.HttpStatusCode;
@@ -11,7 +12,7 @@ import reactor.core.publisher.Mono;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
-public class MapsService {
+public class MapsService implements Maps {
 
     private final WebClient webClient;
     private static final String MAPS_KEY = ConfigurationLoader.getMapsKey();

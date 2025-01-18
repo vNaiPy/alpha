@@ -3,8 +3,11 @@ package com.naipy.alpha.config;
 import com.naipy.alpha.modules.utils.ConstantVariables;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ConfigurationLoader {
 
@@ -15,9 +18,9 @@ public class ConfigurationLoader {
     public static String getMapsKey () {
         String key = ConstantVariables.EMPTY_STRING;
         String keyPath = ConstantVariables.USER_PATH.concat("/Documentos/key.txt");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(keyPath));
-            key = br.readLine();
+        Path path = Paths.get(keyPath);
+        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+            key = reader.readLine();
         } catch (IOException e) {
             throw new UnsupportedOperationException("Erro ao ler o arquivo: " + e.getMessage());
         }
