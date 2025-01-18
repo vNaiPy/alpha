@@ -1,7 +1,7 @@
 package com.naipy.alpha.modules.external_api.maps.services;
 
 import com.naipy.alpha.config.ConfigurationLoader;
-import com.naipy.alpha.modules.external_api.maps.interfaces.Maps;
+import com.naipy.alpha.modules.external_api.interfaces.Maps;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.utils.ConstantVariables;
 import org.springframework.http.HttpStatusCode;
@@ -25,12 +25,17 @@ public class MapsService implements Maps {
                 .build();
     }
 
-    public GeocodeResponse getAddressByZipCodeOrCompleteAddressFromMapsApi (String zipCodeOrCompleteAddress) {
+    @Override
+    public GeocodeResponse getAddressBy(String zipCodeOrCompleteAddress) {
+        return getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCodeOrCompleteAddress);
+    }
+
+    private GeocodeResponse getAddressByZipCodeOrCompleteAddressFromMapsApi (String zipCodeOrCompleteAddress) {
         zipCodeOrCompleteAddress = zipCodeOrCompleteAddress.replace(ConstantVariables.WHITESPACE, ConstantVariables.WHITESPACE_CODE);
 
         return this.webClient
                 .get()
-                .uri("/json?address=" + zipCodeOrCompleteAddress + MAPS_KEY)
+                .uri("/json?address=".concat(zipCodeOrCompleteAddress.concat(MAPS_KEY)))
                 .accept(APPLICATION_JSON)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Parametro invalido")))

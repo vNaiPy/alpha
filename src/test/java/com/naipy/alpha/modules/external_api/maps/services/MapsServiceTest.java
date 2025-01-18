@@ -28,7 +28,7 @@ class MapsServiceTest {
     @Test
     void getAddressBySomethingFromMapsApi_Cep() {
         String searchFor = "09635130";
-        GeocodeResponse geocodeResponse = mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(searchFor);
+        GeocodeResponse geocodeResponse = mapsService.getAddressBy(searchFor);
         System.out.println(geocodeResponse);
     }
 
@@ -37,7 +37,7 @@ class MapsServiceTest {
         String searchFor =
                 "Rua Gasparini 130 Rudge Ramos São Bernardo do Campo Sao Paulo Brasil"
                 .replace(" ", WHITESPACE_CODE);
-        GeocodeResponse geocodeResponse = mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(searchFor);
+        GeocodeResponse geocodeResponse = mapsService.getAddressBy(searchFor);
         System.out.println(geocodeResponse);
     }
 

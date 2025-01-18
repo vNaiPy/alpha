@@ -37,7 +37,7 @@ public class AddressService extends ServiceUtils {
         Optional<Address> optionalAddress = addressRepository.findAddressByZipCode(zipCode);
         if (optionalAddress.isEmpty()) {
             GeocodeResponse geocodeResponse =
-                    mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
+                    mapsService.getAddressBy(zipCode);
             isValidGeocodeResponse(geocodeResponse, zipCode);
             addressDTO = new AddressDTO(addressRepository.save(instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse).getAddress()));
         }
@@ -48,7 +48,7 @@ public class AddressService extends ServiceUtils {
     }
 
     public AddressEnriched getAddressEnrichedByCompleteAddress (String completeAddress) {
-        GeocodeResponse geocodeResponse = mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(completeAddress);
+        GeocodeResponse geocodeResponse = mapsService.getAddressBy(completeAddress);
         isValidGeocodeResponse(geocodeResponse, completeAddress);
         return instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
     }

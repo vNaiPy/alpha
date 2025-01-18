@@ -54,8 +54,8 @@ class AddressServiceTest extends ServiceUtils {
 
         if (optionalAddress.isEmpty()) {
             GeocodeResponse mockedGeocodeResponse = ChargeAddressObject.getPostalCodeType();
-            Mockito.when(mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode)).thenReturn(mockedGeocodeResponse);
-            GeocodeResponse geocodeResponse = mapsService.getAddressByZipCodeOrCompleteAddressFromMapsApi(zipCode);
+            Mockito.when(mapsService.getAddressBy(zipCode)).thenReturn(mockedGeocodeResponse);
+            GeocodeResponse geocodeResponse = mapsService.getAddressBy(zipCode);
             addressService.isValidGeocodeResponse(geocodeResponse, zipCode);
 
             AddressEnriched addressEnriched = addressService.instantiateAddressEnrichedFromGeocodeResponse(geocodeResponse);
