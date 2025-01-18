@@ -91,12 +91,4 @@ class AddressServiceTest extends ServiceUtils {
             Assertions.assertEquals(addressEnriched.getAddress(), addressGoal);
         }
     }
-
-    void equalizerObjectId(Address address, Address addressGoal) {
-        addressGoal.setId(address.getId());
-    }
-
-    void equalizerObjectId(AddressEnriched addressEnriched, AddressEnriched addressEnrichedGoal) {
-        addressEnrichedGoal.getAddress().setId(addressEnriched.getAddress().getId());
-    }
 }
