@@ -21,7 +21,6 @@ public class ErrorManager extends ServiceUtils {
 
     public void storeTheError (Throwable e, ErrorAppType errorAppType) {
         ErrorMessage errorMessage = ErrorMessage.builder()
-                .id(generateUUID())
                 .message(e.getMessage())
                 .technicalError(e.getCause().getMessage())
                 .lineNumberError(e.getStackTrace()[0].getLineNumber())

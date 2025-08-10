@@ -57,6 +57,7 @@ class UserRepositoryTest extends ServiceUtils {
 
         User admin = User.builder()
                 .id(ServiceUtils.generateUUID())
+                .username("handrei.morais")
                 .name("Handrei")
                 .surname("Morais de Souza")
                 .email("handrei@mail.com")
@@ -72,6 +73,7 @@ class UserRepositoryTest extends ServiceUtils {
 
         User user = User.builder()
                 .id(ServiceUtils.generateUUID())
+                .username("bruna.meyer")
                 .name("Bruna")
                 .surname("Meyer")
                 .identityDocument("12345678900")

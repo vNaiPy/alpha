@@ -33,6 +33,7 @@ public class TestConfig extends ServiceUtils implements CommandLineRunner {
 
         User admin = User.builder()
                 .id(generateUUID())
+                .username("handrei.morais")
                 .name("Handrei")
                 .surname("Morais")
                 .email("handrei@mail.com")

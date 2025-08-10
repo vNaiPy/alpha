@@ -1,6 +1,38 @@
 type User {
-    id: ID,
-    name: String!
-    email: String,
+    id: ID!
+    username: String
+    name: String
+    surname: String
+    email: String
     phone: String
+    store: Store
+    userStatus: UserStatus
+    profilePicture: String
+    createdAt: String
+    identityDocument: String
+    role: [Role!]
+    addresses: [UserAddress]
+    orders: [Order]
+}
+
+input UpdateUserInput {
+    name: String
+    surname: String
+    email: String
+    phone: String
+    userStatus: UserStatus
+    profilePicture: String
+}
+
+enum Role {
+    USER
+    MODERATOR
+    ADMIN
+}
+
+enum UserStatus {
+    ACTIVE
+    SUSPENDED
+    DESACTIVATED
+    BANNED
 }

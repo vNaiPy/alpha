@@ -3,6 +3,7 @@ package com.naipy.alpha.modules.exceptions.controllers;
 import com.naipy.alpha.modules.exceptions.enums.ErrorAppType;
 import com.naipy.alpha.modules.exceptions.services.ErrorManager;
 import com.naipy.alpha.modules.exceptions.services.*;
+import com.naipy.alpha.modules.user.exceptions.UserCannotBeAuthenticateException;
 import graphql.ErrorClassification;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
@@ -27,6 +28,10 @@ public class CustomExceptionResolver extends DataFetcherExceptionResolverAdapter
         if (ex instanceof ResourceNotFoundException) {
             errorManager.storeTheError(ex, ErrorAppType.RESOURCE_NOT_FOUND);
             return graphqlErrorBuilder(ex, env, ErrorType.NOT_FOUND);
+        }
+        else if (ex instanceof UserCannotBeAuthenticateException) {
+            errorManager.storeTheError(ex, ErrorAppType.USER_UNAUTHORIZED);
+            return graphqlErrorBuilder(ex, env, ErrorType.UNAUTHORIZED);
         }
         else if (ex instanceof StoreNotRegisteredException) {
             errorManager.storeTheError(ex, ErrorAppType.STORE_NOT_REGISTERED);

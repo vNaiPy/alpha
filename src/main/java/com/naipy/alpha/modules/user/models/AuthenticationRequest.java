@@ -1,17 +1,19 @@
 package com.naipy.alpha.modules.user.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
-@Data
+import java.io.Serializable;
+
+@Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class AuthenticationRequest {
+public class AuthenticationRequest implements Serializable {
 
+    @NotBlank
     private String username;
+
+    @NotBlank
     private String password;
 
 }

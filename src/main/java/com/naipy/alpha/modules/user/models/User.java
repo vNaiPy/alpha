@@ -30,7 +30,12 @@ import java.util.*;
 public class User implements UserDetails {
 
     @Id
+    @Column(nullable = false, unique = true)
     private String id;
+
+    @NotBlank
+    @Column(nullable = false, unique = true)
+    private String username;
 
     @NotBlank
     private String name;
@@ -39,6 +44,7 @@ public class User implements UserDetails {
     private String surname;
 
     @NotBlank
+    @Column(nullable = false, unique = true)
     private String identityDocument;
 
     @NotBlank
@@ -54,11 +60,7 @@ public class User implements UserDetails {
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Instant registeredSince;
-
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Instant lastUpdate;
+    private Instant createdAt;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
