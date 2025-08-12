@@ -42,9 +42,8 @@ public class TestConfig extends ServiceUtils implements CommandLineRunner {
                 .password(passwordEncoder.encode("123456"))
                 .status(UserStatus.ACTIVE)
                 .roles(List.of(Role.ADMIN, Role.USER))
-                .profilePicture("https://")
-                .registeredSince(Instant.now())
-                .lastUpdate(Instant.now())
+                .pictureUrl("https://")
+                .createdAt(Instant.now())
                 .build();
         _userRepository.save(admin);
         /*User user = User.builder()

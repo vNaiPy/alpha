@@ -22,6 +22,7 @@ import java.util.Set;
 public class Address implements Serializable {
 
     @Id
+    @Column(nullable = false, unique = true)
     private String id;
 
     @NotBlank
@@ -31,7 +32,7 @@ public class Address implements Serializable {
     private String neighborhood;
 
     @NotBlank
-    @Column(length = 12)
+    @Column(length = 12, nullable = false, unique = true)
     private String zipcode;
 
     @NotBlank

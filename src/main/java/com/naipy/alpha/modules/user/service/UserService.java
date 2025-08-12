@@ -6,10 +6,12 @@ import com.naipy.alpha.modules.user.models.*;
 import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
+import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.user_address.service.UserAddressService;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,7 @@ public class UserService extends ServiceUtils {
         this.authenticationService = authenticationService;
     }
 
+    @Transactional
     public AuthenticationResponse addNewUser (RegisterRequest request) {
         User user = User.builder()
                 .id(ServiceUtils.generateUUID())
@@ -58,8 +61,9 @@ public class UserService extends ServiceUtils {
         return authenticationService.authenticate(request);
     }
 
+    @Transactional
     public UserAddress addAddressToUser (AddressInput addressInput) {
-        return userAddressService.addAddressToUser(addressInput);
+        return userAddressService.addAddressToUser(addressInput, AddressUsageType.PERSONAL);
     }
 
     public List<UserDTO> findAll () {
@@ -94,6 +98,7 @@ public class UserService extends ServiceUtils {
         return userList.stream().map(UserDTO::createUserDTO).toList();
     }
 
+    @Transactional
     public void delete (String id) {
         try {
             userRepository.deleteById(id);
@@ -106,6 +111,7 @@ public class UserService extends ServiceUtils {
         }
     }
 
+    @Transactional
     public UserDTO update (UserDTO user) {
         try {
             User entity = userRepository.getReferenceById(getIdCurrentUser().getId());
@@ -119,6 +125,7 @@ public class UserService extends ServiceUtils {
 
     }
 
+    @Transactional
     public UserDTO deactivate() {
         try {
             User entity = userRepository.getReferenceById(getIdCurrentUser().getId());
@@ -137,6 +144,6 @@ public class UserService extends ServiceUtils {
         entity.setEmail(userDTO.email());
         entity.setPhone(userDTO.phone());
         entity.setStatus(userDTO.status());
-        entity.setProfilePicture(userDTO.profilePicture());
+        entity.setPictureUrl(userDTO.pictureUrl());
     }
 }

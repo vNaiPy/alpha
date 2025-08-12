@@ -66,9 +66,8 @@ class UserRepositoryTest extends ServiceUtils {
                 .password(passwordEncoder.encode("123456"))
                 .status(UserStatus.ACTIVE)
                 .roles(List.of(Role.ADMIN, Role.USER))
-                .profilePicture("https://")
-                .registeredSince(Instant.now())
-                .lastUpdate(Instant.now())
+                .pictureUrl("https://")
+                .createdAt(Instant.now())
                 .build();
 
         User user = User.builder()
@@ -82,9 +81,8 @@ class UserRepositoryTest extends ServiceUtils {
                 .password(passwordEncoder.encode("123456"))
                 .status(UserStatus.ACTIVE)
                 .roles(List.of(Role.USER))
-                .profilePicture("https://")
-                .registeredSince(Instant.now())
-                .lastUpdate(Instant.now())
+                .pictureUrl("https://")
+                .createdAt(Instant.now())
                 .build();
 
         userRepository.saveAll(List.of(admin, user));

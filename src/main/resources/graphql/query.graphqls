@@ -11,6 +11,9 @@ type Query {
 
     #Store
     findStoreByCurrentUser: Store
+    findStoreById (id: ID!): Store
+    findStoreByName (name: String!): Store
+    findAllStoreByNameContaining (name: String!): Store
     findAllStore: [Store]
 
     #Product

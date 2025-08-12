@@ -1,9 +1,12 @@
 package com.naipy.alpha.modules.store.controller;
 
 import com.naipy.alpha.modules.store.models.Store;
+import com.naipy.alpha.modules.store.models.StoreDTO;
 import com.naipy.alpha.modules.store.service.StoreService;
-import lombok.RequiredArgsConstructor;
+import com.naipy.alpha.modules.user.controllers.AddressInput;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -11,48 +14,49 @@ import org.springframework.stereotype.Controller;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
 public class StoreController {
 
-    @Autowired
     private final StoreService _storeService;
 
-    /*@MutationMapping
+    @Autowired
+    public StoreController(StoreService storeService) { this._storeService = storeService; }
+
+    @MutationMapping
     @Secured("USER")
-    public Store storeRegistration (@Argument StoreInput store) {
-
-        Localization newAddress = Localization.builder()
-                .street(store.address.street)
-                .complement(store.address.complement)
-                .neighborhood(store.address.neighborhood)
-                .state(store.address.state)
-                .city(store.address.city)
-                .country(store.address.country)
-                .longitude(store.address.longitude)
-                .latitude(store.address.latitude)
-                .build();
-
-        Store newStore = Store.builder()
-                .name(store.name)
-                .logoUrl(store.logoUrl)
-                .bannerUrl(store.bannerUrl)
-                .instant(Instant.parse("2019-06-20T21:53:07Z"))
-                .build();
-
-        return _storeService.register(newStore, newAddress);
-    }*/
+    public Store registerStore (@Argument StoreDTO store, @Argument AddressInput addressInput) {
+        return _storeService.register(store, addressInput);
+    }
 
     @QueryMapping
-    public List<Store> findAllStore () {
+    public List<StoreDTO> findAllStore () {
         return _storeService.findAll();
     }
 
     @QueryMapping
+    public StoreDTO findStoreByName (@Argument final String name) {
+        return _storeService.findByName(name);
+    }
+
+    @QueryMapping
+    public List<StoreDTO> findAllStoreByNameContaining (@Argument final String name) {
+        return _storeService.findByNameContaining(name);
+    }
+
+    @QueryMapping
+    public StoreDTO findStoreById(@Argument final String id) {
+        return _storeService.findById(id);
+    }
+
+    @QueryMapping
     @Secured("USER")
-    public Store findStoreByCurrentUser () {
+    public StoreDTO findStoreByCurrentUser () {
         return _storeService.findStoreByCurrentUser();
     }
 
-    record StoreInput (String name, String logoUrl, String bannerUrl, LocalizationInput address) {}
-    record LocalizationInput (String street, String complement, String neighborhood, String city, String state, String country, Double longitude, Double latitude) {}
+    @MutationMapping
+    @Secured("USER")
+    public String desactivateStore () {
+        StoreDTO desactivatedStore = _storeService.desactivate();
+        return "Store with name: ".concat(desactivatedStore.name()).concat(" has been desactivated.");
+    }
 }

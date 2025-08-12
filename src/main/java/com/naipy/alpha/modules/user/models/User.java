@@ -53,7 +53,7 @@ public class User implements UserDetails {
     @NotBlank
     private String phone;
 
-    private String profilePicture;
+    private String pictureUrl;
 
     @NotBlank
     private String password;
@@ -68,10 +68,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
-    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Store store;
 
-    @OneToMany(mappedBy = "id.user")
+    @OneToMany(mappedBy = "id.user", fetch = FetchType.LAZY)
     private Set<UserAddress> usersAddresses = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
@@ -79,12 +79,12 @@ public class User implements UserDetails {
     private List<Token> tokenList;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Product> products = new ArrayList<>();
 

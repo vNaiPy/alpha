@@ -10,7 +10,8 @@ type Mutation {
     desactivateUser: String
 
     #Store
-    storeRegistration (store: StoreInput!): Store!
+    registerStore (store: StoreInput!, address: UserAddressInput!): Store!
+    desactivateStore: String!
 
     #Product
     addProduct (product: ProductInput!): Product!

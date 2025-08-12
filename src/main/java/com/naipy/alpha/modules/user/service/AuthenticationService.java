@@ -42,11 +42,11 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate (AuthenticationRequest request) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
+                        request.username(),
+                        request.password()
                 )
         );
-        User user = userRepository.findByEmail(request.getUsername()).orElseThrow();
+        User user = userRepository.findByEmail(request.username()).orElseThrow();
         if (!user.getStatus().equals(UserStatus.ACTIVE))
             throw new UserCannotBeAuthenticateException(
                     "User cannot be authenticated because it is not active. Current status: ".concat(user.getStatus().toString())

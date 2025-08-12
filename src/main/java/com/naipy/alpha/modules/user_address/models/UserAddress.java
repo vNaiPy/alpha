@@ -45,9 +45,6 @@ public class UserAddress implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant insertDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Instant lastUpdate;
-
     public UserAddress() {
     }
 
@@ -60,7 +57,6 @@ public class UserAddress implements Serializable {
         this.longitude = longitude;
         this.usageType = usageType;
         this.insertDate = Instant.now();
-        this.lastUpdate = Instant.now();
     }
 
     @JsonIgnore
