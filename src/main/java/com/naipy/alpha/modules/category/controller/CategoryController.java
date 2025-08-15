@@ -32,13 +32,13 @@ public class CategoryController {
     }
 
     @QueryMapping()
-    Category findByCategoryId (@Argument Long id) {
+    Category findByCategoryId (@Argument String id) {
         return _categoryService.findById(id);
     }
 
     @MutationMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    Long deleteCategoryById (@Argument Long id) {
+    String deleteCategoryById (@Argument String id) {
         _categoryService.delete(id);
         return id;
     }

@@ -84,7 +84,7 @@ public class User implements UserDetails {
     private List<Token> tokenList;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
 

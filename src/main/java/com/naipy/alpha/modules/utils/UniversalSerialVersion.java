@@ -6,7 +6,7 @@ public class UniversalSerialVersion {
         throw new UnsupportedOperationException("This class cannot be instanced");
     }
 
-    // Variação da classe 0000 - 000 sequencia de modelos
+    // Variação da classe 0000 - 0000 sequencia de modelos
 
     public static final long USER_SERIAL_VERSION_UID = 10000001L;
     public static final long PRODUCT_SERIAL_VERSION_UID = 10000002L;

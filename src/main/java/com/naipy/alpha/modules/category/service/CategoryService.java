@@ -15,14 +15,18 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
+    private final CategoryRepository _categoryRepository;
+
     @Autowired
-    private CategoryRepository _categoryRepository;
+    public CategoryService (CategoryRepository categoryRepository) {
+        this._categoryRepository = categoryRepository;
+    }
 
     public List<Category> findAll () {
         return _categoryRepository.findAll();
     }
 
-    public Category findById (Long id) {
+    public Category findById (String id) {
         Optional<Category> categoryOptional = _categoryRepository.findById(id);
         if (categoryOptional.isEmpty()) throw new ResourceNotFoundException("Category not found. Id:" + id);
         return categoryOptional.get();
@@ -32,7 +36,7 @@ public class CategoryService {
         return _categoryRepository.save(category);
     }
 
-    public void delete (Long id) {
+    public void delete (String id) {
         try {
             _categoryRepository.deleteById(id);
         }
