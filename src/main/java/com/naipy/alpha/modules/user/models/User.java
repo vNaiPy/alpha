@@ -8,6 +8,7 @@ import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.token.Token;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
+import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.time.Instant;
 import java.util.*;
 
@@ -28,6 +30,9 @@ import java.util.*;
 @NoArgsConstructor
 @Table(name = "tb_users")
 public class User implements UserDetails {
+
+    @Serial
+    private static final long serialVersionUID = UniversalSerialVersion.USER_SERIAL_VERSION_UID;
 
     @Id
     @Column(nullable = false, unique = true)

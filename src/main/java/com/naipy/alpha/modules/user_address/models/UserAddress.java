@@ -6,6 +6,7 @@ import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.pk.UserAddressPK;
 import com.naipy.alpha.modules.user.models.User;
+import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -22,6 +24,9 @@ import java.time.Instant;
 @Setter
 @ToString
 public class UserAddress implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = UniversalSerialVersion.USER_ADDRESS_SERIAL_VERSION_UID;
 
     @EmbeddedId
     private UserAddressPK id = new UserAddressPK();

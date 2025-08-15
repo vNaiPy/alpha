@@ -1,10 +1,8 @@
 package com.naipy.alpha.modules.product.controller;
 
-import com.naipy.alpha.modules.category.model.Category;
-import com.naipy.alpha.modules.product.model.Product;
 import com.naipy.alpha.modules.product.model.ProductDTO;
+import com.naipy.alpha.modules.product.model.ProductInput;
 import com.naipy.alpha.modules.product.service.ProductService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -13,16 +11,16 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Controller
-@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
     private final ProductService _productService;
+
+    @Autowired
+    public ProductController(ProductService productService) {
+        this._productService = productService;
+    }
 
     @QueryMapping
     public List<ProductDTO> findAllProducts () {
@@ -30,56 +28,35 @@ public class ProductController {
     }
 
     @QueryMapping
-    public ProductDTO findByProductId (@Argument UUID id) {
+    public ProductDTO findByProductId (@Argument String id) {
         return _productService.findById(id);
     }
 
-    /*@QueryMapping
-    public List<ProductDTO> searchingForWithLngLat (@Argument String searchingFor, @Argument Double lng, @Argument Double lat) {
-        return _productService.searchingForWithLngLat(searchingFor, lng, lat);
-    };*/
+    @QueryMapping
+    public List<ProductDTO> searchingForWithLngLat (@Argument final String searchingFor, @Argument final Double lng, @Argument final Double lat, @Argument final Double radius) {
+        return _productService.searchingForWithLngLat(searchingFor, lng, lat, radius);
+    }
 
     @QueryMapping
-    public List<ProductDTO> findAllProductsByOwnerId (@Argument UUID id) {
-        return _productService.findAllByOwner(id);
+    public List<ProductDTO> findAllProductsByOwnerId () {
+        return _productService.findAllByOwner();
     }
 
     @MutationMapping
     @Secured("USER")
     public ProductDTO addProduct (@Argument ProductInput product) {
-        Product newProduct = new Product();
-        newProduct.setName(product.name);
-        newProduct.setDescription(product.description);
-        newProduct.setPrice(product.price);
-        newProduct.setImgUrl(product.imgUrl);
-
-        Set<Category> categoryIdSet = product.categoryIdList().stream()
-                .map(categoryId -> Category.builder().id(categoryId).build())
-                .collect(Collectors.toSet());
-        return _productService.insert(newProduct, categoryIdSet);
+        return _productService.insert(product);
     }
 
     @MutationMapping
     @Secured("USER")
-    public ProductDTO updateProduct (@Argument UUID id, @Argument ProductInput product) {
-        Product updatedProduct = new Product();
-        updatedProduct.setName(product.name);
-        updatedProduct.setDescription(product.description);
-        updatedProduct.setPrice(product.price);
-        updatedProduct.setImgUrl(product.imgUrl);
-
-        Set<Category> categoryIdSet = product.categoryIdList().stream()
-                .map(categoryId -> Category.builder().id(categoryId).build())
-                .collect(Collectors.toSet());
-        updatedProduct.getCategories().addAll(categoryIdSet);
-        return _productService.updateProduct(id, updatedProduct);
+    public ProductDTO updateProduct (@Argument ProductDTO productDTO) {
+        return _productService.update(productDTO);
     }
 
     @MutationMapping
     @Secured("USER")
-    public String inactiveByProductId (@Argument UUID id) {
-        return _productService.inactiveByProductId(id);
+    public String desactivateProductById (@Argument String id) {
+        return _productService.deactivate(id);
     }
-
-    record ProductInput (String name, String description, Double price, String imgUrl, List<Long> categoryIdList) {}
 }

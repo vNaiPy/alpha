@@ -1,42 +1,33 @@
 package com.naipy.alpha.modules.product.model;
 
 import com.naipy.alpha.modules.category.model.Category;
-import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.naipy.alpha.modules.store.models.StoreDTO;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class ProductDTO {
-
-    private UUID id;
-    private String name;
-    private String description;
-    private Double price;
-    private String imgUrl;
-    private ProductStatus status;
-    private Store store;
-    private Set<Category> categories = new HashSet<>();
-
+public record ProductDTO (
+        String id,
+        String name,
+        String description,
+        Double price,
+        String imgUrl,
+        ProductStatus status,
+        StoreDTO storeDTO,
+        Set<Category> categories
+) implements Serializable {
     public static ProductDTO createProductDTO (Product product) {
-        return ProductDTO.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .price(product.getPrice())
-                .imgUrl(product.getImgUrl())
-                .status(product.getStatus())
-                .store(product.getOwner().getStore())
-                .categories(product.getCategories())
-                .build();
+        return new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getImgUrl(),
+                product.getStatus(),
+                StoreDTO.createStoreDTO(product.getOwner().getStore()),
+                !product.getCategories().isEmpty() ? product.getCategories() : new HashSet<>()
+        );
     }
 }

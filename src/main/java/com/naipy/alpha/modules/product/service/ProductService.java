@@ -1,37 +1,30 @@
 package com.naipy.alpha.modules.product.service;
 
-import com.naipy.alpha.modules.category.model.Category;
 import com.naipy.alpha.modules.product.model.Product;
-import com.naipy.alpha.modules.user.models.User;
+import com.naipy.alpha.modules.product.model.ProductInput;
 import com.naipy.alpha.modules.product.model.ProductDTO;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
 import com.naipy.alpha.modules.product.repository.ProductRepository;
-import com.naipy.alpha.modules.store.repository.StoreRepository;
 import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
-import com.naipy.alpha.modules.exceptions.services.StoreNotRegisteredException;
+import com.naipy.alpha.modules.utils.ServiceUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 
 @Service
-public class ProductService {
+public class ProductService extends ServiceUtils {
 
-    private final StoreRepository storeRepository;
     private final ProductRepository productRepository;
 
     @Autowired
-    public ProductService(StoreRepository storeRepository, ProductRepository productRepository) {
-        this.storeRepository = storeRepository;
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -39,37 +32,49 @@ public class ProductService {
         return productRepository.findAll().stream().map(ProductDTO::createProductDTO).toList();
     }
 
-    /*public List<ProductDTO> searchingForWithLngLat (String searchingFor, Double lng, Double lat) {
-        Double lngMaior = lng + 0.02;
-        Double lngMenor = lng - 0.02;
-        Double latMaior = lat + 0.02;
-        Double latMenor = lat - 0.02;
-        return _productRepository.findAllByLngLat(searchingFor.toLowerCase(), lngMaior, lngMenor, latMaior, latMenor).stream().map(ProductDTO::createProductDTO).toList();
+    public List<ProductDTO> searchingForWithLngLat (String searchingFor, Double lng, Double lat, Double radius) {
+        Double lngMaior = lng + radius;
+        Double lngMenor = lng - radius;
+        Double latMaior = lat + radius;
+        Double latMenor = lat - radius;
+        return productRepository.findAllByLngLat(searchingFor.toLowerCase(), lngMaior, lngMenor, latMaior, latMenor)
+                .stream().map(ProductDTO::createProductDTO)
+                .toList();
     }
-*/
-    public ProductDTO findById (UUID id) {
+
+    public ProductDTO findById (String id) {
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isEmpty()) throw new ResourceNotFoundException("Product not found. Id:" + id);
         return ProductDTO.createProductDTO(productOptional.get());
     }
 
-    public List<ProductDTO> findAllByOwner (UUID id) {
-        return productRepository.findAllByOwnerId(id).stream().map(ProductDTO::createProductDTO).toList();
+    public List<ProductDTO> findAllByOwner () {
+        return productRepository.findAllByOwnerId(getIdCurrentUser().getId()).stream().map(ProductDTO::createProductDTO).toList();
     }
 
-    public ProductDTO insert (Product product, Set<Category> categoryIdSet) {
-        if (!storeRepository.existsById(getIdCurrentUser().getId())) throw new StoreNotRegisteredException("Store not found to insert product");
-        product.setStatus(ProductStatus.PENDING);
-        product.setOwner(getIdCurrentUser());
-        Product savedProduct = productRepository.save(product);
-        savedProduct.getCategories().addAll(categoryIdSet);
-        savedProduct.setStatus(ProductStatus.ACTIVE);
-        return ProductDTO.createProductDTO(productRepository.save(savedProduct));
+    public List<ProductDTO> findAllByNameContainingIgnoreCase (String name) {
+        return productRepository.findAllByNameContainingIgnoreCase(name).stream().map(ProductDTO::createProductDTO).toList();
     }
 
-    public ProductDTO updateProduct (UUID id, Product updatedProduct) {
+    @Transactional
+    public ProductDTO insert (final ProductInput productInput) {
+        Product product = Product.builder()
+                .id(generateUUID())
+                .name(productInput.name())
+                .description(productInput.description())
+                .price(productInput.price())
+                .imgUrl(productInput.imgUrl())
+                .status(ProductStatus.ACTIVE)
+                .owner(getIdCurrentUser())
+                .categories(productInput.categories())
+                .build();
+        return ProductDTO.createProductDTO(productRepository.save(product));
+    }
+
+    @Transactional
+    public ProductDTO update (ProductDTO updatedProduct) {
         try {
-            Product existentProduct = productRepository.getReferenceById(id);
+            Product existentProduct = productRepository.getReferenceById(getIdCurrentUser().getId());
             updateData(updatedProduct, existentProduct);
             return ProductDTO.createProductDTO(productRepository.save(existentProduct));
         }
@@ -78,10 +83,11 @@ public class ProductService {
         }
     }
 
-    public String inactiveByProductId (UUID id) {
+    @Transactional
+    public String deactivate (String id) {
         try {
             Product existentProduct = productRepository.getReferenceById(id);
-            existentProduct.setStatus(ProductStatus.INACTIVE);
+            existentProduct.setStatus(ProductStatus.DESACTIVATED);
             productRepository.save(existentProduct);
             return "Product deactivated!";
         }
@@ -94,16 +100,11 @@ public class ProductService {
         }
     }
 
-    private User getIdCurrentUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (User) authentication.getPrincipal();
-    }
-
-    private void updateData(Product updatedProduct, Product existentProduct) {
-        existentProduct.setName(updatedProduct.getName());
-        existentProduct.setDescription(updatedProduct.getDescription());
-        existentProduct.setPrice(updatedProduct.getPrice());
-        existentProduct.setImgUrl(updatedProduct.getImgUrl());
-        existentProduct.getCategories().addAll(updatedProduct.getCategories());
+    private void updateData(ProductDTO updatedProduct, Product existentProduct) {
+        existentProduct.setName(updatedProduct.name());
+        existentProduct.setDescription(updatedProduct.description());
+        existentProduct.setPrice(updatedProduct.price());
+        existentProduct.setImgUrl(updatedProduct.imgUrl());
+        existentProduct.setCategories(updatedProduct.categories());
     }
 }
