@@ -1,6 +1,8 @@
 package com.naipy.alpha.modules.store.enums;
 
-public enum StoreStatus {
+import java.io.Serializable;
+
+public enum StoreStatus implements Serializable {
     ACTIVE,
     VACATION,
     SUSPENDED,

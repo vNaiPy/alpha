@@ -1,6 +1,8 @@
 package com.naipy.alpha.modules.product.enums;
 
-public enum ProductStatus {
+import java.io.Serializable;
+
+public enum ProductStatus implements Serializable {
     ACTIVE,
     EXPIRED,
     PENDING,

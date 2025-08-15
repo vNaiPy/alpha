@@ -1,6 +1,8 @@
 package com.naipy.alpha.modules.user.enums;
 
-public enum UserStatus {
+import java.io.Serializable;
+
+public enum UserStatus implements Serializable {
 
     ACTIVE,
     SUSPENDED,
