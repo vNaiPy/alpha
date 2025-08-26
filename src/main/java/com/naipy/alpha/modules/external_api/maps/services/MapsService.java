@@ -1,6 +1,5 @@
 package com.naipy.alpha.modules.external_api.maps.services;
 
-import com.naipy.alpha.config.ConfigurationLoader;
 import com.naipy.alpha.modules.external_api.interfaces.Maps;
 import com.naipy.alpha.modules.external_api.maps.models.GeocodeResponse;
 import com.naipy.alpha.modules.utils.ConstantVariables;
@@ -15,7 +14,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class MapsService implements Maps {
 
     private final WebClient webClient;
-    private static final String MAPS_KEY = ConfigurationLoader.getMapsKey();
+    //private static final String MAPS_KEY = ConfigurationLoader.getMapsKey();
+    private static final String MAPS_KEY = "&key=AIzaSyDLr4j7hVxfeYDR1wEC1YnDSgw91UqOjsY";
 
     public MapsService (WebClient.Builder webClientBuilder) {
         final String endpointGeocodeAPI = "https://maps.googleapis.com/maps/api/geocode";

@@ -25,9 +25,8 @@ public class ChargeObject extends ServiceUtils {
                 .password(passwrdEncoder("123456"))
                 .status(UserStatus.ACTIVE)
                 .roles(List.of(Role.USER))
-                .profilePicture("https://")
-                .registeredSince(Instant.now())
-                .lastUpdate(Instant.now())
+                .pictureUrl("https://")
+                .createdAt(Instant.now())
                 .build();
     }
 

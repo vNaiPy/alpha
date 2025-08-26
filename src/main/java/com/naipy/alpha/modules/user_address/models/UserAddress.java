@@ -6,6 +6,7 @@ import com.naipy.alpha.modules.address.models.Address;
 import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.pk.UserAddressPK;
 import com.naipy.alpha.modules.user.models.User;
+import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -22,6 +24,9 @@ import java.time.Instant;
 @Setter
 @ToString
 public class UserAddress implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = UniversalSerialVersion.USER_ADDRESS_SERIAL_VERSION_UID;
 
     @EmbeddedId
     private UserAddressPK id = new UserAddressPK();
@@ -45,9 +50,6 @@ public class UserAddress implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant insertDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Instant lastUpdate;
-
     public UserAddress() {
     }
 
@@ -60,7 +62,6 @@ public class UserAddress implements Serializable {
         this.longitude = longitude;
         this.usageType = usageType;
         this.insertDate = Instant.now();
-        this.lastUpdate = Instant.now();
     }
 
     @JsonIgnore

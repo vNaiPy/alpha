@@ -1,6 +1,8 @@
 package com.naipy.alpha.modules.user_address.enums;
 
-public enum AddressUsageType {
+import java.io.Serializable;
+
+public enum AddressUsageType implements Serializable {
     PERSONAL,
     BUSINESS
 }

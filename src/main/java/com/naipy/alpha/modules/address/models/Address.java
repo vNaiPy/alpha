@@ -2,10 +2,12 @@ package com.naipy.alpha.modules.address.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
+import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
@@ -21,7 +23,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class Address implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = UniversalSerialVersion.ADDRESS_SERIAL_VERSION_UID;
+
     @Id
+    @Column(nullable = false, unique = true)
     private String id;
 
     @NotBlank
@@ -31,7 +37,7 @@ public class Address implements Serializable {
     private String neighborhood;
 
     @NotBlank
-    @Column(length = 12)
+    @Column(length = 12, nullable = false, unique = true)
     private String zipcode;
 
     @NotBlank

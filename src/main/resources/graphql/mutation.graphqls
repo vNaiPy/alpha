@@ -1,18 +1,23 @@
 type Mutation {
+
     #Auth
     register (request: RegisterRequest!): AuthenticationResponse!
     authenticate (request: AuthenticationRequest!): AuthenticationResponse!
 
     #User
-
     addAddressToUser(addressInput: UserAddressInput): [UserAddress]
+    updateUser (updateUserInput: UpdateUserInput!): User!
+    desactivateUser: String
 
     #Store
-    storeRegistration (store: StoreInput!): Store!
+    registerStore (store: StoreInput!, address: UserAddressInput!): Store!
+    desactivateStore: String!
+
     #Product
     addProduct (product: ProductInput!): Product!
     updateProduct (id: ID!, product: ProductInput!): Product!
     inactiveByProductId (id: ID!): String
+
     #Category
     addCategory (category: CategoryInput!): Category!
     deleteCategoryById (id: ID!): ID!

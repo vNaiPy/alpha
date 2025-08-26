@@ -5,7 +5,7 @@ COPY src /app/src
 COPY pom.xml /app
 
 WORKDIR /app
-RUN mvn clean install -DskipTests
+RUN mvn clean install
 
 # Etapa de execução com Java 17 (imagem slim)
 FROM openjdk:17-jdk

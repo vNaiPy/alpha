@@ -4,37 +4,43 @@ import com.naipy.alpha.modules.order.models.Order;
 import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.time.Instant;
 import java.util.*;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserDTO {
-
-    private String name;
-    private String email;
-    private String phone;
-    private Store store;
-    private UserStatus status;
-    private Set<UserAddress> usersAddresses = new HashSet<>();
-    private List<Order> orders = new ArrayList<>();
-
-
+public record UserDTO (
+    String id,
+    String username,
+    String name,
+    String surname,
+    String email,
+    String phone,
+    Store store,
+    UserStatus status,
+    String pictureUrl,
+    Instant createdAt,
+    String identityDocument,
+    List<Role> roles,
+    Set<UserAddress> usersAddresses,
+    List<Order> orders
+) implements Serializable {
     public static UserDTO createUserDTO (User user) {
-        return UserDTO.builder()
-                .name(user.getName())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .store(user.getStore())
-                .status(user.getStatus())
-                .usersAddresses(user.getUsersAddresses())
-                .orders(user.getOrders())
-                .build();
+        return new UserDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getName(),
+                user.getSurname(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getStore(),
+                user.getStatus(),
+                user.getPictureUrl(),
+                user.getCreatedAt(),
+                user.getIdentityDocument(),
+                user.getRoles(),
+                user.getUsersAddresses(),
+                user.getOrders()
+        );
     }
 }

@@ -1,6 +1,8 @@
 package com.naipy.alpha.modules.user.service;
 
 import com.naipy.alpha.core.security.jwt.JwtService;
+import com.naipy.alpha.modules.user.enums.UserStatus;
+import com.naipy.alpha.modules.user.exceptions.UserCannotBeAuthenticateException;
 import com.naipy.alpha.modules.user.models.User;
 import com.naipy.alpha.modules.user.models.AuthenticationRequest;
 import com.naipy.alpha.modules.user.models.AuthenticationResponse;
@@ -34,25 +36,25 @@ public class AuthenticationService {
     public AuthenticationResponse authenticateAfterInsertingNewUser (User user) {
         String jwtToken = jwtService.generateToken(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return new AuthenticationResponse(jwtToken);
     }
 
     public AuthenticationResponse authenticate (AuthenticationRequest request) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
+                        request.username(),
+                        request.password()
                 )
         );
-        User user = userRepository.findByEmail(request.getUsername()).orElseThrow();
+        User user = userRepository.findByEmail(request.username()).orElseThrow();
+        if (!user.getStatus().equals(UserStatus.ACTIVE))
+            throw new UserCannotBeAuthenticateException(
+                    "User cannot be authenticated because it is not active. Current status: ".concat(user.getStatus().toString())
+                            .concat(" of user ID: ").concat(user.getId()));
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return new AuthenticationResponse(jwtToken);
     }
 
     protected void revokeAllUserTokens (User user) {

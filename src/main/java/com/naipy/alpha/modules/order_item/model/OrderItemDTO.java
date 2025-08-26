@@ -2,7 +2,6 @@ package com.naipy.alpha.modules.order_item.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order.models.Order;
-import com.naipy.alpha.modules.order_item.model.OrderItem;
 import com.naipy.alpha.modules.product.model.Product;
 import com.naipy.alpha.modules.order_item.pk.OrderItemPK;
 import com.naipy.alpha.modules.product.model.ProductDTO;
@@ -39,22 +38,6 @@ public class OrderItemDTO {
 
     public void setProduct (Product product) {
         id.setProduct(product);
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
 
     public Double getSubTotal () {

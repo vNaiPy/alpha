@@ -2,6 +2,7 @@ package com.naipy.alpha.modules.exceptions.enums;
 
 public enum ErrorAppType {
     INVALID_PARAM
+    ,USER_UNAUTHORIZED
     ,EXTERNAL_RESPONSE_NOT_RECEIVED
     ,STORE_ALREADY_REGISTER
     ,STORE_NOT_REGISTERED

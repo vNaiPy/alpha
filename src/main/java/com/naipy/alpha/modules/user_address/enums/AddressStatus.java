@@ -1,6 +1,8 @@
 package com.naipy.alpha.modules.user_address.enums;
 
-public enum AddressStatus {
+import java.io.Serializable;
+
+public enum AddressStatus implements Serializable {
     ACTIVATED,
     DISABLED
 }

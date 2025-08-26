@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-class UserServiceTest extends ServiceUtils {
+class UserServiceTest2 extends ServiceUtils {
 
     @Mock
     private UserRepository userRepository;

@@ -2,11 +2,14 @@ input StoreInput {
     name: String!,
     logoUrl: String,
     bannerUrl: String,
+    description: String
 }
 
 type Store {
-    name: String!,
-    logoUrl: String!,
-    bannerUrl: String,
-    instant: String,
+    id: ID!
+    name: String!
+    logoUrl: String
+    bannerUrl: String
+    description: String
+    createdAt: String
 }

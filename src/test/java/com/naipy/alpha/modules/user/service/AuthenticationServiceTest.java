@@ -19,7 +19,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
@@ -49,7 +48,7 @@ class AuthenticationServiceTest {
         AuthenticationResponse response = authenticationService.authenticateAfterInsertingNewUser(user);
 
         assertNotNull(response);
-        assertEquals(jwtToken, response.getToken());
+        assertEquals(jwtToken, response.token());
         Mockito.verify(tokenRepository).save(Mockito.any(Token.class));
     }
 

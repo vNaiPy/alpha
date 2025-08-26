@@ -1,19 +1,31 @@
 type Query {
 
+    #User
+    findAllUsers: [User]
+    findByUserId(id: ID!): User
+    findUserByUsername(username: String!): User
+    findUserByUsernameContaining(username: String!): User
+
     #Address
     findByZipcode(zipcode: String): Address
 
     #Store
     findStoreByCurrentUser: Store
+    findStoreById (id: ID!): Store
+    findStoreByName (name: String!): Store
+    findAllStoreByNameContaining (name: String!): Store
     findAllStore: [Store]
+
     #Product
     findAllProducts: [Product]
-    searchingForWithLngLat (searchingFor: String!, lng: Float!, lat: Float!): [Product]
+    searchingForWithLngLat (searchingFor: String!, lng: Float!, lat: Float!, radius: Float!): [Product]
     findByProductId (id: ID): Product
     findAllProductsByOwnerId (id: ID): [Product]
+
     #Category
     findByCategoryId (id: ID): Category
     findAllCategories: [Category]
+
     #Order
     findAllOrders: [Order]
     findByOrderId (id: ID): Order

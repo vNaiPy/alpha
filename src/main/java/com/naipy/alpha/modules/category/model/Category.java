@@ -2,27 +2,41 @@ package com.naipy.alpha.modules.category.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.product.model.Product;
+import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "tb_category")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Category implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = UniversalSerialVersion.CATEGORY_SERIAL_VERSION_UID;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable = false, unique = true)
+    private String id;
+
+    @NotBlank
+    @Column(nullable = false, unique = true)
     private String name;
+
+    private String imgUrl;
+
+    @NotBlank
+    @Column(nullable = false, unique = true)
+    private String subname;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "categories")

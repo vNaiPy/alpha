@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,12 +18,12 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDTO {
+public class OrderDTO implements Serializable {
 
-    private Long id;
+    private String id;
     private Instant moment;
     private OrderStatus orderStatus;
-    private UserDTO client;
+    private UserDTO userDTO;
     private Set<OrderItemDTO> items = new HashSet<>();
     private Payment payment;
 
@@ -31,7 +32,7 @@ public class OrderDTO {
                 .id(order.getId())
                 .moment(order.getMoment())
                 .orderStatus(order.getOrderStatus())
-                .client(UserDTO.createUserDTO(order.getClient()))
+                .userDTO(UserDTO.createUserDTO(order.getUser()))
                 .items(order.getItems().stream().map(OrderItemDTO::new).collect(Collectors.toSet()))
                 .payment(order.getPayment())
                 .build();

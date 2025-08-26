@@ -4,18 +4,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order_item.pk.OrderItemPK;
 import com.naipy.alpha.modules.order.models.Order;
 import com.naipy.alpha.modules.product.model.Product;
+import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_order_item")
-@Data
+@Getter
+@Setter
 public class OrderItem implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = UniversalSerialVersion.ORDER_PRODUCT_SERIAL_VERSION_UID;
 
     @EmbeddedId
     private OrderItemPK id = new OrderItemPK();

@@ -8,6 +8,7 @@ import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.token.Token;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
+import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.time.Instant;
 import java.util.*;
 
@@ -29,8 +31,16 @@ import java.util.*;
 @Table(name = "tb_users")
 public class User implements UserDetails {
 
+    @Serial
+    private static final long serialVersionUID = UniversalSerialVersion.USER_SERIAL_VERSION_UID;
+
     @Id
+    @Column(nullable = false, unique = true)
     private String id;
+
+    @NotBlank
+    @Column(nullable = false, unique = true)
+    private String username;
 
     @NotBlank
     private String name;
@@ -39,6 +49,7 @@ public class User implements UserDetails {
     private String surname;
 
     @NotBlank
+    @Column(nullable = false, unique = true)
     private String identityDocument;
 
     @NotBlank
@@ -47,18 +58,14 @@ public class User implements UserDetails {
     @NotBlank
     private String phone;
 
-    private String profilePicture;
+    private String pictureUrl;
 
     @NotBlank
     private String password;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Instant registeredSince;
-
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Instant lastUpdate;
+    private Instant createdAt;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
@@ -66,10 +73,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
-    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Store store;
 
-    @OneToMany(mappedBy = "id.user")
+    @OneToMany(mappedBy = "id.user", fetch = FetchType.LAZY)
     private Set<UserAddress> usersAddresses = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
@@ -77,12 +84,12 @@ public class User implements UserDetails {
     private List<Token> tokenList;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Product> products = new ArrayList<>();
 

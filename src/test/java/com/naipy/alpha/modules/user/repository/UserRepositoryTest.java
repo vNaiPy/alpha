@@ -57,30 +57,32 @@ class UserRepositoryTest extends ServiceUtils {
 
         User admin = User.builder()
                 .id(ServiceUtils.generateUUID())
+                .username("handrei.morais")
                 .name("Handrei")
                 .surname("Morais de Souza")
                 .email("handrei@mail.com")
                 .phone("119999999999")
+                .identityDocument("12345678901")
                 .password(passwordEncoder.encode("123456"))
                 .status(UserStatus.ACTIVE)
                 .roles(List.of(Role.ADMIN, Role.USER))
-                .profilePicture("https://")
-                .registeredSince(Instant.now())
-                .lastUpdate(Instant.now())
+                .pictureUrl("https://")
+                .createdAt(Instant.now())
                 .build();
 
         User user = User.builder()
                 .id(ServiceUtils.generateUUID())
+                .username("bruna.meyer")
                 .name("Bruna")
                 .surname("Meyer")
+                .identityDocument("12345678900")
                 .email("bruna@mail.com")
                 .phone("119999999999")
                 .password(passwordEncoder.encode("123456"))
                 .status(UserStatus.ACTIVE)
                 .roles(List.of(Role.USER))
-                .profilePicture("https://")
-                .registeredSince(Instant.now())
-                .lastUpdate(Instant.now())
+                .pictureUrl("https://")
+                .createdAt(Instant.now())
                 .build();
 
         userRepository.saveAll(List.of(admin, user));
