@@ -13,8 +13,8 @@ public class AddressDTO {
     private final String street;
     private final String neighborhood;
     private final String zipcode;
-    private final String latitude;
-    private final String longitude;
+    private final Double latitude;
+    private final Double longitude;
     private final String city;
     private final String state;
     private final String country;

@@ -1,6 +1,6 @@
 package com.naipy.alpha.modules.order.controller;
 
-import com.naipy.alpha.modules.order.models.OrderDTO;
+import com.naipy.alpha.modules.order.models.dto.OrderDTO;
 import com.naipy.alpha.modules.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;

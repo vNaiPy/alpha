@@ -1,9 +1,14 @@
 #Category
 input CategoryInput {
     name: String!
+    subname: String!
+    imgUrl: String
+
 }
 
 type Category {
     id: ID!
     name: String
+    imgUrl: String
+    subname: String
 }

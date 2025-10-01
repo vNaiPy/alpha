@@ -1,6 +1,6 @@
 package com.naipy.alpha.modules.user.models;
 
-import com.naipy.alpha.modules.order.models.Order;
+import com.naipy.alpha.modules.order.models.entities.Order;
 import com.naipy.alpha.modules.store.models.Store;
 import com.naipy.alpha.modules.user.enums.UserStatus;
 import com.naipy.alpha.modules.user_address.models.UserAddress;

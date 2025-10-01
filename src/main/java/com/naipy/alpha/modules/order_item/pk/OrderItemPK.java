@@ -1,6 +1,6 @@
 package com.naipy.alpha.modules.order_item.pk;
 
-import com.naipy.alpha.modules.order.models.Order;
+import com.naipy.alpha.modules.order.models.entities.Order;
 import com.naipy.alpha.modules.product.model.Product;
 import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.Embeddable;

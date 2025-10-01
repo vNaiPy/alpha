@@ -1,7 +1,7 @@
 package com.naipy.alpha.modules.product.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.naipy.alpha.modules.order.models.Order;
+import com.naipy.alpha.modules.order.models.entities.Order;
 import com.naipy.alpha.modules.order_item.model.OrderItem;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
 import com.naipy.alpha.modules.user.models.User;

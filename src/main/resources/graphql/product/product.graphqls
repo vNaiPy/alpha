@@ -13,6 +13,14 @@ type Product {
     price: Float!,
     imgUrl: String!,
     status: String!,
-    store: Store!,
+    store: StoreDTO!,
     categories: [Category]!
+}
+
+input SearchingProductInput {
+    searchingFor: String!
+    lng: Float!
+    lat: Float!
+    radius: Float
+    paginatorInput: PaginatorInput!
 }

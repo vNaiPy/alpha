@@ -2,7 +2,10 @@ package com.naipy.alpha.modules.product.controller;
 
 import com.naipy.alpha.modules.product.model.ProductDTO;
 import com.naipy.alpha.modules.product.model.ProductInput;
+import com.naipy.alpha.modules.product.model.SearchingProductInput;
 import com.naipy.alpha.modules.product.service.ProductService;
+import com.naipy.alpha.modules.utils.models.ItemsPaginatorResponse;
+import com.naipy.alpha.modules.utils.models.PaginatorInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -33,13 +36,18 @@ public class ProductController {
     }
 
     @QueryMapping
-    public List<ProductDTO> searchingForWithLngLat (@Argument final String searchingFor, @Argument final Double lng, @Argument final Double lat, @Argument final Double radius) {
-        return _productService.searchingForWithLngLat(searchingFor, lng, lat, radius);
+    public ItemsPaginatorResponse<ProductDTO> findAllWithinRadiusByLngLat (@Argument SearchingProductInput searchingProductInput) {
+        return _productService.searchingForWithLngLat(searchingProductInput);
     }
 
     @QueryMapping
-    public List<ProductDTO> findAllProductsByOwnerId () {
-        return _productService.findAllByOwner();
+    public List<ProductDTO> findAllProductsByOwnerId (@Argument final PaginatorInput paginatorInput) {
+        return _productService.findAllByOwner(paginatorInput);
+    }
+
+    @QueryMapping
+    public List<ProductDTO> findAllByNameContainingIgnoreCase (@Argument final String name, @Argument final PaginatorInput paginatorInput) {
+        return _productService.findAllByNameContainingIgnoreCase(name, paginatorInput);
     }
 
     @MutationMapping

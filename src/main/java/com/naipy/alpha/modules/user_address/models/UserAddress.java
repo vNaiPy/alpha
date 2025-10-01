@@ -37,11 +37,11 @@ public class UserAddress implements Serializable {
     @NotBlank
     private String streetNumber;
 
-    @NotBlank
-    private String latitude;
+    @NotNull
+    private Double latitude;
 
-    @NotBlank
-    private String longitude;
+    @NotNull
+    private Double longitude;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -53,7 +53,7 @@ public class UserAddress implements Serializable {
     public UserAddress() {
     }
 
-    public UserAddress(User user, Address address, String complement, String streetNumber, String latitude, String longitude, AddressUsageType usageType) {
+    public UserAddress(User user, Address address, String complement, String streetNumber, Double latitude, Double longitude, AddressUsageType usageType) {
         setUser(user);
         setAddress(address);
         this.complement = complement;

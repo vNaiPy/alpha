@@ -5,6 +5,7 @@ import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serial;
@@ -49,11 +50,11 @@ public class Address implements Serializable {
     @NotBlank
     private String country;
 
-    @NotBlank
-    private String latitude;
+    @NotNull
+    private Double latitude;
 
-    @NotBlank
-    private String longitude;
+    @NotNull
+    private Double longitude;
 
     @JsonIgnore
     @OneToMany(mappedBy = "id.address")

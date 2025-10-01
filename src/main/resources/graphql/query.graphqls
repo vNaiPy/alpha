@@ -10,15 +10,15 @@ type Query {
     findByZipcode(zipcode: String): Address
 
     #Store
-    findStoreByCurrentUser: Store
-    findStoreById (id: ID!): Store
-    findStoreByName (name: String!): Store
-    findAllStoreByNameContaining (name: String!): Store
-    findAllStore: [Store]
+    findStoreByCurrentUser: StoreDTO
+    findStoreById (id: ID!): StoreDTO
+    findStoreByName (name: String!): StoreDTO
+    findAllStoreByNameContaining (name: String!): StoreDTO
+    findAllStore: [StoreDTO]
 
     #Product
     findAllProducts: [Product]
-    searchingForWithLngLat (searchingFor: String!, lng: Float!, lat: Float!, radius: Float!): [Product]
+    findAllWithinRadiusByLngLat (searchingProductInput: SearchingProductInput!): ProductPaginator
     findByProductId (id: ID): Product
     findAllProductsByOwnerId (id: ID): [Product]
 

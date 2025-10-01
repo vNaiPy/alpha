@@ -5,7 +5,7 @@ type User {
     surname: String
     email: String
     phone: String
-    store: Store
+    store: StoreDTO
     userStatus: UserStatus
     profilePicture: String
     createdAt: String

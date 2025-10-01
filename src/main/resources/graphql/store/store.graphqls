@@ -5,11 +5,12 @@ input StoreInput {
     description: String
 }
 
-type Store {
+type StoreDTO {
     id: ID!
     name: String!
     logoUrl: String
     bannerUrl: String
     description: String
     createdAt: String
+    storeStatus: String
 }

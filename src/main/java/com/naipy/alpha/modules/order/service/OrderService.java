@@ -1,7 +1,7 @@
 package com.naipy.alpha.modules.order.service;
 
-import com.naipy.alpha.modules.order.models.Order;
-import com.naipy.alpha.modules.order.models.OrderDTO;
+import com.naipy.alpha.modules.order.models.entities.Order;
+import com.naipy.alpha.modules.order.models.dto.OrderDTO;
 import com.naipy.alpha.modules.order.repository.OrderRepository;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
 import com.naipy.alpha.modules.utils.ServiceUtils;

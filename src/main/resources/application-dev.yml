@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/springboot_course_test
+    url: jdbc:postgresql://localhost:5432/we-make-it
     username: postgres
-    password: 1234567
+    password: 123qwe
   jpa:
     show-sql: true
     hibernate:
@@ -10,9 +10,19 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
-          lab:
+          lob:
             non_contextual_creation: true
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphiql
+    servlet:
+      maxQueryDepth: 5
+    schema:
+      printer:
+        enabled: false
 jwt:
   secret: MYJWTSECRET
   expiration: 3600000

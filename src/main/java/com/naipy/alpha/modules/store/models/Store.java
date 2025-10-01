@@ -43,7 +43,7 @@ public class Store implements Serializable {
     @Column(nullable = false)
     private Instant createdAt;
 
-    @NotBlank
+    @NotNull
     @Column(nullable = false)
     private StoreStatus storeStatus;
 

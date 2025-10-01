@@ -2,7 +2,7 @@ package com.naipy.alpha.modules.order_item.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.naipy.alpha.modules.order_item.pk.OrderItemPK;
-import com.naipy.alpha.modules.order.models.Order;
+import com.naipy.alpha.modules.order.models.entities.Order;
 import com.naipy.alpha.modules.product.model.Product;
 import com.naipy.alpha.modules.utils.UniversalSerialVersion;
 import jakarta.persistence.EmbeddedId;

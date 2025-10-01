@@ -1,6 +1,6 @@
 package com.naipy.alpha.modules.order.repository;
 
-import com.naipy.alpha.modules.order.models.Order;
+import com.naipy.alpha.modules.order.models.entities.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

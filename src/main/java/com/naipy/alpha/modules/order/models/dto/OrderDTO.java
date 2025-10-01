@@ -1,5 +1,7 @@
-package com.naipy.alpha.modules.order.models;
+package com.naipy.alpha.modules.order.models.dto;
 
+import com.naipy.alpha.modules.order.models.entities.Order;
+import com.naipy.alpha.modules.order.models.entities.Payment;
 import com.naipy.alpha.modules.order_item.model.OrderItemDTO;
 import com.naipy.alpha.modules.user.models.UserDTO;
 import com.naipy.alpha.modules.order.enums.OrderStatus;

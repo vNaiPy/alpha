@@ -15,7 +15,7 @@ public record ProductDTO (
         Double price,
         String imgUrl,
         ProductStatus status,
-        StoreDTO storeDTO,
+        StoreDTO store,
         Set<Category> categories
 ) implements Serializable {
     public static ProductDTO createProductDTO (Product product) {

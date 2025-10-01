@@ -1,4 +1,4 @@
-package com.naipy.alpha.modules.order.models;
+package com.naipy.alpha.modules.order.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.naipy.alpha.modules.order_item.model.OrderItem;
