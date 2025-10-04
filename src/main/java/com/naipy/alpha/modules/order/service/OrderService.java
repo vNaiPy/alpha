@@ -26,7 +26,7 @@ public class OrderService extends ServiceUtils {
     }
 
     public List<OrderDTO> findAllByCurrentUser () {
-        return _orderRepository.findAllByUserId(getIdCurrentUser().getId()).stream().map(OrderDTO::createOrderDTO).toList();
+        return _orderRepository.findAllByUserId(getCurrentUser().getId()).stream().map(OrderDTO::createOrderDTO).toList();
     }
 
     public OrderDTO findById (String id) {

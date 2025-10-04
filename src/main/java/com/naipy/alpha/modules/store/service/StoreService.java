@@ -65,7 +65,7 @@ public class StoreService extends ServiceUtils {
     }
 
     public StoreDTO findStoreByCurrentUser () {
-        Optional<Store> storeOptional = _storeRepository.findByOwnerId(getIdCurrentUser().getId());
+        Optional<Store> storeOptional = _storeRepository.findByOwnerId(getCurrentUser().getId());
         if (storeOptional.isEmpty()) throw new ResourceNotFoundException("Store not exists");
         return StoreDTO.createStoreDTO(storeOptional.get());
     }
@@ -74,7 +74,7 @@ public class StoreService extends ServiceUtils {
     public Store register (StoreDTO storeDTO, AddressInput addressInput) {
         try {
             _userAddressService.addAddressToUser(addressInput, AddressUsageType.BUSINESS);
-            User currentUser = getIdCurrentUser();
+            User currentUser = getCurrentUser();
             Store store = Store.builder()
                     .id(generateUUID())
                     .name(storeDTO.name())
@@ -88,7 +88,7 @@ public class StoreService extends ServiceUtils {
             currentUser.setStore(store);
             return _userRepository.save(currentUser).getStore();
         } catch (DataIntegrityViolationException e) {
-            final String errorMessage = "Store already registered for this user with ID: ".concat(getIdCurrentUser().getId());
+            final String errorMessage = "Store already registered for this user with ID: ".concat(getCurrentUser().getId());
             logger.warn(errorMessage);
             throw new StoreAlreadyRegisteredException(errorMessage);
         }
@@ -110,7 +110,7 @@ public class StoreService extends ServiceUtils {
     @Transactional
     public Store update (StoreDTO storeDTO) {
         try {
-            Store entity = _storeRepository.getReferenceById(getIdCurrentUser().getId());
+            Store entity = _storeRepository.getReferenceById(getCurrentUser().getId());
             updateData(storeDTO, entity);
             return _storeRepository.save(entity);
         }
@@ -122,7 +122,7 @@ public class StoreService extends ServiceUtils {
     @Transactional
     public StoreDTO desactivate () {
         try {
-            Store entity = _storeRepository.getReferenceById(getIdCurrentUser().getId());
+            Store entity = _storeRepository.getReferenceById(getCurrentUser().getId());
             entity.setStoreStatus(StoreStatus.DESACTIVATED);
             return StoreDTO.createStoreDTO(_storeRepository.save(entity));
         }

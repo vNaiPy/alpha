@@ -17,10 +17,12 @@ type Query {
     findAllStore: [StoreDTO]
 
     #Product
-    findAllProducts: [Product]
-    findAllWithinRadiusByLngLat (searchingProductInput: SearchingProductInput!): ProductPaginator
+    findAllProducts (paginatorInput: PaginatorInput!): ProductPaginator!
+    findAllWithinRadiusByLngLat (searchingProductInput: SearchingProductInput!): ProductPaginator!
     findByProductId (id: ID): Product
-    findAllProductsByOwnerId (id: ID): [Product]
+    findAllMyProducts (paginatorInput: PaginatorInput!): ProductPaginator!
+    findAllProductsByOwnerId (id: ID, paginatorInput: PaginatorInput!): ProductPaginator!
+    findAllByCategory (searchingProductInput: SearchingProductInput!): ProductPaginator!
 
     #Category
     findByCategoryId (id: ID): Category

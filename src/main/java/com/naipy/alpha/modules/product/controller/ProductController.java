@@ -13,8 +13,6 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
-
 @Controller
 public class ProductController {
 
@@ -26,8 +24,8 @@ public class ProductController {
     }
 
     @QueryMapping
-    public List<ProductDTO> findAllProducts () {
-        return _productService.findAll();
+    public ItemsPaginatorResponse<ProductDTO> findAllProducts (@Argument PaginatorInput paginatorInput) {
+        return _productService.findAll(paginatorInput);
     }
 
     @QueryMapping
@@ -41,13 +39,18 @@ public class ProductController {
     }
 
     @QueryMapping
-    public List<ProductDTO> findAllProductsByOwnerId (@Argument final PaginatorInput paginatorInput) {
+    public ItemsPaginatorResponse<ProductDTO> findAllMyProducts (@Argument PaginatorInput paginatorInput) {
         return _productService.findAllByOwner(paginatorInput);
     }
 
     @QueryMapping
-    public List<ProductDTO> findAllByNameContainingIgnoreCase (@Argument final String name, @Argument final PaginatorInput paginatorInput) {
-        return _productService.findAllByNameContainingIgnoreCase(name, paginatorInput);
+    public ItemsPaginatorResponse<ProductDTO> findAllMyProductsByOwnerId (@Argument final String ownerId, @Argument PaginatorInput paginatorInput) {
+        return _productService.findAllByOwner(ownerId, paginatorInput);
+    }
+
+    @QueryMapping
+    public ItemsPaginatorResponse<ProductDTO> findAllByCategory (@Argument SearchingProductInput searchingProductInput) {
+        return _productService.findAllByCategory(searchingProductInput);
     }
 
     @MutationMapping
@@ -58,13 +61,13 @@ public class ProductController {
 
     @MutationMapping
     @Secured("USER")
-    public ProductDTO updateProduct (@Argument ProductDTO productDTO) {
-        return _productService.update(productDTO);
+    public ProductDTO updateProduct (@Argument ProductInput product) {
+        return _productService.update(product);
     }
 
     @MutationMapping
     @Secured("USER")
-    public String desactivateProductById (@Argument String id) {
+    public String desactivateProductById (@Argument final String id) {
         return _productService.deactivate(id);
     }
 }

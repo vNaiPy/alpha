@@ -8,6 +8,7 @@ import com.naipy.alpha.modules.product.model.SearchingProductInput;
 import com.naipy.alpha.modules.product.repository.ProductRepository;
 import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
+import com.naipy.alpha.modules.store.repository.StoreRepository;
 import com.naipy.alpha.modules.utils.GeoUtils;
 import com.naipy.alpha.modules.utils.ServiceUtils;
 import com.naipy.alpha.modules.utils.models.ItemsPaginatorResponse;
@@ -21,25 +22,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class ProductService extends ServiceUtils {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository _productRepository;
+
+    private final StoreRepository _storeRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(ProductRepository productRepository, StoreRepository storeRepository) {
+        this._productRepository = productRepository;
+        this._storeRepository = storeRepository;
     }
 
-    public List<ProductDTO> findAll () {
-        return productRepository.findAll().stream().map(ProductDTO::createProductDTO).toList();
+    public ItemsPaginatorResponse<ProductDTO> findAll (PaginatorInput paginatorInput) {
+        Page<Product> productPage = _productRepository.findAll(createPageable(paginatorInput));
+        List<ProductDTO> productDTOList =  productPage.stream().map(ProductDTO::createProductDTO).toList();
+        return new ItemsPaginatorResponse<>(productDTOList, productPage.getTotalElements(), productPage.getTotalPages(), paginatorInput.page());
     }
 
     public ItemsPaginatorResponse<ProductDTO> searchingForWithLngLat (SearchingProductInput searchingProductInput) {
         GeoUtils.BoundingBox box = GeoUtils.calculateBoundingBox(searchingProductInput.lat(), searchingProductInput.lng(), searchingProductInput.radius());
-        Page<Product> productPage =  productRepository.findAllWithinRadiusByLngLat(searchingProductInput.searchingFor().toLowerCase(),
+        Page<Product> productPage =  _productRepository.findAllWithinRadiusByLngLat(searchingProductInput.searchingFor().toLowerCase(),
                 searchingProductInput.lng(),
                 searchingProductInput.lat(),
                 searchingProductInput.radius(),
@@ -53,21 +60,40 @@ public class ProductService extends ServiceUtils {
     }
 
     public ProductDTO findById (String id) {
-        Optional<Product> productOptional = productRepository.findById(id);
+        Optional<Product> productOptional = _productRepository.findById(id);
         if (productOptional.isEmpty()) throw new ResourceNotFoundException("Product not found. Id:" + id);
         return ProductDTO.createProductDTO(productOptional.get());
     }
 
-    public List<ProductDTO> findAllByOwner (PaginatorInput paginatorInput) {
-        return productRepository.findAllByOwnerId(getIdCurrentUser().getId(), createPageable(paginatorInput)).stream().map(ProductDTO::createProductDTO).toList();
+    public ItemsPaginatorResponse<ProductDTO> findAllByOwner (PaginatorInput paginatorInput) {
+        validateStoreExistence(getCurrentUser().getId());
+        Page<Product> productPage = _productRepository.findAllByOwnerId(getCurrentUser().getId(), createPageable(paginatorInput));
+        List<ProductDTO> productDTOList =  productPage.stream().map(ProductDTO::createProductDTO).toList();
+        return new ItemsPaginatorResponse<>(productDTOList, productPage.getTotalElements(), productPage.getTotalPages(), paginatorInput.page());
     }
 
-    public List<ProductDTO> findAllByNameContainingIgnoreCase (String name, PaginatorInput paginatorInput) {
-        return productRepository.findAllByNameContainingIgnoreCase(name, createPageable(paginatorInput)).stream().map(ProductDTO::createProductDTO).toList();
+    public ItemsPaginatorResponse<ProductDTO> findAllByOwner (String ownerId, PaginatorInput paginatorInput) {
+        validateStoreExistence(ownerId);
+        Page<Product> productPage = _productRepository.findAllByOwnerId(ownerId, createPageable(paginatorInput));
+        List<ProductDTO> productDTOList =  productPage.stream().map(ProductDTO::createProductDTO).toList();
+        return new ItemsPaginatorResponse<>(productDTOList, productPage.getTotalElements(), productPage.getTotalPages(), paginatorInput.page());
+    }
+
+    public ItemsPaginatorResponse<ProductDTO> findAllByNameContainingIgnoreCase (String name, PaginatorInput paginatorInput) {
+        Page<Product> productPage = _productRepository.findAllByNameContainingIgnoreCase(name, createPageable(paginatorInput));
+        List<ProductDTO> productDTOList =  productPage.stream().map(ProductDTO::createProductDTO).toList();
+        return new ItemsPaginatorResponse<>(productDTOList, productPage.getTotalElements(), productPage.getTotalPages(), paginatorInput.page());
+    }
+
+    public ItemsPaginatorResponse<ProductDTO> findAllByCategory (SearchingProductInput searchingProductInput) {
+        Page<Product> productPage = _productRepository.findAllByCategory(searchingProductInput.categoryIds(), createPageable(searchingProductInput.paginatorInput()));
+        List<ProductDTO> productDTOList =  productPage.stream().map(ProductDTO::createProductDTO).toList();
+        return new ItemsPaginatorResponse<>(productDTOList, productPage.getTotalElements(), productPage.getTotalPages(),searchingProductInput.paginatorInput().page());
     }
 
     @Transactional
-    public ProductDTO insert (final ProductInput productInput) {
+    public ProductDTO insert (ProductInput productInput) {
+        validateStoreExistence(getCurrentUser().getId());
         Product product = Product.builder()
                 .id(generateUUID())
                 .name(productInput.name())
@@ -75,18 +101,18 @@ public class ProductService extends ServiceUtils {
                 .price(productInput.price())
                 .imgUrl(productInput.imgUrl())
                 .status(ProductStatus.ACTIVE)
-                .owner(getIdCurrentUser())
+                .owner(getCurrentUser())
                 .categories(productInput.categories())
                 .build();
-        return ProductDTO.createProductDTO(productRepository.save(product));
+        return ProductDTO.createProductDTO(_productRepository.save(product));
     }
 
     @Transactional
-    public ProductDTO update (ProductDTO updatedProduct) {
+    public ProductDTO update (ProductInput product) {
         try {
-            Product existentProduct = productRepository.getReferenceById(getIdCurrentUser().getId());
-            updateData(updatedProduct, existentProduct);
-            return ProductDTO.createProductDTO(productRepository.save(existentProduct));
+            Product existentProduct = _productRepository.getReferenceById(getCurrentUser().getId());
+            updateData(product, existentProduct);
+            return ProductDTO.createProductDTO(_productRepository.save(existentProduct));
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(e.getMessage());
@@ -96,9 +122,9 @@ public class ProductService extends ServiceUtils {
     @Transactional
     public String deactivate (String id) {
         try {
-            Product existentProduct = productRepository.getReferenceById(id);
+            Product existentProduct = _productRepository.getReferenceById(id);
             existentProduct.setStatus(ProductStatus.DESACTIVATED);
-            productRepository.save(existentProduct);
+            _productRepository.save(existentProduct);
             return "Product deactivated!";
         }
         catch (EmptyResultDataAccessException e) {
@@ -110,11 +136,16 @@ public class ProductService extends ServiceUtils {
         }
     }
 
-    private void updateData(ProductDTO updatedProduct, Product existentProduct) {
+    private void updateData(ProductInput updatedProduct, Product existentProduct) {
         existentProduct.setName(updatedProduct.name());
         existentProduct.setDescription(updatedProduct.description());
         existentProduct.setPrice(updatedProduct.price());
         existentProduct.setImgUrl(updatedProduct.imgUrl());
         existentProduct.setCategories(updatedProduct.categories());
+    }
+
+    private void validateStoreExistence(String ownerId) {
+        if (Boolean.FALSE.equals(_storeRepository.existsByOwnerId(ownerId)))
+            throw new EntityNotFoundException("You need to create a store!");
     }
 }

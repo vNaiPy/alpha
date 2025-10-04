@@ -35,7 +35,7 @@ public class UserAddressService extends ServiceUtils {
         AddressDTO addressDTO = addressService.getAddressAndAddIfDoesntExists(addressInput.zipCode());
         AddressEnriched addressEnriched = getExactAddressOfUser(addressDTO, addressInput.streetNumber());
 
-        User currentUser = getIdCurrentUser();
+        User currentUser = getCurrentUser();
         UserAddress userAddress = new UserAddress();
         userAddress.setUser(currentUser);
         userAddress.setAddress(addressEnriched.getAddress());

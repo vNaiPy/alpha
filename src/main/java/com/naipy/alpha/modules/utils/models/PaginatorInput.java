@@ -1,10 +1,12 @@
 package com.naipy.alpha.modules.utils.models;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 
 public record PaginatorInput (
-        Integer page,
-        Integer size,
+        @NotNull Integer page,
+        @NotNull Integer size,
         String sortBy
 ) implements Serializable {
 }

@@ -114,12 +114,12 @@ public class UserService extends ServiceUtils {
     @Transactional
     public UserDTO update (UserDTO user) {
         try {
-            User entity = userRepository.getReferenceById(getIdCurrentUser().getId());
+            User entity = userRepository.getReferenceById(getCurrentUser().getId());
             updateData(user, entity);
             return UserDTO.createUserDTO(userRepository.save(entity));
         }
         catch (EntityNotFoundException e) {
-            logger.warn("There is no user to update with ID: ".concat(getIdCurrentUser().getId()));
+            logger.warn("There is no user to update with ID: ".concat(getCurrentUser().getId()));
             throw new ResourceNotFoundException(e.getMessage());
         }
 
@@ -128,7 +128,7 @@ public class UserService extends ServiceUtils {
     @Transactional
     public UserDTO deactivate() {
         try {
-            User entity = userRepository.getReferenceById(getIdCurrentUser().getId());
+            User entity = userRepository.getReferenceById(getCurrentUser().getId());
             entity.setStatus(UserStatus.DESACTIVATED);
             return UserDTO.createUserDTO(userRepository.save(entity));
         }

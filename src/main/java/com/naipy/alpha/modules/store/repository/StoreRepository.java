@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, String> {
 
     Optional<Store> findByOwnerId (String id);
     Optional<Store> findByName (String id);
+    Boolean existsByOwnerId (String id);
     List<Store> findAllByName (String name);
 
 

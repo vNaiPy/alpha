@@ -24,7 +24,7 @@ public class ServiceUtils {
         return UuidCreator.getTimeOrderedEpoch().toString();
     }
 
-    protected static User getIdCurrentUser(){
+    protected static User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
     }
@@ -48,9 +48,18 @@ public class ServiceUtils {
     protected Pageable createPageable (PaginatorInput paginatorInput) {
         Pageable pageableToReturn;
         if (paginatorInput.sortBy() != null && !paginatorInput.sortBy().isBlank())
-            pageableToReturn = PageRequest.of(paginatorInput.page(), paginatorInput.size(), Sort.by(paginatorInput.sortBy()).ascending());
+            pageableToReturn = PageRequest.of(paginatorInput.page(), validatePaginatorSize(paginatorInput.size()), Sort.by(paginatorInput.sortBy()).ascending());
         else
-            pageableToReturn = PageRequest.of(paginatorInput.page(), paginatorInput.size());
+            pageableToReturn = PageRequest.of(paginatorInput.page(), validatePaginatorSize(paginatorInput.size()));
         return pageableToReturn;
+    }
+
+    private int validatePaginatorSize (Integer size) {
+        if (50 == size)
+            return 50;
+        else if (100 == size)
+            return 100;
+        else
+            return 20;
     }
 }
