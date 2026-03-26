@@ -18,6 +18,6 @@ public class AddressController {
     }
 
     @QueryMapping()
-    public AddressDTO findByZipcode (@Argument String zipcode) {return addressService.getAddressAndAddIfDoesntExists(zipcode);}
+    public AddressDTO getAddressByZipcode (@Argument String zipcode) {return addressService.getAddressAndAddIfDoesntExists(zipcode);}
 
 }

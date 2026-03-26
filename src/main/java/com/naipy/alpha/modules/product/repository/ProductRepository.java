@@ -4,6 +4,7 @@ import com.naipy.alpha.modules.product.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, String> {
+public interface ProductRepository extends JpaRepository<Product, String>, JpaSpecificationExecutor<Product> {
 
     Page<Product> findAllByOwnerId (String id, Pageable pageable);
 
@@ -38,7 +39,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
                     )
                 ) < :radius
             """)
-    Page<Product> findAllWithinRadiusByLngLat (@Param("searching") String searchingFor,
+    Page<Product>  findAllWithinRadiusByLngLat (@Param("searching") String searchingFor,
                                                @Param("lng") double lng,
                                                @Param("lat") double lat,
                                                @Param("radius") double radius,

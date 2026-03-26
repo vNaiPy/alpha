@@ -33,6 +33,7 @@ public class ErrorMessage {
     private Integer lineNumberError;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private ErrorAppType errorType;
 
     @NotNull

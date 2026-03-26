@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 @Service
-public class ErrorManager extends ServiceUtils {
+public class ErrorManager {
 
     private final ErrorRepository errorRepository;
 

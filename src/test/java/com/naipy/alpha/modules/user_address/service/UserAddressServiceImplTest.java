@@ -5,6 +5,7 @@ import com.naipy.alpha.modules.address.models.AddressDTO;
 import com.naipy.alpha.modules.address.models.AddressEnriched;
 import com.naipy.alpha.modules.address.service.AddressService;
 import com.naipy.alpha.modules.exceptions.services.InvalidParameterException;
+import com.naipy.alpha.modules.user_address.service.impl.UserAddressServiceImpl;
 import com.naipy.alpha.modules.utils.ChargeAddressObject;
 import com.naipy.alpha.modules.utils.ConstantVariables;
 import com.naipy.alpha.modules.utils.ServiceUtils;
@@ -17,7 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 
-class UserAddressServiceTest extends ServiceUtils {
+class UserAddressServiceImplTest {
 
     @Mock
     AddressService addressService;
@@ -40,8 +41,8 @@ class UserAddressServiceTest extends ServiceUtils {
                 .city("São Bernardo do Campo")
                 .state("São Paulo")
                 .country("Brasil")
-                .latitude("-23.6509129")
-                .longitude("-46.57409550000001")
+                .latitude(-23.6509129)
+                .longitude(-46.57409550000001)
                 .build();
         AddressEnriched addressEnrichedExpected = AddressEnriched.builder()
                 .address(addressExpected)
@@ -54,8 +55,8 @@ class UserAddressServiceTest extends ServiceUtils {
         Mockito.when(addressService.getAddressAndAddIfDoesntExists(zipCode)).thenReturn(new AddressDTO(ChargeAddressObject.getOneAddress()));
         AddressDTO addressDTO = addressService.getAddressAndAddIfDoesntExists(zipCode);
 
-        Mockito.when(userAddressService.getExactAddressOfUser(addressDTO, streetNumber)).thenReturn(ChargeAddressObject.getOneAddressEnriched());
-        AddressEnriched addressEnriched = userAddressService.getExactAddressOfUser(addressDTO, streetNumber);
+        Mockito.when(userAddressService.getExactAddressOfUser(addressDTO, streetNumber)).thenReturn(ChargeAddressObject.getOneAddress());
+        Address addressEnriched = userAddressService.getExactAddressOfUser(addressDTO, streetNumber);
         Assertions.assertEquals(addressEnrichedExpected, addressEnriched);
     }
 

@@ -3,9 +3,11 @@ package com.naipy.alpha.modules.product.model;
 import com.naipy.alpha.modules.category.model.Category;
 import com.naipy.alpha.modules.product.enums.ProductStatus;
 import com.naipy.alpha.modules.store.models.StoreDTO;
+import org.springframework.data.domain.Page;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public record ProductDTO (
@@ -29,5 +31,9 @@ public record ProductDTO (
                 StoreDTO.createStoreDTO(product.getOwner().getStore()),
                 !product.getCategories().isEmpty() ? product.getCategories() : new HashSet<>()
         );
+    }
+
+    public static List<ProductDTO> productPageToProductDTOList (Page<Product> productPage) {
+        return productPage.stream().map(ProductDTO::createProductDTO).toList();
     }
 }

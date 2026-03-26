@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 public record ProductInput  (
+        String id,
         String name,
         String description,
         Double price,

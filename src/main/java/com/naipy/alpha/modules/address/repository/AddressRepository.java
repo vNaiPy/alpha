@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface AddressRepository  extends JpaRepository<Address, String> {
 
     @Query("SELECT adss FROM Address adss WHERE adss.zipcode = :zipcode")
-    Optional<Address> findAddressByZipCode (@Param("zipcode") String zipcode);
+    Optional<Address> findAddressByZipcode (@Param("zipcode") String zipcode);
 }

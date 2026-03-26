@@ -6,7 +6,6 @@ import com.naipy.alpha.modules.user.models.*;
 import com.naipy.alpha.modules.user.repository.UserRepository;
 import com.naipy.alpha.modules.exceptions.services.DatabaseException;
 import com.naipy.alpha.modules.exceptions.services.ResourceNotFoundException;
-import com.naipy.alpha.modules.user_address.enums.AddressUsageType;
 import com.naipy.alpha.modules.user_address.models.UserAddress;
 import com.naipy.alpha.modules.user_address.service.UserAddressService;
 import com.naipy.alpha.modules.utils.ServiceUtils;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService extends ServiceUtils {
+public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -63,7 +62,7 @@ public class UserService extends ServiceUtils {
 
     @Transactional
     public UserAddress addAddressToUser (AddressInput addressInput) {
-        return userAddressService.addAddressToUser(addressInput, AddressUsageType.PERSONAL);
+        return userAddressService.addAddressToUser(addressInput);
     }
 
     public List<UserDTO> findAll () {
@@ -114,12 +113,12 @@ public class UserService extends ServiceUtils {
     @Transactional
     public UserDTO update (UserDTO user) {
         try {
-            User entity = userRepository.getReferenceById(getCurrentUser().getId());
+            User entity = userRepository.getReferenceById(ServiceUtils.getCurrentUser().getId());
             updateData(user, entity);
             return UserDTO.createUserDTO(userRepository.save(entity));
         }
         catch (EntityNotFoundException e) {
-            logger.warn("There is no user to update with ID: ".concat(getCurrentUser().getId()));
+            logger.warn("There is no user to update with ID: ".concat(ServiceUtils.getCurrentUser().getId()));
             throw new ResourceNotFoundException(e.getMessage());
         }
 
@@ -128,7 +127,7 @@ public class UserService extends ServiceUtils {
     @Transactional
     public UserDTO deactivate() {
         try {
-            User entity = userRepository.getReferenceById(getCurrentUser().getId());
+            User entity = userRepository.getReferenceById(ServiceUtils.getCurrentUser().getId());
             entity.setStatus(UserStatus.DESACTIVATED);
             return UserDTO.createUserDTO(userRepository.save(entity));
         }

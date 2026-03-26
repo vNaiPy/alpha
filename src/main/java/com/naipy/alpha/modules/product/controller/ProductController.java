@@ -13,61 +13,69 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
 @Controller
 public class ProductController {
 
-    private final ProductService _productService;
+    private final ProductService productService;
 
     @Autowired
     public ProductController(ProductService productService) {
-        this._productService = productService;
+        this.productService = productService;
     }
 
     @QueryMapping
     public ItemsPaginatorResponse<ProductDTO> findAllProducts (@Argument PaginatorInput paginatorInput) {
-        return _productService.findAll(paginatorInput);
+        return productService.getAllProducts(paginatorInput);
     }
 
     @QueryMapping
     public ProductDTO findByProductId (@Argument String id) {
-        return _productService.findById(id);
+        return productService.getProductById(id);
     }
 
     @QueryMapping
     public ItemsPaginatorResponse<ProductDTO> findAllWithinRadiusByLngLat (@Argument SearchingProductInput searchingProductInput) {
-        return _productService.searchingForWithLngLat(searchingProductInput);
+        return productService.getProductsByContainingNameAndLngLat(searchingProductInput);
     }
 
     @QueryMapping
     public ItemsPaginatorResponse<ProductDTO> findAllMyProducts (@Argument PaginatorInput paginatorInput) {
-        return _productService.findAllByOwner(paginatorInput);
+        return productService.getProductsByOwner(paginatorInput);
     }
 
     @QueryMapping
     public ItemsPaginatorResponse<ProductDTO> findAllMyProductsByOwnerId (@Argument final String ownerId, @Argument PaginatorInput paginatorInput) {
-        return _productService.findAllByOwner(ownerId, paginatorInput);
+        return productService.getProductsByOwner(ownerId, paginatorInput);
     }
 
     @QueryMapping
     public ItemsPaginatorResponse<ProductDTO> findAllByCategory (@Argument SearchingProductInput searchingProductInput) {
-        return _productService.findAllByCategory(searchingProductInput);
+        return productService.getProductsByCategory(searchingProductInput);
     }
 
     @MutationMapping
     @Secured("USER")
     public ProductDTO addProduct (@Argument ProductInput product) {
-        return _productService.insert(product);
+        return productService.insertProduct(product);
     }
 
     @MutationMapping
     @Secured("USER")
     public ProductDTO updateProduct (@Argument ProductInput product) {
-        return _productService.update(product);
+        return productService.updateProduct(product);
     }
 
     @MutationMapping
     @Secured("USER")
     public String desactivateProductById (@Argument final String id) {
-        return _productService.deactivate(id);
+        return productService.deactivateProduct(id);
+    }
+
+    @MutationMapping
+    @Secured("USER")
+    public String desactivateAllProductsByIds (@Argument final List<String> ids) {
+        return productService.deactivateAllProducts(ids);
     }
 }
